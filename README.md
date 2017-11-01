@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # mk-demo
 
 该demo是使用mk框架创建的一个demo
@@ -132,3 +133,6 @@ $ npm start
 - action监控：
 
 <img src="https://reactchina.sxlcdn.com/uploads/default/original/2X/e/ea20a8f861ff8203454a1f20a5215cbf90107242.png" width="690" height="449">
+=======
+# newacm3
+>>>>>>> e88903647b41afac1c757861bc896b2246ec7d79
