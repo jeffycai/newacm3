@@ -16,7 +16,7 @@ fetch.config({
 			if (response.token) {
 				fetch.config({ token: response.token })
 			}
-			if(url === '/v1/user/login'){
+			if (url === '/v1/user/login') {
 				return response
 			}
 			return response.value
@@ -82,19 +82,97 @@ function config(options) {
 				isExpand: true,
 				icon: 'appstore',
 				children: [{
+					key: '101',
+					name: '采购管理',
+					children: [{
+						key: '10106',
+						name: '采购单',
+						appName: 'app-scm-voucher-card'
+					}, {
+						key: '10107',
+						name: '采购单列表',
+						appName: 'app-scm-voucher-list'
+					}]
+
+				}, {
 					key: '201',
-					name: '单据测试',
+					name: '销售管理',
 					children: [{
 						key: '20106',
-						name: '销货单列表',
-						appName: 'app-scm-voucher-list'
+						name: '销货单',
+						appName: 'mk-app-report'
 					}, {
 						key: '20107',
-						name: '销货单明细表',
+						name: '销货单列表',
+						appName: 'mk-app-report'
+					}]
+
+				},{
+					key: '202',
+					name: '库存管理',
+					children: [{
+						key: '20206',
+						name: '采购入库单',
+						appName: 'mk-app-report'
+					}, {
+						key: '20207',
+						name: '采购入库单列表',
+						appName: 'mk-app-report'
+					}]
+
+				},{
+					key: '203',
+					name: '业务往来',
+					children: [{
+						key: '20306',
+						name: '采购入库单',
+						appName: 'mk-app-report'
+					}, {
+						key: '20307',
+						name: '采购入库单列表',
 						appName: 'mk-app-report'
 					}]
 
 				}, {
+					key: '204',
+					name: '统计报表',
+					children: [{
+						key: '20406',
+						name: '采购入库单',
+						appName: 'mk-app-report'
+					}, {
+						key: '20407',
+						name: '采购入库单列表',
+						appName: 'mk-app-report'
+					}]
+
+				}, {
+					key: '205',
+					name: '基础档案',
+					children: [{
+						key: '20501',
+						name: '采购入库单',
+						appName: ''
+					}, {
+						key: '20502',
+						name: '采购入库单列表',
+						appName: 'mk-app-report'
+					}]
+
+				},{
+					key: '206',
+					name: '系统设置',
+					children: [{
+						key: '20601',
+						name: '采购入库单',
+						appName: ''
+					}, {
+						key: '20602',
+						name: '采购入库单列表',
+						appName: 'mk-app-report'
+					}]
+
+				},{
 					key: '209',
 					name: '开发工具',
 					children: [{
