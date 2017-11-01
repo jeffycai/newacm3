@@ -100,11 +100,11 @@ function config(options) {
 					children: [{
 						key: '20106',
 						name: '销货单',
-						appName: 'mk-app-report'
+						appName: 'app-scm-voucher-card'
 					}, {
 						key: '20107',
 						name: '销货单列表',
-						appName: 'mk-app-report'
+						appName: 'app-scm-voucher-list'
 					}]
 
 				},{
