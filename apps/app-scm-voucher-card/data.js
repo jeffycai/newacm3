@@ -159,7 +159,7 @@ export function getMeta() {
 					component: 'Select',
 					placeholder: '按名称/拼音搜索',
 					showSearch: true,
-					value: '{{data.form.customer && data.form.customer.name }}',
+					value: '{{data.form.customer && data.form.customer.id }}',
 					onChange: `{{(v)=>$sf('data.form.customer', $fromJS(data.other.customers.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$customerFocus}}",
 					children: {
