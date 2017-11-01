@@ -51,7 +51,7 @@ export default class action {
     }
 
 
-    addAssets = async () => {
+    addAssets = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增资产',
             children: this.metaAction.loadApp(
@@ -66,7 +66,7 @@ export default class action {
         }
     }
 
-    addDepartment = async () => {
+    addDepartment = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增部门',
             children: this.metaAction.loadApp(
@@ -102,7 +102,7 @@ export default class action {
         }
     }
 
-    addProject = async () => {
+    addProject = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增项目',
             children: this.metaAction.loadApp(

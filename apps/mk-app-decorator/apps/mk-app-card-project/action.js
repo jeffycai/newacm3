@@ -34,7 +34,7 @@ class action {
         const payload = {}
 
         var response = await this.webapi.project.query()
-        payload.projects = response
+        payload.project = response
 
         if (this.component.props.personId || this.component.props.personId == 0) {
             response = await this.webapi.project.findById(this.component.props.personId)
