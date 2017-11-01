@@ -54,18 +54,18 @@ class action {
             return
         }
 
-        const response = await this.webapi.portal.init()
-
-        if (response.user) {
-            this.metaAction.context.set('currentUser', response.user)
-            this.metaAction.sf('data.other.currentUser', fromJS(response.user))
-        }
-        else {
-            this.metaAction.context.set('currentUser', undefined)
-            if (this.component.props.onRedirect && this.config.goAfterLogout) {
-                this.component.props.onRedirect(this.config.goAfterLogout)
-            }
-        }
+        // const response = await this.webapi.portal.init()
+        //
+        // if (response.user) {
+        //     this.metaAction.context.set('currentUser', response.user)
+        //     this.metaAction.sf('data.other.currentUser', fromJS(response.user))
+        // }
+        // else {
+        //     this.metaAction.context.set('currentUser', undefined)
+        //     if (this.component.props.onRedirect && this.config.goAfterLogout) {
+        //         this.component.props.onRedirect(this.config.goAfterLogout)
+        //     }
+        // }
 
         if (response.menu) {
             this.injections.reduce('load', { menu: response.menu })
@@ -90,7 +90,7 @@ class action {
         const loop = (children, level) => {
             const ret = []
             children.forEach(child => {
-                
+
                 let ele = {
                     name: child.key,
                     key: child.key
@@ -148,11 +148,18 @@ class action {
     topMenuClick = async (e) => {
         switch (e.key) {
             case 'logout':
-                if (this.component.props.onRedirect && this.config.goAfterLogout) {
-                    await this.webapi.user.logout()
+            if (this.component.props.onRedirect && this.config.goAfterLogout) {
+                let res = await this.webapi.user.logout()
+                if(res){
                     this.metaAction.context.set('currentUser', undefined)
+                    sessionStorage.removeItem('account')
+                    sessionStorage.removeItem('username')
+                    sessionStorage.removeItem('_accessToken')
+                    sessionStorage.removeItem('password')
                     this.component.props.onRedirect(this.config.goAfterLogout)
                 }
+
+            }
                 break;
             case 'github':
                 window.open('https://www.github.com/ziaochina/mk-demo')
@@ -221,6 +228,9 @@ class action {
             event.initEvent("resize", true, true)
             window.dispatchEvent(event)
         }, 0)
+    }
+    logout = ()=>{
+
     }
 }
 

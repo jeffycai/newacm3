@@ -33,15 +33,15 @@ export function getMeta() {
 				}, {
 					name: 'item2',
 					component: 'Form.Item',
-					validateStatus: "{{data.other.error.mobile?'error':'success'}}",
-					help: '{{data.other.error.mobile}}',
+					// validateStatus: "{{data.other.error.mobile?'error':'success'}}",
+					// help: '{{data.other.error.mobile}}',
 					className: 'mk-app-login-content-form-mobile',
 					children: [{
 						name: 'mobile',
 						component: 'Input',
 						placeholder: '请录入手机号',
-						onChange: "{{(e)=>$fieldChange('data.form.mobile', e.target.value)}}",
-						value: '{{data.form.mobile}}',
+						onChange: "{{(e)=>$fieldChange('data.form.account', e.target.value)}}",
+						value: '{{data.form.account}}',
 						prefix: {
 							name: 'userIcon',
 							component: 'Icon',
@@ -122,7 +122,7 @@ export function getMeta() {
 export function getInitState() {
 	return {
 		data: {
-			form: { user: '', password: '' },
+			form: { account: '', password: '' },
 			other: {
 				error: {}
 			}

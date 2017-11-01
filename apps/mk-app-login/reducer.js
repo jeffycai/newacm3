@@ -9,6 +9,7 @@ class reducer {
     }
 
     init = (state, option) => {
+        
         return this.metaReducer.init(state, getInitState())
     }
 }
