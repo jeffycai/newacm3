@@ -85,7 +85,7 @@ module.exports = {
         contentBase: './dist/',
         proxy: {
             // '/v1/*': 'http://127.0.0.1:8000/'
-            '/v1/*': 'http://debug.rrtimes.com:8088/'
+            '/v1/*': 'http://debug.rrtimes.com:8087/'
         }
     },
     plugins: plugins
