@@ -7,26 +7,26 @@ export default class reducer {
     }
 
     calc = (state, rowIndex, fieldName, rowData, params) => {
-        debugger
+        let v = params.v,
+            taxRates = params.taxRates
         if (fieldName === 'price') {
-            state = priceChange(rowIndex, rowData)
+            state = priceChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'amount') {
-
+            state = amountChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'number') {
-            state = numberChange(rowIndex, rowData)
+            state = numberChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'taxRate') {
-            state = taxRateChange(rowIndex, rowData, params)
+            state = taxRateChange(rowIndex, rowData, v, taxRates)
         }
 
         return state
-
     }
 
 
-    numberChange = (rowIndex, rowData) => (v) => {
+    numberChange = (rowIndex, rowData, v) => {
         const number = utils.number.round(v, 2),
             price = utils.number.round(rowData.price, 2),
             amount = utils.number.round(price * number, 2),
@@ -41,7 +41,11 @@ export default class reducer {
         })
     }
 
-    priceChange = (rowIndex, rowData) => (v) => {
+    amountChange = (rowIndex, rowData, v) => {
+
+    }
+
+    priceChange = (rowIndex, rowData, v) => {
         const price = utils.number.round(v, 2),
             number = utils.number.round(rowData.number, 2),
             amount = utils.number.round(price * number, 2),
@@ -56,7 +60,7 @@ export default class reducer {
         })
     }
 
-    taxRateChange = (rowIndex, rowData, taxRates) => (v) => {
+    taxRateChange = (rowIndex, rowData, v, taxRates) => {
         const hit = taxRates.find(o => o.id == v)
 
         if (!hit)

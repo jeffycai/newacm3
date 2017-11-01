@@ -204,11 +204,10 @@ class action {
     }
 
 
-    
+
 
     calc = (rowIndex, fieldName, rowData, params) => (v) => {
-        debugger
-        this.injections.reduce(rowIndex, fieldName, rowData, params)
+        this.injections.reduce('calc', rowIndex, fieldName, rowData, { v, ...params })
     }
 
     numberFormat = (number, decimals, isFocus = false) => {

@@ -34,7 +34,6 @@ class reducer {
     }
 
     calc = (state, rowIndex, fieldName, rowData, params) => {
-        debugger
         this.voucherReducer.calc(state, rowIndex, fieldName, rowData, params)
     }
 
