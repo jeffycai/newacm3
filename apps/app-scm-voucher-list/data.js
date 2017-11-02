@@ -240,28 +240,28 @@ export function getMeta() {
 			component: 'Tabs',
 			className: 'app-scm-voucher-list-tabs',
 			type: 'card',
-			activeKey: '{{data.filter.targetList}}',
+			activeKey: '{{data.other.activeKey}}',
 			onChange: '{{$tabChange}}',
 			children: [{
 				name: 'all',
 				component: 'Tabs.TabPane',
-				key: 'all',
-				tab: '全部'
+				key: '0',
+				tab: `{{'全部(' + data.total.totalCount+ ')'}}`
 			}, {
 				name: 'unaudit',
 				component: 'Tabs.TabPane',
-				key: 'unaudit',
-				tab: `{{'未审核(' + data.total.unauditCount + ')'}}`
+				key: '1',
+				tab: `{{'未审核(' + data.total.notApproveCount + ')'}}`
 			}, {
 				name: 'unpaid',
 				component: 'Tabs.TabPane',
-				key: 'unpaid',
-				tab: `{{'未收完款(' + data.total.unpaidCount + ')'}}`
+				key: '2',
+				tab: `{{'未冲销完(' + data.total.notSettleCount + ')'}}`
 			}, {
 				name: 'paid',
 				component: 'Tabs.TabPane',
-				key: 'paid',
-				tab: '已收款'
+				key: '3',
+				tab: `{{'未冲销完(' + data.total.settledCount + ')'}}`
 			}]
 		}, {
 			name: 'content',
@@ -274,7 +274,7 @@ export function getMeta() {
 				rowHeight: 35,
 				// footerHeight: 35,
 				enableSequence: true,
-				startSequence: '{{(data.pagination.current-1)*data.pagination.pageSize + 1}}',
+				startSequence: '{{(data.page.currentPage-1)*data.page.pageSize + 1}}',
 				// sequenceFooter: {
 				// 	name: 'footer',
 				// 	component: 'DataGrid.Cell',
@@ -318,7 +318,7 @@ export function getMeta() {
 					header: {
 						name: 'header',
 						component: 'DataGrid.Cell',
-						children: ''
+						children: '操作'
 					},
 					cell: {
 						name: 'cell',
@@ -330,34 +330,35 @@ export function getMeta() {
 							showStyle: 'softly',
 							fontFamily: 'mkicon',
 							type: 'audit',
-							disabled: '{{!!data.list[_rowIndex].isAudit}}',
+							disabled: '{{data.list[_rowIndex].status == 128}}',
 							style: {
 								fontSize: 22
 							},
 							title: '审核',
-							onClick: '{{$audit(data.list[_rowIndex].id)}}'
+							onClick: '{{$audit(data.list[_rowIndex].id,data.list[_rowIndex].ts)}}'
 						}, {
 							name: 'reject',
 							component: 'Icon',
 							showStyle: 'softly',
 							fontFamily: 'mkicon',
 							type: 'reject',
-							disabled: '{{!data.list[_rowIndex].isAudit}}',
+							disabled: '{{data.list[_rowIndex].status != 128}}',
 							style: {
 								fontSize: 22
 							},
 							title: '反审核',
-							onClick: '{{$reject(data.list[_rowIndex].id)}}'
+							onClick: '{{$reject(data.list[_rowIndex].id,data.list[_rowIndex].ts)}}'
 						}, {
 							name: 'del',
 							component: 'Icon',
 							showStyle: 'showy',
 							type: 'close',
+							disabled: '{{data.list[_rowIndex].status == 128}}',
 							style: {
 								fontSize: 18
 							},
 							title: '删除',
-							onClick: '{{$del(data.list[_rowIndex].id)}}'
+							onClick: '{{$del(data.list[_rowIndex].id,data.list[_rowIndex].ts)}}'
 						}]
 					}
 				}, {
@@ -369,7 +370,7 @@ export function getMeta() {
 					header: {
 						name: 'header',
 						component: 'DataGrid.Cell',
-						children: '单据编码'
+						children: '单据号'
 					},
 					cell: {
 						name: 'cell',
@@ -396,26 +397,9 @@ export function getMeta() {
 						name: 'cell',
 						component: 'DataGrid.Cell',
 						_power: '({rowIndex})=>rowIndex',
-						children: "{{data.list[_rowIndex].ticketType && data.list[_rowIndex].ticketType.name }}",
+						children: "{{data.list[_rowIndex].invoiceTypeName}}",
 					}
-				}, {
-					name: 'receiptNumber',
-					component: 'DataGrid.Column',
-					columnKey: 'receiptNumber',
-					flexGrow: 1,
-					width: 100,
-					header: {
-						name: 'header',
-						component: 'DataGrid.Cell',
-						children: '收款单号'
-					},
-					cell: {
-						name: 'cell',
-						component: 'DataGrid.Cell',
-						_power: '({rowIndex})=>rowIndex',
-						children: '{{data.list[_rowIndex].receiptNumber}}',
-					},
-				}, {
+				},  {
 					name: 'voucherNO',
 					component: 'DataGrid.Column',
 					columnKey: 'voucherNO',
@@ -430,7 +414,12 @@ export function getMeta() {
 						name: 'cell',
 						component: 'DataGrid.Cell',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{data.list[_rowIndex].voucherNO}}',
+						children:{
+							name: 'link',
+							component: '::a',
+							children: '{{data.list[_rowIndex].docCode}}',
+							onClick: '{{$toDoc(data.list[_rowIndex].docId)}}'
+						}
 					},
 				}, {
 					name: 'date',
@@ -441,13 +430,13 @@ export function getMeta() {
 					header: {
 						name: 'header',
 						component: 'DataGrid.Cell',
-						children: '单据日期'
+						children: '记账日期'
 					},
 					cell: {
 						name: 'cell',
 						component: 'DataGrid.Cell',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{data.list[_rowIndex].date}}',
+						children: '{{data.list[_rowIndex].businessDate}}',
 					},
 				}, {
 					name: 'customer',
@@ -465,7 +454,7 @@ export function getMeta() {
 						component: 'DataGrid.Cell',
 						className: 'app-scm-voucher-list-cell-left',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{data.list[_rowIndex].customer && data.list[_rowIndex].customer.name}}',
+						children: '{{data.list[_rowIndex].customerName}}',
 					},
 				}, {
 					name: 'amount',
@@ -483,7 +472,7 @@ export function getMeta() {
 						component: 'DataGrid.Cell',
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{$numberFormat(data.list[_rowIndex].amount,2)}}',
+						children: '{{$numberFormat(data.list[_rowIndex].totalAmount,2)}}',
 					}
 				}, {
 					name: 'priceTaxTotal',
@@ -501,7 +490,7 @@ export function getMeta() {
 						component: 'DataGrid.Cell',
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{$numberFormat(data.list[_rowIndex].priceTaxTotal,2)}}',
+						children: '{{$numberFormat(data.list[_rowIndex].totalAmountWithTax,2)}}',
 					}
 				}, {
 					name: 'paidAmount',
@@ -512,14 +501,14 @@ export function getMeta() {
 					header: {
 						name: 'header',
 						component: 'DataGrid.Cell',
-						children: '已收款金额'
+						children: '已冲销金额'
 					},
 					cell: {
 						name: 'cell',
 						component: 'DataGrid.Cell',
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{$numberFormat(data.list[_rowIndex].paidAmount,2)}}',
+						children: '{{$numberFormat(data.list[_rowIndex].settledAmount,2)}}',
 					}
 				}, {
 					name: 'unpaidAmount',
@@ -530,7 +519,7 @@ export function getMeta() {
 					header: {
 						name: 'header',
 						component: 'DataGrid.Cell',
-						children: '未付款金额'
+						children: '未冲销金额'
 					},
 					cell: {
 						name: 'cell',
@@ -539,24 +528,7 @@ export function getMeta() {
 						_power: '({rowIndex})=>rowIndex',
 						children: '{{$numberFormat(data.list[_rowIndex].unpaidAmount,2)}}',
 					}
-				}, {
-					name: 'isAudit',
-					component: 'DataGrid.Column',
-					columnKey: 'isAudit',
-					flexGrow: 1,
-					width: 30,
-					header: {
-						name: 'header',
-						component: 'DataGrid.Cell',
-						children: '审核'
-					},
-					cell: {
-						name: 'cell',
-						component: 'DataGrid.Cell',
-						_power: '({rowIndex})=>rowIndex',
-						children: `{{data.list[_rowIndex].isAudit ? '是': '否'}}`,
-					},
-				}, {
+				},  {
 					name: 'memo',
 					component: 'DataGrid.Column',
 					columnKey: 'memo',
@@ -572,7 +544,7 @@ export function getMeta() {
 						component: 'DataGrid.Cell',
 						className: 'app-scm-voucher-list-cell-left',
 						_power: '({rowIndex})=>rowIndex',
-						children: '{{data.list[_rowIndex].memo}}',
+						children: '{{data.list[_rowIndex].remark}}',
 					},
 				}]
 			}]
@@ -584,9 +556,9 @@ export function getMeta() {
 				name: 'pagination',
 				component: 'Pagination',
 				showSizeChanger: true,
-				pageSize: '{{data.pagination.pageSize}}',
-				current: '{{data.pagination.current}}',
-				total: '{{data.pagination.total}}',
+				pageSize: '{{data.page.pageSize}}',
+				current: '{{data.page.currentPage}}',
+				total: '{{data.page.totalPage}}',
 				onChange: '{{$pageChanged}}',
 				onShowSizeChange: '{{$pageChanged}}'
 			}]
@@ -599,7 +571,7 @@ export function getInitState() {
 	return {
 		data: {
 			list: [],
-			pagination: { current: 1, total: 0, pageSize: 20 },
+			page: { currentPage: 1, totalPage: 0, pageSize: 20 },
 			queryOption:{
 
 			},
@@ -618,7 +590,8 @@ export function getInitState() {
 				paidCount: 0
 			},
 			other: {
-				isFold: true
+				isFold: true,
+				activeKey:'0'
 			 }
 		}
 	}

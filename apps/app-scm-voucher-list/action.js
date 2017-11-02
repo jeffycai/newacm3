@@ -20,15 +20,15 @@ class action {
         this.injections = injections
         injections.reduce('init')
 
-        const pagination = this.metaAction.gf('data.pagination').toJS()
+        const page = this.metaAction.gf('data.page').toJS()
         const filter = this.metaAction.gf('data.filter').toJS()
-        this.load(pagination, filter)
+        this.load(page, filter)
     }
 
-    load = async (pagination, filter) => {
-        if(pagination){
-            filter.page.currentPage = pagination.current
-            filter.page.pageSize = pagination.pageSize
+    load = async (page, filter) => {
+        if(page){
+            filter.page.currentPage = page.currentPage
+            filter.page.pageSize = page.pageSize
         }
 
         const response = await this.webapi.deliveryList.init(filter)
@@ -37,9 +37,9 @@ class action {
         this.injections.reduce('load', response)
     }
     reload = async () => {
-        const pagination = this.metaAction.gf('data.pagination').toJS()
+        const page = this.metaAction.gf('data.page').toJS()
         const filter = this.metaAction.gf('data.filter').toJS()
-        this.load(pagination, filter)
+        this.load(page, filter)
     }
 
     add = async () => {
@@ -108,24 +108,24 @@ class action {
         }
 
         const ids = selectRows.map(o => o.get('id')).toJS()
-        await this.webapi.deliverOrderList.audit({ ids })
+        await this.webapi.deliveryList.audit({ ids })
         this.metaAction.toast('success', '审核成功')
         this.reload()
     }
 
-    audit = (id) => async () => {
-        await this.webapi.deliverOrderList.audit({ ids: [id] })
+    audit = (id,ts) => async () => {
+        await this.webapi.deliveryList.audit({ id,ts })
         this.metaAction.toast('success', '审核成功')
         this.reload()
     }
 
-    reject = (id) => async () => {
-        await this.webapi.deliverOrderList.reject({ ids: [id] })
+    reject = (id,ts) => async () => {
+        await this.webapi.deliveryList.reject({ id,ts})
         this.metaAction.toast('success', '反审核成功')
         this.reload()
     }
 
-    del = (id) => async () => {
+    del = (id,ts) => async () => {
         const ret = await this.metaAction.modal('confirm', {
             title: '删除',
             content: '确认删除?'
@@ -134,7 +134,7 @@ class action {
         if (!ret)
             return
 
-        await this.webapi.deliverOrderList.del({ ids: [id] })
+        await this.webapi.deliveryList.del({ id,ts })
         this.metaAction.toast('success', '删除成功')
         this.reload()
     }
@@ -155,26 +155,42 @@ class action {
 
         const key = e.target.value
 
-        const pagination = this.metaAction.gf('data.pagination').toJS(),
+        const page = this.metaAction.gf('data.page').toJS(),
             filter = this.metaAction.gf('data.filter').toJS()
 
         filter.common = key
-        const response = await this.webapi.deliverOrderList.query({ pagination, filter })
+        const response = await this.webapi.deliverOrderList.query({ page, filter })
 
         response.filter = filter
 
-        this.load(pagination, filter)
+        this.load(page, filter)
     }
 
     tabChange = async (key) => {
-        const pagination = this.metaAction.gf('data.pagination').toJS(),
+        const page = this.metaAction.gf('data.page').toJS(),
             filter = this.metaAction.gf('data.filter').toJS()
 
-        filter.targetList = key
-        const response = await this.webapi.deliverOrderList.query({ pagination, filter })
+        filter.status = undefined
+        filter.settleStatus = undefined
+
+        if (key == '1') {
+            filter.status = 127
+        } else if (key == '2') {
+            filter.settleStatus = 130
+        } else if (key == '3') {
+            filter.settleStatus = 131
+        }
+        this.metaAction.sf('data.other.activeKey',key)
+
+
+        const response = await this.webapi.deliveryList.query(filter)
         response.filter = filter
 
-        this.load(pagination, filter)
+        this.load(page, filter)
+    }
+    toDoc = (docId)=>{
+        // debugger
+        // this.metaAction.toast('success', '未开发凭证')
     }
 
     customerChange = (v) => {
@@ -189,15 +205,15 @@ class action {
 
     }
     dateChange = (v)=>{
-        
+
     }
     search = () => {
         this.reload()
     }
 
-    pageChanged = (current, pageSize) => {
+    pageChanged = (currentPage, pageSize) => {
         const filter = this.metaAction.gf('data.filter').toJS()
-        this.load({ current, pageSize }, filter)
+        this.load({ currentPage, pageSize }, filter)
     }
 
     receipt = () => {
