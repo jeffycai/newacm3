@@ -255,9 +255,9 @@ class action {
         this.metaAction.sf('data.other.settlementModes', fromJS(response))
     }
 
-    accountFocus = async () => {
+    bankAccountFocus = async () => {
         const response = await this.webapi.assetAccount.query()
-        this.metaAction.sf('data.other.assetAccounts', fromJS(response))
+        this.metaAction.sf('data.other.bankAccount', fromJS(response))
     }
 
 

@@ -80,7 +80,7 @@ export function getMeta() {
 							name: 'reject',
 							component: 'Menu.Item',
 							key: 'reject',
-							children: '生成红字销售发票'
+							children: '生成红字销售订单'
 						}, {
 							name: 'receipt',
 							component: 'Menu.Item',
@@ -614,7 +614,7 @@ export function getMeta() {
 				name: 'settlement',
 				component: 'Form',
 				className: 'app-scm-voucher-card-form-footer-settlement',
-				children: [{
+				children: [/*{
 					name: 'settlementModeItem',
 					component: 'Form.Item',
 					label: '结算方式',
@@ -633,36 +633,36 @@ export function getMeta() {
 							_power: 'for in data.other.settlementModes'
 						}
 					}]
-				}, {
-					name: 'accountItem',
-					component: 'Form.Item',
-					label: '现结账户',
-					children: [{
-						name: 'account',
-						component: 'Select',
-						showSearch: false,
-						value: '{{data.form.settlements[_rowIndex].account && data.form.settlements[_rowIndex].account.id }}',
-						onChange: `{{(v)=>$sf('data.form.settlements.'+ _rowIndex +'.account', $fromJS(data.other.assetAccounts.find(o=>o.id==v),null))}}`,
-						onFocus: "{{$accountFocus}}",
-						children: {
-							name: 'option',
-							component: 'Select.Option',
-							value: "{{ data.other.assetAccounts && data.other.assetAccounts[_lastIndex].id }}",
-							children: '{{data.other.assetAccounts && data.other.assetAccounts[_lastIndex].name }}',
-							_power: 'for in data.other.assetAccounts'
-						}
-					}]
-				}, {
-					name: 'settlementAmount',
-					component: 'Form.Item',
-					label: '现结金额',
-					children: [{
+				},*/ {
+						name: 'bankAccountItem',
+						component: 'Form.Item',
+						label: '现结账户',
+						children: [{
+							name: 'bankAccount',
+							component: 'Select',
+							showSearch: false,
+							value: '{{data.form.settlements[_rowIndex].bankAccount && data.form.settlements[_rowIndex].bankAccount.id }}',
+							onChange: `{{(v)=>$sf('data.form.settlements.'+ _rowIndex +'.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
+							onFocus: "{{$bankAccountFocus}}",
+							children: {
+								name: 'option',
+								component: 'Select.Option',
+								value: "{{ data.other.bankAccount && data.other.bankAccount[_lastIndex].id }}",
+								children: '{{data.other.bankAccount && data.other.bankAccount[_lastIndex].name }}',
+								_power: 'for in data.other.bankAccount'
+							}
+						}]
+					}, {
 						name: 'settlementAmount',
-						component: 'Input.Number',
-						value: "{{data.form.settlements[_rowIndex].settlementAmount}}",
-						onChange: "{{(v)=>$sf('data.form.settlements.' + _rowIndex + '.settlementAmount', v)}}",
-					}]
-				}],
+						component: 'Form.Item',
+						label: '现结金额',
+						children: [{
+							name: 'settlementAmount',
+							component: 'Input.Number',
+							value: "{{data.form.settlements[_rowIndex].settlementAmount}}",
+							onChange: "{{(v)=>$sf('data.form.settlements.' + _rowIndex + '.settlementAmount', v)}}",
+						}]
+					}],
 				_power: 'for in data.form.settlements'
 			}, {
 				name: 'advance',

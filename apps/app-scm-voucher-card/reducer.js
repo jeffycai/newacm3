@@ -21,7 +21,7 @@ class reducer {
 
     load = (state, response) => {
         if (response) {
-            //state = this.metaReducer.sf(state, 'data.form', fromJS(response))
+            //state = this.metaReducer.sf(state, 'data', fromJS(response))
         }
         else {
             state = this.metaReducer.sf(state, 'data', fromJS(getInitState().data))
@@ -153,13 +153,12 @@ class reducer {
             }
 
         })
-        debugger
         return data
     }
 
     setForm = (state, form) => {
         if (form)
-            return this.metaReducer.sf(state, 'data.form', fromJS(this.parseResponse(form)))
+            return this.metaReducer.sf(state, 'data', fromJS(this.parseResponse(form)))
         else
             return this.metaReducer.sf(state, 'data.form', fromJS(getInitState().data.form))
     }

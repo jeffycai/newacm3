@@ -726,7 +726,7 @@ function initMockData() {
                     amountWithTax: 105
                 }],
                 settlements: [{
-                    account: { id: 1, name: '现金' },
+                    bankAccount: { id: 1, name: '现金' },
                     settlementAmount: 105 - (i % 3) * 10
                 }]
             })
