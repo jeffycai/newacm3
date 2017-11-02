@@ -336,7 +336,7 @@ export function getMeta() {
 			headerHeight: 35,
 			rowHeight: 35,
 			footerHeight: 35,
-			rowsCount: '{{data.form.details.length}}',
+			rowsCount: '{{(data.form.details && data.form.details.length) ?data.form.details.length:1 }}',
 			enableSequence: true,
 			enableAddDelrow: true,
 			startSequence: 1,
@@ -757,7 +757,13 @@ export function getInitState() {
 		data: {
 			form: {
 				details: [
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem,
 					blankVoucherItem
+
+
 				],
 				settlements: [{}]
 			},
