@@ -80,7 +80,7 @@ class action {
     }
 
     history = async () => {
-        this.component.props.setPortalContent('销货单列表', 'app-scm-voucher-list')
+        this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
     }
 
     moreMenuClick = (e) => {

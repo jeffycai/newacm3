@@ -109,8 +109,15 @@ class reducer {
         if ((!data.form.id && !data.form.ts) || responseValue.operateStatus == 'Deleted') {
             data.other.status = consts.status.VOUCHER_STATUS_ADD
         }
-        data.other.taxRateList = responseValue.taxRateList
-        data.other.invoiceType = responseValue.invoiceType
+        if(responseValue.taxRateList){
+            data.other.taxRateList = responseValue.taxRateList
+        }
+        
+
+        if(responseValue.invoiceType){
+            data.other.invoiceType = responseValue.invoiceType
+        }
+        
         //如果行数太少,则用空行补足
         if (responseValue.details) {
             while (responseValue.details.length < getInitState().data.form.details.length) {

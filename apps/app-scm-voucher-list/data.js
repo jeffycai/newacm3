@@ -17,7 +17,7 @@ export function getMeta() {
 					name: 'addSaleOrder',
 					component: 'Button',
 					type: 'showy',
-					children: '新增销货单',
+					children: '新增销售订单',
 					onClick: '{{$add}}'
 				}, {
 					name: 'receipt',

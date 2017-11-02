@@ -373,7 +373,7 @@ export function getMeta() {
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					showSearch: true,
 					value: `{{{
-								if(!data.form.details[_rowIndex].inventory) return
+								if(data.form.details[_rowIndex] && !data.form.details[_rowIndex].inventory) return
 								return $isFocus(_ctrlPath)
 									? data.form.details[_rowIndex].inventory.id
 									: data.form.details[_rowIndex].inventory.code
@@ -408,13 +408,13 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
+					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
-				name: 'spec',
+				name: 'specification',
 				component: 'DataGrid.Column',
-				columnKey: 'spec',
+				columnKey: 'specification',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -426,7 +426,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.spec}}",
+					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.specification}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -444,7 +444,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.meaUnit && data.form.details[_rowIndex].inventory.meaUnit.name}}",
+					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.unitName}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -461,7 +461,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath)}}",
-					value: "{{ data.form.details[_rowIndex].isGift ? '是': '否' }}",
+					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '否' }}",
 					checked: "{{ data.form.details[_rowIndex].isGift }}",
 					onChange: "{{(e)=>$sf('data.form.details.' + _rowIndex + '.isGift', e.target.checked)}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -524,7 +524,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmount(data.form.details)}}'
+					//children: '{{$sumAmount(data.form.details)}}'
 				}
 			}, {
 				name: 'taxRate',
@@ -542,7 +542,7 @@ export function getMeta() {
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					showSearch: false,
 					value: `{{{
-								if(!data.form.details[_rowIndex].taxRate) return
+								if(data.form.details[_rowIndex] && !data.form.details[_rowIndex].taxRate) return
 								return $isFocus(_ctrlPath)
 									? data.form.details[_rowIndex].taxRate.id
 									: data.form.details[_rowIndex].taxRate.name
@@ -580,7 +580,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumTax(data.form.details)}}'
+					//children: '{{$sumTax(data.form.details)}}'
 				}
 			}, {
 				name: 'amountWithTax',
@@ -603,7 +603,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmountWithTax(data.form.details)}}'
+					//children: '{{$sumAmountWithTax(data.form.details)}}'
 				}
 			}]
 		}, {
