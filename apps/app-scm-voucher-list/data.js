@@ -92,7 +92,7 @@ export function getMeta() {
 			children: [{
 				name: 'internal',
 				component: 'Radio.Group',
-				value: '{{data.filter.common}}',
+				value: '{{data.other.timer}}',
 				onChange: `{{$commonFilterChange}}`,
 				children: [{
 					name: 'all',
@@ -159,7 +159,7 @@ export function getMeta() {
 					children: [{
 						name: 'beginDate',
 						component: 'DatePicker.RangePicker',
-						value: '{{data.queryOption.momentDates}}',
+						value: '{{$getRangerDate()}}',
 						onChange: '{{$dateChange}}'
 					}]
 
@@ -171,8 +171,9 @@ export function getMeta() {
 						name: 'customer',
 						component: 'Select',
 						showSearch: false,
-						value: '{{data.filter.customer && data.filter.customer.id }}',
-						onChange: "{{$customerChange}}",
+						value: '{{data.filter.customerId }}',
+						onFocus:'{{$selectFocus("customers")}}',
+						onChange: `{{(v)=>$sf('data.filter.customerId', v)}}`,
 						children: {
 							name: 'option',
 							component: 'Select.Option',
@@ -189,13 +190,13 @@ export function getMeta() {
 						name: 'invoiceType',
 						component: 'Select',
 						showSearch: false,
-						value: '{{data.filter.invoiceType && data.filter.invoiceType.id}}',
-						onChange: "{{$invoiceTypeChange}}",
+						value: '{{data.filter.invoiceTypeId}}',
+						onChange: `{{(v)=>$sf('data.filter.invoiceTypeId', v)}}`,
 						children:{
 							name: 'option',
 							component: 'Select.Option',
-							value: "{{ data.other.invoiceTypes && data.other.invoiceTypes[_rowIndex].id }}",
-							children: '{{data.other.invoiceTypes && data.other.invoiceTypes[_rowIndex].name }}',
+							value: "{{ data.other.invoiceTypes && data.other.invoiceTypes[_rowIndex].enumItemId }}",
+							children: '{{data.other.invoiceTypes && data.other.invoiceTypes[_rowIndex].enumItemName }}',
 							_power: 'for in data.other.invoiceTypes'
 						}
 					}]
@@ -206,8 +207,8 @@ export function getMeta() {
 					children: [{
 						name: 'code',
 						component: 'Input',
-						value: '{{data.filter.code}}',
-						onBlur: `{{(e)=>$sf('data.filter.code', e.target.value)}}`,
+						value: '{{data.filter.invoiceNumber}}',
+						onBlur: `{{(e)=>$sf('data.filter.invoiceNumber', e.target.value)}}`,
 					}]
 				},{
 					name: 'commodityItem',
@@ -217,8 +218,9 @@ export function getMeta() {
 						name: 'commodity',
 						component: 'Select',
 						showSearch: false,
-						value: '{{data.filter.commodity && data.filter.commodity.id}}',
-						onChange: "{{$commodityChange}}",
+						value: '{{data.filter.inventoryId}}',
+						onFocus:'{{$selectFocus("commoditys")}}',
+						onChange: `{{(v)=>$sf('data.filter.inventoryId', v)}}`,
 						children:{
 							name: 'option',
 							component: 'Select.Option',
@@ -591,7 +593,8 @@ export function getInitState() {
 			},
 			other: {
 				isFold: true,
-				activeKey:'0'
+				activeKey:'0',
+				timer:'thisMonth'
 			 }
 		}
 	}

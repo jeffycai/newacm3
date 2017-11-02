@@ -12,6 +12,16 @@ export default {
         query: (option) => fetch.post('/v1/web/deliveryList/query', option),
         del: (option) => fetch.post('/v1/delivery/delete', option),
         audit: (option) => fetch.post('/v1/delivery/audit', option),
-        reject: (option) => fetch.post('/v1/delivery/unaudit', option)
+        reject: (option) => fetch.post('/v1/delivery/unaudit', option),
+        customerQuery:(option)=> fetch.post('v1/customerArchive/query',{
+            isContentEmpty: false,
+            status: true,
+            notNeedPage: true,
+            page: {currentPage: 1, pageSize: 50}
+        }),
+        commodityrQuery:()=> fetch.post('v1/inventory/queryBySale',{
+            notNeedPage:true,
+            status:true
+        })
     }
 }
