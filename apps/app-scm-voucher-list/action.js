@@ -97,8 +97,8 @@ class action {
         if (!ret)
             return
 
-        const ids = selectRows.map(o => o.get('id')).toJS()
-        await this.webapi.deliverOrderList.del({ ids })
+        const ids = selectRows.map(o => { return {id:o.get('id'),ts:o.get('ts')}}).toJS()
+        await this.webapi.deliveryList.deleteBatch(ids)
         this.metaAction.toast('success', '删除成功')
         this.reload()
     }
@@ -118,8 +118,8 @@ class action {
             return
         }
 
-        const ids = selectRows.map(o => o.get('id')).toJS()
-        await this.webapi.deliveryList.audit({ ids })
+        const ids = selectRows.map(o => { return {id:o.get('id'),ts:o.get('ts')}}).toJS()
+        await this.webapi.deliveryList.auditBatch(ids)
         this.metaAction.toast('success', '审核成功')
         this.reload()
     }

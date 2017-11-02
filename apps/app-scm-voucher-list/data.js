@@ -24,7 +24,7 @@ export function getMeta() {
 					component: 'Button',
 					type: 'bluesky',
 					children: '收款',
-					onClick: '{{$receipt}}'
+					// onClick: '{{$receipt}}'
 				}, {
 					name: 'batch',
 					component: 'Dropdown',

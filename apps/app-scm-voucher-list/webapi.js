@@ -11,8 +11,12 @@ export default {
         init: (option) => fetch.post('/v1/web/deliveryList/queryInit', option),
         query: (option) => fetch.post('/v1/web/deliveryList/query', option),
         del: (option) => fetch.post('/v1/delivery/delete', option),
+        deleteBatch: (option) => fetch.post('v1/delivery/deleteBatch', option),
+        auditBatch: (option) => fetch.post('v1/delivery/auditBatch', option),
         audit: (option) => fetch.post('/v1/delivery/audit', option),
         reject: (option) => fetch.post('/v1/delivery/unaudit', option),
+
+
         customerQuery:(option)=> fetch.post('v1/customerArchive/query',{
             isContentEmpty: false,
             status: true,
