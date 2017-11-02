@@ -15,11 +15,11 @@ class reducer {
     }
 
     load = (state, response) => {
-
         state = this.metaReducer.sf(state, 'data.list', fromJS(response.dataList))
         state = this.metaReducer.sf(state, 'data.page', fromJS(response.page))
         state = this.metaReducer.sf(state, 'data.filter', fromJS(response.filter))
         state = this.metaReducer.sf(state, 'data.total', fromJS(this.parsetotal(response)))
+        state = this.metaReducer.sf(state, 'data.other.invoiceTypes', fromJS(response.invoiceType.enumDetail))
         if (response.customers)
             state = this.metaReducer.sf(state, 'data.other.customers', fromJS(response.customers))
 

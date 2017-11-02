@@ -30,7 +30,6 @@ class action {
             filter.page.currentPage = page.currentPage
             filter.page.pageSize = page.pageSize
         }
-
         const response = await this.webapi.deliveryList.init(filter)
 
         response.filter = filter
@@ -51,7 +50,19 @@ class action {
             this.component.props.setPortalContent('销货单', 'app-scm-voucher-card')
     }
 
-
+    selectFocus = (key)=> async()=>{
+        let res = undefined
+        switch (key) {
+            case 'customers':
+                res = await this.webapi.deliveryList.customerQuery()
+                break;
+            default:
+            case 'commoditys':
+                res = await this.webapi.deliveryList.commodityrQuery()
+                break;
+        }
+        this.metaAction.sf(`data.other.${key}`,fromJS(res.dataList) )
+    }
     batchMenuClick = (e) => {
         switch (e.key) {
             case 'del':
@@ -86,8 +97,8 @@ class action {
         if (!ret)
             return
 
-        const ids = selectRows.map(o => o.get('id')).toJS()
-        await this.webapi.deliverOrderList.del({ ids })
+        const ids = selectRows.map(o => { return {id:o.get('id'),ts:o.get('ts')}}).toJS()
+        await this.webapi.deliveryList.deleteBatch(ids)
         this.metaAction.toast('success', '删除成功')
         this.reload()
     }
@@ -107,8 +118,8 @@ class action {
             return
         }
 
-        const ids = selectRows.map(o => o.get('id')).toJS()
-        await this.webapi.deliveryList.audit({ ids })
+        const ids = selectRows.map(o => { return {id:o.get('id'),ts:o.get('ts')}}).toJS()
+        await this.webapi.deliveryList.auditBatch(ids)
         this.metaAction.toast('success', '审核成功')
         this.reload()
     }
@@ -151,17 +162,73 @@ class action {
         this.metaAction.sf('data.other.isFold', !this.metaAction.gf('data.other.isFold'))
     }
 
-    commonFilterChange = async (e) => {
+    commonFilterChange = (e) => {
 
         const key = e.target.value
 
-        const page = this.metaAction.gf('data.page').toJS(),
-            filter = this.metaAction.gf('data.filter').toJS()
+        let page = this.metaAction.gf('data.page').toJS(),
+            filter = this.metaAction.gf('data.filter').toJS(),
+            startTime,
+            endTime
 
-        filter.common = key
-        const response = await this.webapi.deliverOrderList.query({ page, filter })
 
-        response.filter = filter
+        switch (key) {
+            case 'all':
+                delete(filter.startTime)
+                delete(filter.endTime)
+                break;
+            case 'today':
+                startTime = moment().format('YYYY-MM-DD')
+                endTime = moment().format('YYYY-MM-DD')
+                filter.startTime = startTime
+                filter.endTime = endTime
+                break;
+            case 'yesterday':
+                startTime = moment().subtract(1, "days").format("YYYY-MM-DD")
+                endTime = moment().subtract(1, "days").format("YYYY-MM-DD")
+                filter.startTime = startTime
+                filter.endTime = endTime
+                break;
+            case 'thisWeek':
+                startTime = moment().startOf('week').format("YYYY-MM-DD")
+                endTime = moment().endOf('week').format("YYYY-MM-DD")
+                filter.startTime = startTime
+                filter.endTime = endTime
+                break;
+            case 'lastWeek':
+                startTime = moment().startOf('week').subtract(7, "days").format("YYYY-MM-DD")
+                endTime = moment().endOf('week').subtract(7, "days").format("YYYY-MM-DD")
+                filter.startTime = startTime
+                filter.endTime = endTime
+                break;
+            case 'thisMonth':
+                startTime = moment().startOf('month').format("YYYY-MM-DD")
+                endTime = moment().endOf('month').format("YYYY-MM-DD")
+                filter.startTime = startTime
+                filter.endTime = endTime
+                break;
+            case 'lastMonth':
+                startTime = moment(moment().subtract(1, "months").format("YYYY-MM-DD")).startOf('month').format('YYYY-MM-DD')
+
+                endTime = moment(moment().subtract(1, "months").format("YYYY-MM-DD")).endOf('month').format('YYYY-MM-DD')
+                filter.startTime = startTime
+                filter.endTime = endTime
+
+                break;
+            case 'thisYear':
+                startTime = moment().startOf('year').format("YYYY-MM-DD")
+                endTime = moment().endOf('year').format("YYYY-MM-DD")
+                filter.startTime = startTime
+                filter.endTime = endTime
+                break;
+
+        }
+
+        this.metaAction.sfs({
+            'data.other.timer':key,
+            'data.filter.startTime':startTime,
+            'data.filter.endTime':endTime
+        })
 
         this.load(page, filter)
     }
@@ -193,20 +260,20 @@ class action {
         // this.metaAction.toast('success', '未开发凭证')
     }
 
-    customerChange = (v) => {
-        const ds = this.metaAction.gf('data.other.customers')
-        const hit = ds.find(o => o.get('id') == v)
-        this.metaAction.sf(`data.filter.customer`, hit)
-    }
-    commodityChange = (v)=>{
 
-    }
-    invoiceTypeChange = (v)=>{
-
-    }
     dateChange = (v)=>{
-
+        let startTime =  v[0].format('YYYY-MM-DD'),
+            endTime =  v[1].format('YYYY-MM-DD')
+        this.metaAction.sfs({
+            'data.filter.startTime':startTime,
+            'data.filter.endTime':endTime,
+        })
     }
+    getRangerDate = ()=>{
+        let filter = this.metaAction.gf('data.filter').toJS()
+        return [moment(filter.startTime),moment(filter.endTime)]
+    }
+
     search = () => {
         this.reload()
     }
