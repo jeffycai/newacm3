@@ -69,16 +69,20 @@ class action {
     }
 
     audit = async () => {
-        const id = this.metaAction.gf('data.form.id')
-        if (!id)
+        const id = this.metaAction.gf('data.form.id'),
+            ts = this.metaAction.gf('data.form.ts')
+        if (!id && !ts) {
+            this.metaAction.toast('error', '请保存单据')
             return
+        }
 
-        const response = await this.webapi.delivery.audit({ id })
+        const response = await this.webapi.delivery.audit({ id, ts })
         if (response) {
+            this.metaAction.toast('success', '单据审核成功')
             this.injections.reduce('setForm', response)
         }
-    }
 
+    }
     history = async () => {
         this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
     }

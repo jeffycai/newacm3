@@ -700,7 +700,7 @@ export function getMeta() {
 					children: [{
 						name: 'balanceAdvance',
 						component: '::span',
-						children: '{{$calcBalance(data)}}'
+						//children: '{{$calcBalance(data)}}'
 					}]
 				}]
 			}]
