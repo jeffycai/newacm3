@@ -11,8 +11,8 @@ const mockData = fetch.mockData
 
 function initMockData() {
     //类型
-    if (!mockData.stockCategories) {
-        mockData.stockCategories = [{
+    if (!mockData.inventoryCategories) {
+        mockData.inventoryCategories = [{
             id: 1,
             name: '商品'
         }, {
@@ -36,8 +36,8 @@ function initMockData() {
     }
 
     //分类
-    if (!mockData.stockTypes) {
-        mockData.stockTypes = [{
+    if (!mockData.inventoryTypes) {
+        mockData.inventoryTypes = [{
             id: 1,
             code: '001',
             name: '食品',
@@ -113,11 +113,11 @@ function initMockData() {
     }
 
     //存货
-    if (!mockData.stocks) {
-        mockData.stocks = []
+    if (!mockData.inventory) {
+        mockData.inventory = []
 
         for (let i = 1; i <= 10; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 1000 + i,
                 code: 1000 + i + '',
                 name: '肉' + i,
@@ -184,7 +184,7 @@ function initMockData() {
         }
 
         for (let i = 1; i < 6; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 2000 + i,
                 code: 2000 + i + '',
                 name: '酒' + i,
@@ -251,7 +251,7 @@ function initMockData() {
         }
 
         for (let i = 1; i < 10; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 3000 + i,
                 code: 3000 + i + '',
                 name: '干果' + i,
@@ -319,7 +319,7 @@ function initMockData() {
         }
 
         for (let i = 1; i < 34; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 4000 + i,
                 code: 4000 + i + '',
                 name: '衣服' + i,
@@ -387,7 +387,7 @@ function initMockData() {
         }
 
         for (let i = 1; i < 8; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 5000 + i,
                 code: 5000 + i + '',
                 name: '鞋子' + i,
@@ -455,7 +455,7 @@ function initMockData() {
         }
 
         for (let i = 1; i < 28; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 6000 + i,
                 code: 6000 + i + '',
                 name: '饰品' + i,
@@ -523,7 +523,7 @@ function initMockData() {
         }
 
         for (let i = 1; i < 50; i++) {
-            mockData.stocks.push({
+            mockData.inventory.push({
                 id: 7000 + i,
                 code: 7000 + i + '',
                 name: '设备' + i,
@@ -695,10 +695,10 @@ function initMockData() {
     }
 
     // 销售出库单
-    if (!mockData.deliveryOrders) {
-        mockData.deliveryOrders = []
+    if (!mockData.delivery) {
+        mockData.delivery = []
         for (let i = 0; i < 200; i++) {
-            mockData.deliveryOrders.push({
+            mockData.delivery.push({
                 id: i,
                 code: 'do20170101' + (100 + i + 1),
                 ticketType: { id: 1, name: '专用发票' },
@@ -717,7 +717,7 @@ function initMockData() {
                 settlementMode: { id: 1, name: '现结' },
                 details: [{
                     id: 1,
-                    stock: mockData.stocks[1],
+                    inventory: mockData.inventory[1],
                     price: 10,
                     number: 10,
                     amount: 100,
@@ -735,14 +735,14 @@ function initMockData() {
 }
 
 
-fetch.mock('/v1/deliveryOrder/init', (option) => {
+fetch.mock('/v1/delivery/init', (option) => {
     initMockData()
     //debugger
     return {
         result: true,
         value: {
-            voucher: (option.id || option.id == 0) ? mockData.deliveryOrders.find(o => o.id == option.id) : undefined,
-            stocks: mockData.stocks,
+            voucher: (option.id || option.id == 0) ? mockData.delivery.find(o => o.id == option.id) : undefined,
+            inventory: mockData.inventory,
             customers: mockData.customers,
             ticketTypes: mockData.ticketTypes,
             warehouses: mockData.warehouses,
@@ -753,11 +753,11 @@ fetch.mock('/v1/deliveryOrder/init', (option) => {
     }
 })
 
-fetch.mock('/v1/stock/query', (option) => {
+fetch.mock('/v1/inventory/query', (option) => {
     initMockData()
     return {
         result: true,
-        value: mockData.stocks
+        value: mockData.inventory
     }
 })
 
@@ -826,9 +826,9 @@ fetch.mock('/v1/assetAccount/query', (option) => {
 })
 
 
-fetch.mock('/v1/deliveryOrder/prev', (option) => {
+fetch.mock('/v1/delivery/prev', (option) => {
     initMockData()
-    if (!mockData.deliveryOrders || mockData.deliveryOrders.length == 0) {
+    if (!mockData.delivery || mockData.delivery.length == 0) {
         return {
             result: false,
             error: {
@@ -838,10 +838,10 @@ fetch.mock('/v1/deliveryOrder/prev', (option) => {
     }
 
     if (!(option.id || option.id == 0)) {
-        return { result: true, value: mockData.deliveryOrders[mockData.deliveryOrders.length - 1] }
+        return { result: true, value: mockData.delivery[mockData.delivery.length - 1] }
     }
 
-    const index = mockData.deliveryOrders.findIndex(o => o.id == option.id)
+    const index = mockData.delivery.findIndex(o => o.id == option.id)
 
     if (index == 0) {
         return {
@@ -852,14 +852,14 @@ fetch.mock('/v1/deliveryOrder/prev', (option) => {
         }
     }
 
-    return { result: true, value: mockData.deliveryOrders[index - 1] }
+    return { result: true, value: mockData.delivery[index - 1] }
 })
 
 
-fetch.mock('/v1/deliveryOrder/next', (option) => {
+fetch.mock('/v1/delivery/next', (option) => {
     initMockData()
 
-    if (!mockData.deliveryOrders || mockData.deliveryOrders.length == 0) {
+    if (!mockData.delivery || mockData.delivery.length == 0) {
         return {
             result: false,
             error: {
@@ -869,12 +869,12 @@ fetch.mock('/v1/deliveryOrder/next', (option) => {
     }
 
     if (!(option.id || option.id == 0)) {
-        return { result: true, value: mockData.deliveryOrders[mockData.deliveryOrders.length - 1] }
+        return { result: true, value: mockData.delivery[mockData.delivery.length - 1] }
     }
 
-    const index = mockData.deliveryOrders.findIndex(o => o.id == option.id)
+    const index = mockData.delivery.findIndex(o => o.id == option.id)
 
-    if (index == mockData.deliveryOrders.length - 1) {
+    if (index == mockData.delivery.length - 1) {
         return {
             result: false,
             error: {
@@ -884,66 +884,66 @@ fetch.mock('/v1/deliveryOrder/next', (option) => {
     }
 
 
-    return { result: true, value: mockData.deliveryOrders[index + 1] }
+    return { result: true, value: mockData.delivery[index + 1] }
 })
 
 
-fetch.mock('/v1/deliveryOrder/update', (option) => {
+fetch.mock('/v1/delivery/update', (option) => {
     initMockData()
 
-    const index = mockData.deliveryOrders.findIndex(o => o.id == option.id)
-    mockData.deliveryOrders.splice(index, 1, option)
+    const index = mockData.delivery.findIndex(o => o.id == option.id)
+    mockData.delivery.splice(index, 1, option)
     return { result: true, value: option }
 })
 
-fetch.mock('/v1/deliveryOrder/create', (option) => {
+fetch.mock('/v1/delivery/create', (option) => {
     initMockData()
 
     var maxId = 0
 
-    mockData.deliveryOrders.forEach(o => {
+    mockData.delivery.forEach(o => {
         maxId = maxId > o.id ? maxId : o.id
     })
 
     const id = maxId + 1
     option = { ...option, id, code: 'do20170101' + (100 + id + 1), }
 
-    mockData.deliveryOrders.push(option)
+    mockData.delivery.push(option)
 
     return { result: true, value: option }
 })
 
-fetch.mock('/v1/deliveryOrder/audit', (option) => {
+fetch.mock('/v1/delivery/audit', (option) => {
     initMockData()
 
-    const order = mockData.deliveryOrders.find(o => o.id == option.id)
+    const order = mockData.delivery.find(o => o.id == option.id)
     order.isAudit = true
 
     return { result: true, value: order }
 })
 
-fetch.mock('/v1/deliveryOrder/del', (option) => {
+fetch.mock('/v1/delivery/del', (option) => {
     initMockData()
 
-    const index = mockData.deliveryOrders.findIndex(o => o.id == option.id)
-    mockData.deliveryOrders.splice(index, 1)
+    const index = mockData.delivery.findIndex(o => o.id == option.id)
+    mockData.delivery.splice(index, 1)
 
-    if (!mockData.deliveryOrders || mockData.deliveryOrders.length == 0) {
+    if (!mockData.delivery || mockData.delivery.length == 0) {
         return {
             result: true
         }
     }
 
-    if (mockData.deliveryOrders.length - 1 >= index) {
+    if (mockData.delivery.length - 1 >= index) {
         return {
             result: true,
-            value: mockData.deliveryOrders[index]
+            value: mockData.delivery[index]
         }
     }
     else {
         return {
             result: true,
-            value: mockData.deliveryOrders[mockData.deliveryOrders.length - 1]
+            value: mockData.delivery[mockData.delivery.length - 1]
         }
     }
 })

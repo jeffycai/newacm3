@@ -66,6 +66,7 @@ class action {
             }
 
         } else {
+            form.status = 1
             const response = await this.webapi.customer.create(form)
             if (response) {
                 this.metaAction.toast('success', '保存成功')

@@ -10,7 +10,7 @@ export default {
     customer: {
         query: () => fetch.post('/v1/customer/query', {}),
         findById: (id) => fetch.post('/v1/customer/findById', { id }),
-        create: (option) => fetch.post('/v1/customer/create', option),
+        create: (option) => fetch.post('/v1/customerArchive/create', option),
         update: (option) => fetch.post('/v1/customer/update', option),
         prev: (id) => fetch.post('/v1/customer/prev', { id }),
         next: (id) => fetch.post('/v1/customer/next', { id })

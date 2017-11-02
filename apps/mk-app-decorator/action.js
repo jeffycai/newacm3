@@ -1,5 +1,6 @@
 import React from 'react'
 import utils from 'mk-utils'
+import config from './config'
 import Immutable, { fromJS, Map, List } from 'immutable'
 
 export default class action {
@@ -12,6 +13,9 @@ export default class action {
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
+
+        this.config = config.current
+        this.webapi = this.config.webapi
     }
 
     fieldChange = async (fieldPath, value, checkFn) => {
@@ -42,13 +46,80 @@ export default class action {
                 }
             )
         })
-
+        debugger
         if (ret) {
             this.metaAction.sfs({
                 [field]: fromJS(ret)
             })
         }
     }
+
+    getCustomer = async (params) => {
+        let list = {
+            "isContentEmpty": false,
+            "status": true,
+            "notNeedPage": true,
+            "page": {
+                "currentPage": 1,
+                "pageSize": 50
+            }
+        }
+        if (!params) {
+            list = Object.assign(list, params)
+
+        }
+
+        const response = await this.webapi.basicFiles.consumerQuery.query(list)
+        if (response) {
+            this.metaAction.sf('data.other.customers', fromJS(response.dataList))
+        }
+    }
+
+    getDepartment = async (params) => {
+        if (!params) {
+
+        }
+
+        const response = await this.webapi.dept.getEndNodeDepartByOrgId.query('')
+        if (response) {
+            this.metaAction.sf('data.other.department', fromJS(response))
+        }
+    }
+
+    getPerson = async (params) => {
+        if (!params) params = {}
+        if (params.deptId)
+            param = { departmentId: deptId }
+
+        const response = await this.webapi.person.getPersonDeptList.query(params)
+
+        if (response) {
+            this.metaAction.sf('data.other.person', fromJS(response))
+        }
+    }
+
+    getProject = async (params) => {
+        if (!params) {
+            params = { notNeedPage: true, status: true }
+        }
+        const response = await this.webapi.basicFiles.projectQuery.query(params)
+
+        if (response && response.dataList) {
+            this.metaAction.sf('data.other.project', fromJS(response.dataList))
+        }
+    }
+
+    getInventory = async (params) => {
+        let invParam = { status: true, notNeedPage: true }
+        if (params && params.voucherTypeId) {
+            invParam.voucherTypeId = params.voucherTypeId
+        }
+        const response = await this.webapi.receipt.getInventorys.query(invParam)
+        if (response && response.dataList) {
+            this.metaAction.sf('data.other.inventory', fromJS(response.dataList))
+        }
+    }
+
 
 
     addAssets = async (field) => {
@@ -139,7 +210,7 @@ export default class action {
         if (!fieldName) return
 
         //this.injections.reduce('calc', rowIndex,fieldName,rowData,params)
-        
+
     }
 
     checkSave = (form) => {

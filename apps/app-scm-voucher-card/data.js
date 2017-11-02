@@ -190,30 +190,30 @@ export function getMeta() {
 					onChange: "{{(d)=>$sf('data.form.date',$momentToString(d,'YYYY-MM-DD'))}}",
 				}]
 			}, {
-				name: 'ticketTypeItem',
+				name: 'invoiceTypeItem',
 				component: 'Form.Item',
 				label: '票据类型',
 				required: true,
 				children: [{
-					name: 'ticketType',
+					name: 'invoiceType',
 					component: 'Select',
 					showSearch: false,
-					value: '{{data.form.ticketType && data.form.ticketType.id }}',
-					onChange: `{{(v)=>$sf('data.form.ticketType', $fromJS(data.other.ticketTypes.find(o=>o.id==v),null))}}`,
-					onFocus: "{{$ticketTypeFocus}}",
+					//value: '{{data.form.invoiceType.enumDetail && data.form.invoiceType.enumDetail.enumItemId }}',
+					onChange: `{{(v)=>$sf('data.form.invoiceType.enumDetail', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
+					onFocus: "{{$invoiceTypeFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.ticketTypes && data.other.ticketTypes[_rowIndex].id }}",
-						children: '{{data.other.ticketTypes && data.other.ticketTypes[_rowIndex].name }}',
-						_power: 'for in data.other.ticketTypes'
+						value: "{{ data.other.invoiceType && data.other.invoiceType[_rowIndex].enumItemId }}",
+						children: '{{data.other.invoiceType && data.other.invoiceType[_rowIndex].enumItemName }}',
+						_power: 'for in data.other.invoiceType'
 					}
 				}]
 			}, {
 				name: 'warehouseItem',
 				component: 'Form.Item',
 				label: '仓库',
-				required: true,
+				required: false,
 				children: [{
 					name: 'warehouse',
 					component: 'Select',
@@ -261,7 +261,7 @@ export function getMeta() {
 			}, {
 				name: 'projectItem',
 				component: 'Form.Item',
-				required: true,
+				required: false,
 				validateStatus: 'info',
 				label: '项目',
 				children: [{
@@ -290,7 +290,6 @@ export function getMeta() {
 			}, {
 				name: 'personItem',
 				component: 'Form.Item',
-				required: true,
 				validateStatus: 'info',
 				label: '业务员',
 				children: [{
@@ -342,7 +341,7 @@ export function getMeta() {
 			sequenceFooter: {
 				name: 'footer',
 				component: 'DataGrid.Cell',
-				children: '汇总'
+				children: '合计'
 			},
 			readonly: false,
 			onAddrow: "{{$addRow('details')}}",
@@ -351,9 +350,9 @@ export function getMeta() {
 			scrollToColumn: '{{data.other.detailsScrollToColumn}}',
 			scrollToRow: '{{data.other.detailsScrollToRow}}',
 			columns: [{
-				name: 'stockCode',
+				name: 'inventoryCode',
 				component: 'DataGrid.Column',
-				columnKey: 'stockCode',
+				columnKey: 'inventoryCode',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -372,30 +371,30 @@ export function getMeta() {
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					showSearch: true,
 					value: `{{{
-								if(!data.form.details[_rowIndex].stock) return
+								if(!data.form.details[_rowIndex].inventory) return
 								return $isFocus(_ctrlPath)
-									? data.form.details[_rowIndex].stock.id
-									: data.form.details[_rowIndex].stock.code
+									? data.form.details[_rowIndex].inventory.id
+									: data.form.details[_rowIndex].inventory.code
 							}}}`,
 					onChange: `{{(v)=>{
-								const hit = data.other.stocks.find(o=>o.id==v)
-								$sf('data.form.details.'+ _rowIndex + '.stock', $fromJS(hit,null))
+								const hit = data.other.inventory.find(o=>o.id==v)
+								$sf('data.form.details.'+ _rowIndex + '.inventory', $fromJS(hit,null))
 							}}}`,
-					onFocus: "{{$stockFocus}}",
+					onFocus: "{{$inventoryFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.stocks && data.other.stocks[_lastIndex].id }}",
-						children: '{{data.other.stocks && data.other.stocks[_lastIndex].name }}',
-						_power: 'for in data.other.stocks'
+						value: "{{ data.other.inventory && data.other.inventory[_lastIndex].id }}",
+						children: '{{data.other.inventory && data.other.inventory[_lastIndex].name }}',
+						_power: 'for in data.other.inventory'
 					},
 					_excludeProps: "{{$isFocus(_ctrlPath)? ['onClick'] : ['children'] }}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 			}, {
-				name: 'stockName',
+				name: 'inventoryName',
 				component: 'DataGrid.Column',
-				columnKey: 'stockName',
+				columnKey: 'inventoryName',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -407,7 +406,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].stock && data.form.details[_rowIndex].stock.name}}",
+					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -425,7 +424,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].stock && data.form.details[_rowIndex].stock.spec}}",
+					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.spec}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -443,7 +442,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].stock && data.form.details[_rowIndex].stock.meaUnit && data.form.details[_rowIndex].stock.meaUnit.name}}",
+					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.meaUnit && data.form.details[_rowIndex].inventory.meaUnit.name}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {

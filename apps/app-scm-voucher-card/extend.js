@@ -10,8 +10,8 @@ function getGridOption() {
             emptyRow: {},
             getColNames: (gf) => {
                 return [
-                    'stockCode',
-                    'stockName',
+                    'inventoryCode',
+                    'inventoryName',
                     'spec',
                     'unit',
                     'isGift',
