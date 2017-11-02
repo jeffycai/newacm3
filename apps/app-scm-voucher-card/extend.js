@@ -15,12 +15,12 @@ function getGridOption() {
                     'spec',
                     'unit',
                     'isGift',
-                    'number',
+                    'quantity',
                     'price',
                     'amount',
                     'taxRate',
                     'tax',
-                    'priceTaxTotal'
+                    'amountWithTax'
                 ]
             },
             cellIsReadonly: (cellPosition, path, gf) => {

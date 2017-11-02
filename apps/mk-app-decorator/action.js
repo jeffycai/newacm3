@@ -219,13 +219,11 @@ export default class action {
             msg.push('客户不能为空!')
         }
 
-        if (!form.date)
+        if (!form.businessDate)
             msg.push('单据日期不能为空!')
+ 
 
-        if (!form.warehouse || !form.warehouse.id)
-            msg.push('仓库不能为空!')
-
-        if (!form.ticketType || !form.ticketType.id)
+        if (!form.invoiceType || !form.invoiceType.enumDetail)
             msg.push('票据类型不能为空!')
 
         if (!form.details || form.details.length == 0) {
@@ -233,7 +231,7 @@ export default class action {
         }
 
         form.details.forEach((detail, index) => {
-            if (!detail.stock)
+            if (!detail.inventory)
                 msg.push(`明细第${index + 1}行，存货不能为空！`)
         })
 

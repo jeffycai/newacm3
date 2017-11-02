@@ -703,7 +703,7 @@ function initMockData() {
                 code: 'do20170101' + (100 + i + 1),
                 ticketType: { id: 1, name: '专用发票' },
                 warehouse: { id: 1, name: '北京仓' },
-                date: `2017-${i % 11 + 1}-${i % 28 + 1}`,
+                businessDate: `2017-${i % 11 + 1}-${i % 28 + 1}`,
                 customer: { id: 1, name: '腾讯' },
                 person: { id: 1, name: '张三' },
                 voucherNO: i % 2 == 1 ? '' : 'VO' + (10000 + i),
@@ -719,11 +719,11 @@ function initMockData() {
                     id: 1,
                     inventory: mockData.inventory[1],
                     price: 10,
-                    number: 10,
+                    quantity: 10,
                     amount: 100,
                     taxRate: { id: 5, name: '5%' },
                     tax: 5,
-                    priceTaxTotal: 105
+                    amountWithTax: 105
                 }],
                 settlements: [{
                     account: { id: 1, name: '现金' },

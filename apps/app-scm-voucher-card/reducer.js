@@ -30,8 +30,9 @@ class reducer {
         return state
     }
 
-    calc = (state, rowIndex, fieldName, rowData, params) => {
-        this.voucherReducer.calc(state, rowIndex, fieldName, rowData, params)
+    calc = (v) => (state, rowIndex, fieldName, rowData, params) => {
+        debugger
+        //this.voucherReducer.calc(state, rowIndex, fieldName, rowData, params)
     }
 
     setForm = (state, form) => {
