@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export function getMeta() {
 	return {
 		name: 'root',
@@ -46,7 +48,7 @@ export function getMeta() {
 						name: 'internal',
 						component: 'Button',
 						type: 'bluesky',
-						
+
 						children: ['批量', {
 							name: 'down',
 							component: 'Icon',
@@ -86,7 +88,7 @@ export function getMeta() {
 			name: 'commonFilter',
 			component: 'Layout',
 			className: 'app-scm-voucher-list-baseFilter',
-			
+
 			children: [{
 				name: 'internal',
 				component: 'Radio.Group',
@@ -157,11 +159,8 @@ export function getMeta() {
 					children: [{
 						name: 'beginDate',
 						component: 'DatePicker.RangePicker',
-						value: '{{data.other.momentDates}}',
-						onChange: `{{(moments,strs)=>$sfs({
-							'data.filter.dates': strs,
-							'data.other.momentDates': moments
-						})}}`
+						value: '{{data.queryOption.momentDates}}',
+						onChange: '{{$dateChange}}'
 					}]
 
 				}, {
@@ -182,17 +181,53 @@ export function getMeta() {
 							_power: 'for in data.other.customers'
 						}
 					}]
-				}, {
+				},{
+					name: 'invoiceTypeItem',
+					component: 'Form.Item',
+					label: '票据类型',
+					children: [{
+						name: 'invoiceType',
+						component: 'Select',
+						showSearch: false,
+						value: '{{data.filter.invoiceType && data.filter.invoiceType.id}}',
+						onChange: "{{$invoiceTypeChange}}",
+						children:{
+							name: 'option',
+							component: 'Select.Option',
+							value: "{{ data.other.invoiceTypes && data.other.invoiceTypes[_rowIndex].id }}",
+							children: '{{data.other.invoiceTypes && data.other.invoiceTypes[_rowIndex].name }}',
+							_power: 'for in data.other.invoiceTypes'
+						}
+					}]
+				},{
 					name: 'codeItem',
 					component: 'Form.Item',
-					label: '单据编码',
+					label: '发票号码',
 					children: [{
 						name: 'code',
 						component: 'Input',
 						value: '{{data.filter.code}}',
 						onBlur: `{{(e)=>$sf('data.filter.code', e.target.value)}}`,
 					}]
-				}, {
+				},{
+					name: 'commodityItem',
+					component: 'Form.Item',
+					label: '商品',
+					children: [{
+						name: 'commodity',
+						component: 'Select',
+						showSearch: false,
+						value: '{{data.filter.commodity && data.filter.commodity.id}}',
+						onChange: "{{$commodityChange}}",
+						children:{
+							name: 'option',
+							component: 'Select.Option',
+							value: "{{ data.other.commoditys && data.other.commoditys[_rowIndex].id }}",
+							children: '{{data.other.commoditys && data.other.commoditys[_rowIndex].name }}',
+							_power: 'for in data.other.commoditys'
+						}
+					}]
+				},{
 					name: 'search',
 					component: 'Button',
 					type: 'bluesky',
@@ -237,14 +272,14 @@ export function getMeta() {
 				component: 'DataGrid',
 				headerHeight: 35,
 				rowHeight: 35,
-				footerHeight: 35,
+				// footerHeight: 35,
 				enableSequence: true,
 				startSequence: '{{(data.pagination.current-1)*data.pagination.pageSize + 1}}',
-				sequenceFooter: {
-					name: 'footer',
-					component: 'DataGrid.Cell',
-					children: '汇总'
-				},
+				// sequenceFooter: {
+				// 	name: 'footer',
+				// 	component: 'DataGrid.Cell',
+				// 	children: '汇总'
+				// },
 				rowsCount: "{{data.list ? data.list.length : 0}}",
 
 				columns: [{
@@ -449,12 +484,6 @@ export function getMeta() {
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
 						children: '{{$numberFormat(data.list[_rowIndex].amount,2)}}',
-					},
-					footer: {
-						name: 'footer',
-						component: 'DataGrid.Cell',
-						className: 'app-scm-voucher-list-cell-right',
-						children: '{{$numberFormat(data.total.amount,2)}}'
 					}
 				}, {
 					name: 'priceTaxTotal',
@@ -473,12 +502,6 @@ export function getMeta() {
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
 						children: '{{$numberFormat(data.list[_rowIndex].priceTaxTotal,2)}}',
-					},
-					footer: {
-						name: 'footer',
-						component: 'DataGrid.Cell',
-						className: 'app-scm-voucher-list-cell-right',
-						children: '{{$numberFormat(data.total.priceTaxTotal,2)}}'
 					}
 				}, {
 					name: 'paidAmount',
@@ -497,12 +520,6 @@ export function getMeta() {
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
 						children: '{{$numberFormat(data.list[_rowIndex].paidAmount,2)}}',
-					},
-					footer: {
-						name: 'footer',
-						component: 'DataGrid.Cell',
-						className: 'app-scm-voucher-list-cell-right',
-						children: '{{$numberFormat(data.total.paidAmount,2)}}'
 					}
 				}, {
 					name: 'unpaidAmount',
@@ -521,12 +538,6 @@ export function getMeta() {
 						className: 'app-scm-voucher-list-cell-right',
 						_power: '({rowIndex})=>rowIndex',
 						children: '{{$numberFormat(data.list[_rowIndex].unpaidAmount,2)}}',
-					},
-					footer: {
-						name: 'footer',
-						component: 'DataGrid.Cell',
-						className: 'app-scm-voucher-list-cell-right',
-						children: '{{$numberFormat(data.total.unpaidAmount,2)}}'
 					}
 				}, {
 					name: 'isAudit',
@@ -589,9 +600,16 @@ export function getInitState() {
 		data: {
 			list: [],
 			pagination: { current: 1, total: 0, pageSize: 20 },
+			queryOption:{
+
+			},
 			filter: {
-				common: 'all',
-				targetList: 'all'
+				startTime: moment().startOf('month').format('YYYY-MM-DD'),
+  				endTime: moment().endOf('month').format('YYYY-MM-DD'),
+				page:{
+					currentPage: 1,
+    				pageSize: 20
+				}
 			},
 			total: {
 				allCount: 0,
@@ -599,7 +617,7 @@ export function getInitState() {
 				unpaidCount: 0,
 				paidCount: 0
 			},
-			other: { 
+			other: {
 				isFold: true
 			 }
 		}

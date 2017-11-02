@@ -15,14 +15,24 @@ class reducer {
     }
 
     load = (state, response) => {
+        debugger
         state = this.metaReducer.sf(state, 'data.list', fromJS(response.list))
         state = this.metaReducer.sf(state, 'data.pagination', fromJS(response.pagination))
         state = this.metaReducer.sf(state, 'data.filter', fromJS(response.filter))
-        state = this.metaReducer.sf(state, 'data.total', fromJS(response.total))
+        state = this.metaReducer.sf(state, 'data.total', fromJS(this.parsetotal(response)))
         if (response.customers)
             state = this.metaReducer.sf(state, 'data.other.customers', fromJS(response.customers))
 
         return state
+    }
+    parsetotal = (response)=>{
+        let total= {
+            allCount: response.totalCount,
+            unauditCount : response.notApproveCount,
+            unpaidCount: response.notSettleCount,
+            paidCount: response.settledCount
+        }
+        return total
     }
 }
 

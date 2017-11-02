@@ -20,8 +20,8 @@ class action {
     }
 
     load = async (pagination, filter = {}) => {
-        const response = await this.webapi.homeMessage.query()
-        this.injections.reduce('load', response)
+        // const response = await this.webapi.homeMessage.query()
+        // this.injections.reduce('load', response)
     }
 
     getListRowsCount = () => {
