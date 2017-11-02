@@ -120,6 +120,10 @@ export default class action {
         }
     }
 
+    getTaxRate = async (params) => {
+
+    }
+
 
 
     addAssets = async (field) => {
@@ -221,7 +225,7 @@ export default class action {
 
         if (!form.businessDate)
             msg.push('单据日期不能为空!')
- 
+
 
         if (!form.invoiceType || !form.invoiceType.enumDetail)
             msg.push('票据类型不能为空!')

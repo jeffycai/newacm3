@@ -50,7 +50,7 @@ export function print(post,list){
     return post('/v1/web/delivery/print',list)
 }
 
-// 附件在销售单保存但未审核的状态下的新增和删除接口
+// 附件在销售订单保存但未审核的状态下的新增和删除接口
 export function enclosurecreatebatch(post, idList) {
 	return post('/v1/delivery/enclosureCreate', idList)
 }

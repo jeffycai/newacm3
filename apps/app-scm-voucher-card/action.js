@@ -111,17 +111,13 @@ class action {
         if (form.id || form.id == 0) {
             const response = await this.webapi.delivery.update(form)
             if (response) {
-                this.metaAction.toast('success', '保存单据成功')
+                this.metaAction.toast('success', '保存更新成功')
                 this.injections.reduce('setForm', response)
             }
         }
         else {
-            debugger
-
             form = this.transForSave(form)
             const response = await this.webapi.delivery.create(form)
-
-
             if (response) {
                 this.metaAction.toast('success', '保存单据成功')
                 this.injections.reduce('setForm', response)
@@ -173,8 +169,8 @@ class action {
                     ts: row.ts,
                     "inventoryId": row.inventory.id,
                     "unitId": row.inventory.unitId,
-                    "taxRate": row.taxRate ? row.taxRate.value : '0.17',
-                    "taxRateId": row.taxRate ? row.taxRate.id : '17',
+                    "taxRate": row.taxRate ? row.taxRate.taxRate : 0,
+                    "taxRateId": row.taxRate ? row.taxRate.id : '0',
                     "quantity": row.quantity,
                     "price": row.price,
                     "amount": row.amount,
@@ -251,8 +247,7 @@ class action {
     }
 
     taxRateFocus = async () => {
-        const response = await this.webapi.taxRate.query()
-        this.metaAction.sf('data.other.taxRates', fromJS(response))
+        //await this.voucherAction.getTaxRate()
     }
 
     settlementModeFocus = async () => {

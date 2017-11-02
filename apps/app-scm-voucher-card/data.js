@@ -1,3 +1,5 @@
+import consts from './consts'
+
 export function getMeta() {
 	return {
 		name: 'root',
@@ -120,7 +122,7 @@ export function getMeta() {
 				children: {
 					name: 'title',
 					component: '::h1',
-					children: '销售单'
+					children: '销售订单'
 				}
 			}, {
 				name: 'right',
@@ -198,7 +200,7 @@ export function getMeta() {
 					name: 'invoiceType',
 					component: 'Select',
 					showSearch: false,
-					//value: '{{data.form.invoiceType.enumDetail && data.form.invoiceType.enumDetail.enumItemId }}',
+					value: '{{data.form.invoiceType && data.form.invoiceType.enumDetail && data.form.invoiceType.enumDetail.enumItemId }}',
 					onChange: `{{(v)=>$sf('data.form.invoiceType.enumDetail', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
 					onFocus: "{{$invoiceTypeFocus}}",
 					children: {
@@ -316,15 +318,15 @@ export function getMeta() {
 					},
 				}]
 			}, {
-				name: 'memo',
+				name: 'remark',
 				component: 'Form.Item',
 				label: '备注',
-				className: 'app-scm-voucher-card-form-header-memo',
+				className: 'app-scm-voucher-card-form-header-remark',
 				children: [{
-					name: 'memo',
+					name: 'remark',
 					component: 'Input',
-					value: '{{data.form.memo}}',
-					onChange: "{{(e)=>$sf('data.form.memo',e.target.value)}}",
+					value: '{{data.form.remark}}',
+					onChange: "{{(e)=>$sf('data.form.remark',e.target.value)}}",
 				}]
 			}]
 		}, {
@@ -545,14 +547,14 @@ export function getMeta() {
 									? data.form.details[_rowIndex].taxRate.id
 									: data.form.details[_rowIndex].taxRate.name
 							}}}`,
-					onChange: "{{$calc(_rowIndex,'taxRate', data.form.details[_rowIndex], data.other.taxRates)}}",
+					onChange: "{{$taxRateChange(_rowIndex, data.form.details[_rowIndex], data.other.taxRate)}}",
 					onFocus: "{{$taxRateFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.taxRates && data.other.taxRates[_lastIndex].id }}",
-						children: '{{data.other.taxRates && data.other.taxRates[_lastIndex].name }}',
-						_power: 'for in data.other.taxRates'
+						value: "{{ data.other.taxRate && data.other.taxRate[_lastIndex].id }}",
+						children: '{{data.other.taxRate && data.other.taxRate[_lastIndex].name }}',
+						_power: 'for in data.other.taxRate'
 					},
 					_excludeProps: "{{$isFocus(_ctrlPath)? ['onClick'] : ['children'] }}",
 					_power: '({rowIndex})=>rowIndex',
@@ -754,14 +756,24 @@ export function getInitState() {
 	return {
 		data: {
 			form: {
-				details: [{}],
+				details: [
+					blankVoucherItem
+				],
 				settlements: [{}]
 			},
 			total: {
 
 			},
 			other: {
+				status: consts.status.VOUCHER_STATUS_ADD
 			}
 		}
+	}
+}
+
+
+export const blankVoucherItem = {
+	inventory: {
+
 	}
 }

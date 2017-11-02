@@ -52,7 +52,7 @@ export function queryById(post,id){
 	return post("/v1/arrival/queryById", {id})
 }
 
-// 附件在销售单保存但未审核的状态下的新增和删除接口
+// 附件在销售订单保存但未审核的状态下的新增和删除接口
 export function enclosurecreatebatch(post, idList) {
 	return post('/v1/arrival/enclosureCreate', idList)
 }
