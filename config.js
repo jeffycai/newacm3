@@ -1,7 +1,7 @@
 import { Toast, Notification, Modal } from 'mk-component'
 import { fetch, history } from 'mk-utils'
 import './mock.js' //脱离后台测试，启用mock，否则这行注释
-
+//import webapi from './api'
 import apiDoc from './apiDoc'
 
 var _options = {}
@@ -60,7 +60,7 @@ function config(options) {
 
 	//对应用进行配置，key会被转换为'^<key>$'跟app名称正则匹配
 	_options.apps && _options.apps.config({
-		//'*': { webapi } //正式网站应该有一个完整webapi对象，提供所有web请求函数
+		//'*': { webapi }, //正式网站应该有一个完整webapi对象，提供所有web请求函数
 		'mk-app-root': {
 			startAppName: 'mk-app-login'
 		},
@@ -107,7 +107,7 @@ function config(options) {
 						appName: 'app-scm-voucher-list'
 					}]
 
-				},{
+				}, {
 					key: '202',
 					name: '库存管理',
 					children: [{
@@ -120,7 +120,7 @@ function config(options) {
 						appName: 'mk-app-report'
 					}]
 
-				},{
+				}, {
 					key: '203',
 					name: '业务往来',
 					children: [{
@@ -159,7 +159,7 @@ function config(options) {
 						appName: 'mk-app-report'
 					}]
 
-				},{
+				}, {
 					key: '206',
 					name: '系统设置',
 					children: [{
@@ -172,7 +172,7 @@ function config(options) {
 						appName: 'mk-app-report'
 					}]
 
-				},{
+				}, {
 					key: '209',
 					name: '开发工具',
 					children: [{

@@ -18,18 +18,15 @@ class reducer {
         return this.metaReducer.init(state, getInitState())
     }
 
-    load = (state, { voucher, stocks, customers, ticketTypes, warehouses }) => {
-        if (voucher) {
-            state = this.metaReducer.sf(state, 'data.form', fromJS(voucher))
+    load = (state, response) => {
+        if (response) {
+            //state = this.metaReducer.sf(state, 'data.form', fromJS(response))
         }
         else {
             state = this.metaReducer.sf(state, 'data', fromJS(getInitState().data))
         }
-
-        state = this.metaReducer.sf(state, 'data.other.stocks', fromJS(stocks))
-        state = this.metaReducer.sf(state, 'data.other.customers', fromJS(customers))
-        state = this.metaReducer.sf(state, 'data.other.ticketTypes', fromJS(ticketTypes))
-        state = this.metaReducer.sf(state, 'data.other.warehouses', fromJS(warehouses))
+        // debugger
+        state = this.metaReducer.sf(state, 'data.other.invoiceType', fromJS(response.invoiceType.enumDetail))
         return state
     }
 

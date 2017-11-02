@@ -7,20 +7,20 @@
 import { fetch } from 'mk-utils'
 
 export default {
-    deliveryOrder: {
+    delivery: {
         init: (option) => fetch.post('/v1/web/delivery/init', option),
         create: (option) => fetch.post('/v1/delivery/create', option),
         update: (option) => fetch.post('/v1/delivery/update', option),
         del: (option) => fetch.post('/v1/delivery/del', option),
         audit: (option) => fetch.post('/v1/delivery/audit', option),
-        prev: (id) => fetch.post('/v1/delivery/prev', { id }),
+        prev: (id) => fetch.post('/v1/delivery/previous', { id }),
         next: (id) => fetch.post('/v1/delivery/next', { id }),
     },
     stock: {
         query: (option) => fetch.post('/v1/stock/query', option)
     },
     customer: {
-        query: (option) => fetch.post('/v1/customer/query', option)
+        query: (option) => fetch.post('/v1/customerArchive/query', option)
     },
     department: {
         query: (option) => fetch.post('/v1/department/query', option)

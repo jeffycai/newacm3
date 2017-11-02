@@ -30,13 +30,13 @@ class action {
 
     load = async () => {
         const payload = {}
-        const response = await this.webapi.deliveryOrder.init({ id: this.component.props.deliveryOrderId })
+        const response = await this.webapi.delivery.init({ id: this.component.props.deliveryId })
         this.injections.reduce('load', response)
     }
 
     prev = async () => {
         const id = this.metaAction.gf('data.form.id')
-        const response = await this.webapi.deliveryOrder.prev(id)
+        const response = await this.webapi.delivery.prev(id)
         if (response) {
             this.injections.reduce('setForm', response)
         }
@@ -44,7 +44,7 @@ class action {
 
     next = async () => {
         const id = this.metaAction.gf('data.form.id')
-        const response = await this.webapi.deliveryOrder.next(id)
+        const response = await this.webapi.delivery.next(id)
         if (response) {
             this.injections.reduce('setForm', response)
         }
@@ -62,7 +62,7 @@ class action {
         })
 
         if (ret) {
-            const response = await this.webapi.deliveryOrder.del({ id })
+            const response = await this.webapi.delivery.del({ id })
             this.metaAction.toast('success', '删除单据成功')
             this.injections.reduce('setForm', response)
         }
@@ -73,7 +73,7 @@ class action {
         if (!id)
             return
 
-        const response = await this.webapi.deliveryOrder.audit({ id })
+        const response = await this.webapi.delivery.audit({ id })
         if (response) {
             this.injections.reduce('setForm', response)
         }
@@ -107,14 +107,14 @@ class action {
         }
 
         if (form.id || form.id == 0) {
-            const response = await this.webapi.deliveryOrder.update(form)
+            const response = await this.webapi.delivery.update(form)
             if (response) {
                 this.metaAction.toast('success', '保存单据成功')
                 this.injections.reduce('setForm', response)
             }
         }
         else {
-            const response = await this.webapi.deliveryOrder.create(form)
+            const response = await this.webapi.delivery.create(form)
             if (response) {
                 this.metaAction.toast('success', '保存单据成功')
                 this.injections.reduce('setForm', response)
@@ -154,23 +154,19 @@ class action {
     }
 
     customerFocus = async () => {
-        const response = await this.webapi.customer.query()
-        this.metaAction.sf('data.other.customers', fromJS(response))
+        await this.voucherAction.getCustomer()
     }
 
     departmentFocus = async () => {
-        const response = await this.webapi.department.query()
-        this.metaAction.sf('data.other.department', fromJS(response))
+        await this.voucherAction.getDepartment({ orgId: '' })
     }
 
     personFocus = async () => {
-        const response = await this.webapi.person.query()
-        this.metaAction.sf('data.other.person', fromJS(response))
+        await this.voucherAction.getPerson()
     }
 
     projectFocus = async () => {
-        const response = await this.webapi.project.query()
-        this.metaAction.sf('data.other.project', fromJS(response))
+        await this.voucherAction.getProject()
     }
 
     warehouseFocus = async () => {
@@ -178,14 +174,12 @@ class action {
         this.metaAction.sf('data.other.warehouses', fromJS(response))
     }
 
-    ticketTypeFocus = async () => {
-        const response = await this.webapi.ticketType.query()
-        this.metaAction.sf('data.other.ticketTypes', fromJS(response))
+    invoiceTypeFocus = async () => {
+
     }
 
-    stockFocus = async () => {
-        const response = await this.webapi.stock.query()
-        this.metaAction.sf('data.other.stocks', fromJS(response))
+    inventoryFocus = async () => {
+        await this.voucherAction.getInventory({ voucherTypeId: '137' })
     }
 
     taxRateFocus = async () => {
