@@ -18,8 +18,8 @@ class action {
     }
 
     load = async () => {
-        const response = await this.webapi.bargraph.query()
-        this.injections.reduce('load', response)
+        // const response = await this.webapi.bargraph.query()
+        // this.injections.reduce('load', response)
     }
 
     getOption = () => {

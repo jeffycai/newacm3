@@ -7,8 +7,8 @@
 import { fetch } from 'mk-utils'
 
 export default {
-    deliverOrderList: {
-        init: (option) => fetch.post('/v1/deliverOrderList/init', option),
+    deliveryList: {
+        init: (option) => fetch.post('/v1/web/deliveryList/queryInit', option),
         query: (option) => fetch.post('/v1/deliverOrderList/query', option),
         del: (option) => fetch.post('/v1/deliverOrderList/del', option),
         audit: (option) => fetch.post('/v1/deliverOrderList/audit', option),

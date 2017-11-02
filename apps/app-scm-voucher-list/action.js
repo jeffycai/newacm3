@@ -26,11 +26,16 @@ class action {
     }
 
     load = async (pagination, filter) => {
-        const response = await this.webapi.deliverOrderList.init({ pagination, filter })
+        if(pagination){
+            filter.page.currentPage = pagination.current
+            filter.page.pageSize = pagination.pageSize
+        }
+
+        const response = await this.webapi.deliveryList.init(filter)
+
         response.filter = filter
         this.injections.reduce('load', response)
     }
-
     reload = async () => {
         const pagination = this.metaAction.gf('data.pagination').toJS()
         const filter = this.metaAction.gf('data.filter').toJS()
@@ -177,7 +182,15 @@ class action {
         const hit = ds.find(o => o.get('id') == v)
         this.metaAction.sf(`data.filter.customer`, hit)
     }
+    commodityChange = (v)=>{
 
+    }
+    invoiceTypeChange = (v)=>{
+
+    }
+    dateChange = (v)=>{
+        
+    }
     search = () => {
         this.reload()
     }
