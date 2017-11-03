@@ -4,7 +4,6 @@ import myConfig  from './config'
 
 import app_scm_voucher_card from './apps/app-scm-voucher-card/index.js'
 import app_scm_voucher_list from './apps/app-scm-voucher-list/index.js'
-import app_setting from './apps/app-setting/index.js'
 import mk_app_apidoc from './apps/mk-app-apidoc/index.js'
 import mk_app_bar_graph from './apps/mk-app-bar-graph/index.js'
 import mk_app_card_assets from './apps/mk-app-decorator/apps/mk-app-card-assets/index.js'
@@ -37,7 +36,6 @@ const apps = {
 		
 	[app_scm_voucher_card.name]: app_scm_voucher_card,	
 	[app_scm_voucher_list.name]: app_scm_voucher_list,	
-	[app_setting.name]: app_setting,	
 	[mk_app_apidoc.name]: mk_app_apidoc,	
 	[mk_app_bar_graph.name]: mk_app_bar_graph,	
 	[mk_app_card_assets.name]: mk_app_card_assets,	

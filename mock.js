@@ -1,7 +1,6 @@
 
 import './apps/app-scm-voucher-card/mock.js';
 import './apps/app-scm-voucher-list/mock.js';
-import './apps/app-setting/mock.js';
 import './apps/mk-app-apidoc/mock.js';
 import './apps/mk-app-bar-graph/mock.js';
 import './apps/mk-app-decorator/apps/mk-app-card-assets/mock.js';
