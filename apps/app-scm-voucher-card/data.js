@@ -54,7 +54,7 @@ export function getMeta() {
 					name: 'audit',
 					component: 'Button',
 					type: 'bluesky',
-					disabled: '{{!!data.form.isAudit || !data.form.id}}',
+					disabled: '{{!data.form.id}}',
 					onClick: '{{$audit}}',
 					children: '审核'
 				}, {
@@ -74,7 +74,7 @@ export function getMeta() {
 							name: 'del',
 							component: 'Menu.Item',
 							key: 'del',
-							disabled: '{{!!data.form.isAudit || !data.form.id}}',
+							disabled: '{{!data.form.id}}',
 							children: '删除'
 						}, {
 							name: 'reject',
@@ -200,8 +200,8 @@ export function getMeta() {
 					name: 'invoiceType',
 					component: 'Select',
 					showSearch: false,
-					value: '{{data.form.invoiceType && data.form.invoiceType.enumDetail && data.form.invoiceType.enumDetail.enumItemId }}',
-					onChange: `{{(v)=>$sf('data.form.invoiceType.enumDetail', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
+					value: '{{data.form.invoiceType && data.form.invoiceType.enumItemId }}',
+					onChange: `{{(v)=>$sf('data.form.invoiceType', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
 					onFocus: "{{$invoiceTypeFocus}}",
 					children: {
 						name: 'option',
@@ -373,7 +373,8 @@ export function getMeta() {
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					showSearch: true,
 					value: `{{{
-								if(data.form.details[_rowIndex] && !data.form.details[_rowIndex].inventory) return
+								if(!data.form.details[_rowIndex]) return
+								if(!data.form.details[_rowIndex].inventory) return
 								return $isFocus(_ctrlPath)
 									? data.form.details[_rowIndex].inventory.id
 									: data.form.details[_rowIndex].inventory.code
@@ -433,8 +434,8 @@ export function getMeta() {
 				name: 'unit',
 				component: 'DataGrid.Column',
 				columnKey: 'unit',
-				flexGrow: 1,
-				width: 100,
+				//flexGrow: 1,
+				width: 80,
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
@@ -462,7 +463,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '否' }}",
-					checked: "{{ data.form.details[_rowIndex].isGift }}",
+					checked: "{{ data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift }}",
 					onChange: "{{(e)=>$sf('data.form.details.' + _rowIndex + '.isGift', e.target.checked)}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
@@ -757,10 +758,6 @@ export function getInitState() {
 		data: {
 			form: {
 				details: [
-					blankVoucherItem,
-					blankVoucherItem,
-					blankVoucherItem,
-					blankVoucherItem,
 					blankVoucherItem
 
 
@@ -776,7 +773,6 @@ export function getInitState() {
 		}
 	}
 }
-
 
 export const blankVoucherItem = {
 	inventory: {

@@ -214,7 +214,6 @@ export default class action {
         if (!fieldName) return
 
         //this.injections.reduce('calc', rowIndex,fieldName,rowData,params)
-
     }
 
     checkSave = (form) => {
@@ -227,7 +226,7 @@ export default class action {
             msg.push('单据日期不能为空!')
 
 
-        if (!form.invoiceType || !form.invoiceType.enumDetail)
+        if (!form.invoiceType || !form.invoiceType.enumItemId)
             msg.push('票据类型不能为空!')
 
         if (!form.details || form.details.length == 0) {

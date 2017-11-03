@@ -20,14 +20,24 @@ class reducer {
     }
 
     load = (state, response) => {
-        if (response) {
-            //state = this.metaReducer.sf(state, 'data', fromJS(response))
+
+        let parsed = this.parseResponse(response)
+        state = this.metaReducer.sf(state, 'data.other.isChanged', false)
+        state = this.metaReducer.sf(state, 'data.form', fromJS(parsed.form))
+
+        if (parsed.other.columnSetting) {
+            //上张、下张等操作时不更新columnsetting
+            state = this.metaReducer.sf(state, 'data.other.columnSetting', fromJS(this.parseResponseBySet(parsed.other.columnSetting)))
         }
-        else {
-            state = this.metaReducer.sf(state, 'data', fromJS(getInitState().data))
+        if (parsed.other.invoiceType) {
+            state = this.metaReducer.sf(state, 'data.other.invoiceType', fromJS(parsed.other.invoiceType))
         }
-        state = this.metaReducer.sf(state, 'data.other.invoiceType', fromJS(response.invoiceType.enumDetail))
-        state = this.metaReducer.sf(state, 'data.other.taxRate', fromJS(response.taxRateList))
+        if (parsed.other.taxRate) {
+            state = this.metaReducer.sf(state, 'data.other.taxRate', fromJS(parsed.other.taxRate))
+        }
+        // state = this.metaReducer.sf(state, 'data.other.invoiceType', fromJS(response.invoiceType.enumDetail))
+        // state = this.metaReducer.sf(state, 'data.other.taxRate', fromJS(response.taxRateList))
+        // state = this.metaReducer.sf(state, 'data.other.columnSetting', fromJS(response.columnSetting[0]))
         return state
     }
 
@@ -36,19 +46,33 @@ class reducer {
         //this.voucherReducer.calc(state, rowIndex, fieldName, rowData, params)
     }
 
+    parseResponseBySet = (response) => {
+        let data = []
+        data = response[0].details.map(o => {
+            return {
+                propertyName: o.propertyName.replace('Id', ''),
+                propertyTitle: o.propertyTitle,
+                visible: o.visible
+            }
+        })
+        return data
+    }
+
     parseResponse = (response) => {
         let data = {
             form: {
-                detail: [
+                details: [
                 ]
             },
             other: {
-                status: consts.VOUCHER_STATUS_NORMAL,
+                status: consts.status.VOUCHER_STATUS_NORMAL,
             }
         }
 
+
+
         let responseValue = response
-        if (!responseValue) return voucherData
+        if (!responseValue) return data
 
         data.form = {
             id: responseValue.id,
@@ -81,8 +105,8 @@ class reducer {
                 name: responseValue.customerName
             },
             invoiceType: {
-                id: responseValue.invoiceTypeId || responseValue.defaultInvoiceType,
-                name: responseValue.invoiceTypeName || responseValue.defaultInvoiceTypeName,
+                enumItemId: responseValue.invoiceTypeId || responseValue.defaultInvoiceType,
+                enumItemName: responseValue.invoiceTypeName || responseValue.defaultInvoiceTypeName,
             },
             department: {
                 id: responseValue.departmentId,
@@ -105,19 +129,22 @@ class reducer {
         data.form.restMoney = utils.number.format(data.form.totalAmountWithTax - data.form.receiveAmount, 2)
         data.form.balance = utils.number.format(data.form.restMoney - data.form.preReceiveAmount, 2)
 
-        data.other.columnSetting = responseValue.columnSetting
         if ((!data.form.id && !data.form.ts) || responseValue.operateStatus == 'Deleted') {
             data.other.status = consts.status.VOUCHER_STATUS_ADD
         }
-        if(responseValue.taxRateList){
-            data.other.taxRateList = responseValue.taxRateList
-        }
-        
 
-        if(responseValue.invoiceType){
-            data.other.invoiceType = responseValue.invoiceType
+        if (responseValue.taxRateList) {
+            data.other.taxRate = responseValue.taxRateList
         }
-        
+
+        if (responseValue.invoiceType && responseValue.invoiceType.enumDetail) {
+            data.other.invoiceType = responseValue.invoiceType.enumDetail
+        }
+
+        if (responseValue.columnSetting) {
+            data.other.columnSetting = responseValue.columnSetting
+        }
+
         //如果行数太少,则用空行补足
         if (responseValue.details) {
             while (responseValue.details.length < getInitState().data.form.details.length) {
@@ -125,10 +152,15 @@ class reducer {
             }
         }
         else {
-            responseValue.details = getInitState().data.form.details
+            responseValue.details = [{
+                inventory: {
+
+                }
+            }]
         }
+
         data.form.details = responseValue.details.map(o => {
-            if (o && o.id) {
+            if (o) {
                 return {
                     id: o.id,
                     ts: o.ts,
@@ -164,10 +196,12 @@ class reducer {
     }
 
     setForm = (state, form) => {
-        if (form)
+        if (form) {
             return this.metaReducer.sf(state, 'data', fromJS(this.parseResponse(form)))
-        else
+        }
+        else {
             return this.metaReducer.sf(state, 'data.form', fromJS(getInitState().data.form))
+        }
     }
 }
 

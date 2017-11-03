@@ -75,7 +75,7 @@ class action {
             this.metaAction.toast('error', '请保存单据')
             return
         }
-
+        debugger
         const response = await this.webapi.delivery.audit({ id, ts })
         if (response) {
             this.metaAction.toast('success', '单据审核成功')
@@ -140,7 +140,7 @@ class action {
             "departmentId": form.department ? form.department.id : '',
             "salesPersonId": form.person ? form.person.id : '',
             "projectId": form.project ? form.project.id : '',
-            "invoiceTypeId": form.invoiceType ? form.invoiceType.enumDetail.enumItemId : '',
+            "invoiceTypeId": form.invoiceType ? form.invoiceType.enumItemId : '',
             "bankAccountId": form.bankAccount ? form.bankAccount.id : 4,
             //'totalSettleAmount': 0,
             "businessDate": form.businessDate,
@@ -243,6 +243,8 @@ class action {
     }
 
     invoiceTypeFocus = async () => {
+        let response = this.metaAction.gf('data.other.invoiceType')
+        this.metaAction.sf('data.other.invoiceType', fromJS(response))
 
     }
 
