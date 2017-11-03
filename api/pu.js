@@ -1,4 +1,4 @@
-// 销售单 -------------
+// 销售订单 -------------
 //  初始化  传一个 销售类型 的json 对象
 export function init(post,params){
 	return post("/v1/sa/delivery/init", params)
@@ -21,9 +21,9 @@ export function CommodityAndServiceQuery(post,list){
 	return post("/v1/inventory/query", list)
 }
 
-//销售单列表 -----------------------------------------
+//销售订单列表 -----------------------------------------
 /**
- * 通过日期获取销售单 列表,初始化数据
+ * 通过日期获取销售订单 列表,初始化数据
  * @param  {[type]} post [description]
  * @param  {[type]} date [description]
  * @return {[type]}      [description]
@@ -32,7 +32,7 @@ export function getSaleInitData(post, list) {
 	return post("/v1/sa/delivery/queryList", list)
 }
 
-// 销售单 查询按钮，发送 开始 和 结束时间
+// 销售订单 查询按钮，发送 开始 和 结束时间
 export function puListEvent(post, list) {
 	return post("/v1/sa/delivery/queryList", list)
 }
@@ -58,17 +58,17 @@ export function audit(post, params){
 export function print(post,list){
     return post('/v1/sa/delivery/printDelivery',list)
 }
-//销售单 下一张
+//销售订单 下一张
 export function next(post,code){
 	return post('/v1/sa/delivery/nextDelivery',{code})
 }
-//销售单 上一张
+//销售订单 上一张
 export function prev(post,code){
 	return post('/v1/sa/delivery/previousDelivery',{code})
 }
 
 
-// 销售单列表-================
+// 销售订单列表-================
 // 批量审核
 export function deliveryAuditBatch(post, list){
 	return post('/v1/sa/delivery/auditBatch',list)
@@ -91,7 +91,7 @@ export function deleteBatch(post,params){
 	return post('/v1/sa/delivery/deleteBatch',params)
 }
 
-// 附件在销售单保存但未审核的状态下的新增和删除接口
+// 附件在销售订单保存但未审核的状态下的新增和删除接口
 export function enclosurecreatebatch(post, idList) {
 	return post('/v1/sa/delivery/enclosurecreatebatch', idList)
 }

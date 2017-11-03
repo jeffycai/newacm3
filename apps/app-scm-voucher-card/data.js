@@ -1,3 +1,5 @@
+import consts from './consts'
+
 export function getMeta() {
 	return {
 		name: 'root',
@@ -52,7 +54,7 @@ export function getMeta() {
 					name: 'audit',
 					component: 'Button',
 					type: 'bluesky',
-					disabled: '{{!!data.form.isAudit || !data.form.id}}',
+					disabled: '{{!data.form.id}}',
 					onClick: '{{$audit}}',
 					children: '审核'
 				}, {
@@ -72,13 +74,13 @@ export function getMeta() {
 							name: 'del',
 							component: 'Menu.Item',
 							key: 'del',
-							disabled: '{{!!data.form.isAudit || !data.form.id}}',
+							disabled: '{{!data.form.id}}',
 							children: '删除'
 						}, {
 							name: 'reject',
 							component: 'Menu.Item',
 							key: 'reject',
-							children: '生成红字销售发票'
+							children: '生成红字销售订单'
 						}, {
 							name: 'receipt',
 							component: 'Menu.Item',
@@ -108,10 +110,16 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-title-left',
 				children: [{
 					name: 'audited',
-					component: '::div',
+					component: '::img',
 					className: 'app-scm-voucher-card-title-left-tag',
-					children: '已审核',
-					_visible: '{{!!data.form.isAudit}}'
+					src: require('./img/audited.png'),
+					_visible: '{{data.form.status===128?true:false}}'
+				},{
+					name: 'settleStatus',
+					component: '::img',
+					className: 'app-scm-voucher-card-title-left-tag',
+					src: require('./img/settle.png'),
+					_visible: '{{data.form.status===128?true:false}}'
 				}]
 			}, {
 				name: 'center',
@@ -120,7 +128,7 @@ export function getMeta() {
 				children: {
 					name: 'title',
 					component: '::h1',
-					children: '销售单'
+					children: '销售订单'
 				}
 			}, {
 				name: 'right',
@@ -198,8 +206,8 @@ export function getMeta() {
 					name: 'invoiceType',
 					component: 'Select',
 					showSearch: false,
-					//value: '{{data.form.invoiceType.enumDetail && data.form.invoiceType.enumDetail.enumItemId }}',
-					onChange: `{{(v)=>$sf('data.form.invoiceType.enumDetail', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
+					value: '{{data.form.invoiceType && data.form.invoiceType.enumItemId }}',
+					onChange: `{{(v)=>$sf('data.form.invoiceType', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
 					onFocus: "{{$invoiceTypeFocus}}",
 					children: {
 						name: 'option',
@@ -316,15 +324,15 @@ export function getMeta() {
 					},
 				}]
 			}, {
-				name: 'memo',
+				name: 'remark',
 				component: 'Form.Item',
 				label: '备注',
-				className: 'app-scm-voucher-card-form-header-memo',
+				className: 'app-scm-voucher-card-form-header-remark',
 				children: [{
-					name: 'memo',
+					name: 'remark',
 					component: 'Input',
-					value: '{{data.form.memo}}',
-					onChange: "{{(e)=>$sf('data.form.memo',e.target.value)}}",
+					value: '{{data.form.remark}}',
+					onChange: "{{(e)=>$sf('data.form.remark',e.target.value)}}",
 				}]
 			}]
 		}, {
@@ -334,7 +342,7 @@ export function getMeta() {
 			headerHeight: 35,
 			rowHeight: 35,
 			footerHeight: 35,
-			rowsCount: '{{data.form.details.length}}',
+			rowsCount: '{{(data.form.details && data.form.details.length) ?data.form.details.length:1 }}',
 			enableSequence: true,
 			enableAddDelrow: true,
 			startSequence: 1,
@@ -371,6 +379,7 @@ export function getMeta() {
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					showSearch: true,
 					value: `{{{
+								if(!data.form.details[_rowIndex]) return
 								if(!data.form.details[_rowIndex].inventory) return
 								return $isFocus(_ctrlPath)
 									? data.form.details[_rowIndex].inventory.id
@@ -406,13 +415,13 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
+					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
-				name: 'spec',
+				name: 'specification',
 				component: 'DataGrid.Column',
-				columnKey: 'spec',
+				columnKey: 'specification',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -424,15 +433,15 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.spec}}",
+					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.specification}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
 				name: 'unit',
 				component: 'DataGrid.Column',
 				columnKey: 'unit',
-				flexGrow: 1,
-				width: 100,
+				//flexGrow: 1,
+				width: 80,
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
@@ -442,7 +451,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
-					value: "{{data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.meaUnit && data.form.details[_rowIndex].inventory.meaUnit.name}}",
+					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.unitName}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -459,8 +468,8 @@ export function getMeta() {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath)}}",
-					value: "{{ data.form.details[_rowIndex].isGift ? '是': '否' }}",
-					checked: "{{ data.form.details[_rowIndex].isGift }}",
+					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '否' }}",
+					checked: "{{ data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift }}",
 					onChange: "{{(e)=>$sf('data.form.details.' + _rowIndex + '.isGift', e.target.checked)}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
@@ -522,7 +531,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmount(data.form.details)}}'
+					//children: '{{$sumAmount(data.form.details)}}'
 				}
 			}, {
 				name: 'taxRate',
@@ -540,19 +549,19 @@ export function getMeta() {
 					className: "{{$getCellClassName(_ctrlPath)}}",
 					showSearch: false,
 					value: `{{{
-								if(!data.form.details[_rowIndex].taxRate) return
+								if(data.form.details[_rowIndex] && !data.form.details[_rowIndex].taxRate) return
 								return $isFocus(_ctrlPath)
 									? data.form.details[_rowIndex].taxRate.id
 									: data.form.details[_rowIndex].taxRate.name
 							}}}`,
-					onChange: "{{$calc(_rowIndex,'taxRate', data.form.details[_rowIndex], data.other.taxRates)}}",
+					onChange: "{{$taxRateChange(_rowIndex, data.form.details[_rowIndex], data.other.taxRate)}}",
 					onFocus: "{{$taxRateFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.taxRates && data.other.taxRates[_lastIndex].id }}",
-						children: '{{data.other.taxRates && data.other.taxRates[_lastIndex].name }}',
-						_power: 'for in data.other.taxRates'
+						value: "{{ data.other.taxRate && data.other.taxRate[_lastIndex].id }}",
+						children: '{{data.other.taxRate && data.other.taxRate[_lastIndex].name }}',
+						_power: 'for in data.other.taxRate'
 					},
 					_excludeProps: "{{$isFocus(_ctrlPath)? ['onClick'] : ['children'] }}",
 					_power: '({rowIndex})=>rowIndex',
@@ -578,7 +587,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumTax(data.form.details)}}'
+					//children: '{{$sumTax(data.form.details)}}'
 				}
 			}, {
 				name: 'amountWithTax',
@@ -601,7 +610,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmountWithTax(data.form.details)}}'
+					//children: '{{$sumAmountWithTax(data.form.details)}}'
 				}
 			}]
 		}, {
@@ -612,7 +621,7 @@ export function getMeta() {
 				name: 'settlement',
 				component: 'Form',
 				className: 'app-scm-voucher-card-form-footer-settlement',
-				children: [{
+				children: [/*{
 					name: 'settlementModeItem',
 					component: 'Form.Item',
 					label: '结算方式',
@@ -631,36 +640,36 @@ export function getMeta() {
 							_power: 'for in data.other.settlementModes'
 						}
 					}]
-				}, {
-					name: 'accountItem',
-					component: 'Form.Item',
-					label: '现结账户',
-					children: [{
-						name: 'account',
-						component: 'Select',
-						showSearch: false,
-						value: '{{data.form.settlements[_rowIndex].account && data.form.settlements[_rowIndex].account.id }}',
-						onChange: `{{(v)=>$sf('data.form.settlements.'+ _rowIndex +'.account', $fromJS(data.other.assetAccounts.find(o=>o.id==v),null))}}`,
-						onFocus: "{{$accountFocus}}",
-						children: {
-							name: 'option',
-							component: 'Select.Option',
-							value: "{{ data.other.assetAccounts && data.other.assetAccounts[_lastIndex].id }}",
-							children: '{{data.other.assetAccounts && data.other.assetAccounts[_lastIndex].name }}',
-							_power: 'for in data.other.assetAccounts'
-						}
-					}]
-				}, {
-					name: 'settlementAmount',
-					component: 'Form.Item',
-					label: '现结金额',
-					children: [{
+				},*/ {
+						name: 'bankAccountItem',
+						component: 'Form.Item',
+						label: '现结账户',
+						children: [{
+							name: 'bankAccount',
+							component: 'Select',
+							showSearch: false,
+							value: '{{data.form.settlements[_rowIndex].bankAccount && data.form.settlements[_rowIndex].bankAccount.id }}',
+							onChange: `{{(v)=>$sf('data.form.settlements.'+ _rowIndex +'.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
+							onFocus: "{{$bankAccountFocus}}",
+							children: {
+								name: 'option',
+								component: 'Select.Option',
+								value: "{{ data.other.bankAccount && data.other.bankAccount[_lastIndex].id }}",
+								children: '{{data.other.bankAccount && data.other.bankAccount[_lastIndex].name }}',
+								_power: 'for in data.other.bankAccount'
+							}
+						}]
+					}, {
 						name: 'settlementAmount',
-						component: 'Input.Number',
-						value: "{{data.form.settlements[_rowIndex].settlementAmount}}",
-						onChange: "{{(v)=>$sf('data.form.settlements.' + _rowIndex + '.settlementAmount', v)}}",
-					}]
-				}],
+						component: 'Form.Item',
+						label: '现结金额',
+						children: [{
+							name: 'settlementAmount',
+							component: 'Input.Number',
+							value: "{{data.form.settlements[_rowIndex].settlementAmount}}",
+							onChange: "{{(v)=>$sf('data.form.settlements.' + _rowIndex + '.settlementAmount', v)}}",
+						}]
+					}],
 				_power: 'for in data.form.settlements'
 			}, {
 				name: 'advance',
@@ -698,7 +707,7 @@ export function getMeta() {
 					children: [{
 						name: 'balanceAdvance',
 						component: '::span',
-						children: '{{$calcBalance(data)}}'
+						//children: '{{$calcBalance(data)}}'
 					}]
 				}]
 			}]
@@ -712,13 +721,15 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-footer-left',
 				children: [{
 					name: 'creator',
-					component: '::div',
-					children: '制单人:张三',
+					component: 'Form.Item',
+					label: '制单人',
+					children: '{{data.form.creatorName}}',
 					style: { marginRight: 30 }
 				}, {
 					name: 'approver',
-					component: '::div',
-					children: '审核人:李四'
+					component: 'Form.Item',
+					label: '审核人',
+					children: '{{data.form.auditorName}}',
 				}]
 
 			}, {
@@ -754,14 +765,29 @@ export function getInitState() {
 	return {
 		data: {
 			form: {
-				details: [{}],
+				details: [
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem
+
+
+				],
 				settlements: [{}]
 			},
 			total: {
 
 			},
 			other: {
+				status: consts.status.VOUCHER_STATUS_ADD
 			}
 		}
+	}
+}
+
+export const blankVoucherItem = {
+	inventory: {
+
 	}
 }

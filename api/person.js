@@ -2,7 +2,7 @@ import { fetch } from 'mk-utils'
 
 export default {
     getPersonDeptList: {
-        query: (param) => fetch.post('v1/department/getEndNodeDepartByOrgId', param)
+        query: (param) => fetch.post('v1/person/getPersonDeptList', param)
     }
 }
 

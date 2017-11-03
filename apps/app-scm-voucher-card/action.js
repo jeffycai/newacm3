@@ -69,18 +69,22 @@ class action {
     }
 
     audit = async () => {
-        const id = this.metaAction.gf('data.form.id')
-        if (!id)
+        const id = this.metaAction.gf('data.form.id'),
+            ts = this.metaAction.gf('data.form.ts')
+        if (!id && !ts) {
+            this.metaAction.toast('error', '请保存单据')
             return
-
-        const response = await this.webapi.delivery.audit({ id })
+        }
+        debugger
+        const response = await this.webapi.delivery.audit({ id, ts })
         if (response) {
+            this.metaAction.toast('success', '单据审核成功')
             this.injections.reduce('setForm', response)
         }
-    }
 
+    }
     history = async () => {
-        this.component.props.setPortalContent('销货单列表', 'app-scm-voucher-list')
+        this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
     }
 
     moreMenuClick = (e) => {
@@ -111,17 +115,13 @@ class action {
         if (form.id || form.id == 0) {
             const response = await this.webapi.delivery.update(form)
             if (response) {
-                this.metaAction.toast('success', '保存单据成功')
+                this.metaAction.toast('success', '保存更新成功')
                 this.injections.reduce('setForm', response)
             }
         }
         else {
-            debugger
-
             form = this.transForSave(form)
             const response = await this.webapi.delivery.create(form)
-
-
             if (response) {
                 this.metaAction.toast('success', '保存单据成功')
                 this.injections.reduce('setForm', response)
@@ -140,7 +140,7 @@ class action {
             "departmentId": form.department ? form.department.id : '',
             "salesPersonId": form.person ? form.person.id : '',
             "projectId": form.project ? form.project.id : '',
-            "invoiceTypeId": form.invoiceType ? form.invoiceType.enumDetail.enumItemId : '',
+            "invoiceTypeId": form.invoiceType ? form.invoiceType.enumItemId : '',
             "bankAccountId": form.bankAccount ? form.bankAccount.id : 4,
             //'totalSettleAmount': 0,
             "businessDate": form.businessDate,
@@ -173,8 +173,8 @@ class action {
                     ts: row.ts,
                     "inventoryId": row.inventory.id,
                     "unitId": row.inventory.unitId,
-                    "taxRate": row.taxRate ? row.taxRate.value : '0.17',
-                    "taxRateId": row.taxRate ? row.taxRate.id : '17',
+                    "taxRate": row.taxRate ? row.taxRate.taxRate : 0,
+                    "taxRateId": row.taxRate ? row.taxRate.id : '0',
                     "quantity": row.quantity,
                     "price": row.price,
                     "amount": row.amount,
@@ -243,6 +243,8 @@ class action {
     }
 
     invoiceTypeFocus = async () => {
+        let response = this.metaAction.gf('data.other.invoiceType')
+        this.metaAction.sf('data.other.invoiceType', fromJS(response))
 
     }
 
@@ -251,8 +253,7 @@ class action {
     }
 
     taxRateFocus = async () => {
-        const response = await this.webapi.taxRate.query()
-        this.metaAction.sf('data.other.taxRates', fromJS(response))
+        //await this.voucherAction.getTaxRate()
     }
 
     settlementModeFocus = async () => {
@@ -260,9 +261,9 @@ class action {
         this.metaAction.sf('data.other.settlementModes', fromJS(response))
     }
 
-    accountFocus = async () => {
+    bankAccountFocus = async () => {
         const response = await this.webapi.assetAccount.query()
-        this.metaAction.sf('data.other.assetAccounts', fromJS(response))
+        this.metaAction.sf('data.other.bankAccount', fromJS(response))
     }
 
 

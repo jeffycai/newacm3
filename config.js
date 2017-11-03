@@ -99,11 +99,11 @@ function config(options) {
 					name: '销售管理',
 					children: [{
 						key: '20106',
-						name: '销货单',
+						name: '销售订单',
 						appName: 'app-scm-voucher-card'
 					}, {
 						key: '20107',
-						name: '销货单列表',
+						name: '销售订单列表',
 						appName: 'app-scm-voucher-list'
 					}]
 

@@ -121,7 +121,7 @@ function initMockData() {
                 id: 1000 + i,
                 code: 1000 + i + '',
                 name: '肉' + i,
-                memo: '肉' + i,
+                remark: '肉' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -188,7 +188,7 @@ function initMockData() {
                 id: 2000 + i,
                 code: 2000 + i + '',
                 name: '酒' + i,
-                memo: '酒' + i,
+                remark: '酒' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -255,7 +255,7 @@ function initMockData() {
                 id: 3000 + i,
                 code: 3000 + i + '',
                 name: '干果' + i,
-                memo: '干果' + i,
+                remark: '干果' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -323,7 +323,7 @@ function initMockData() {
                 id: 4000 + i,
                 code: 4000 + i + '',
                 name: '衣服' + i,
-                memo: '衣服' + i,
+                remark: '衣服' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -391,7 +391,7 @@ function initMockData() {
                 id: 5000 + i,
                 code: 5000 + i + '',
                 name: '鞋子' + i,
-                memo: '鞋子' + i,
+                remark: '鞋子' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -459,7 +459,7 @@ function initMockData() {
                 id: 6000 + i,
                 code: 6000 + i + '',
                 name: '饰品' + i,
-                memo: '饰品' + i,
+                remark: '饰品' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -527,7 +527,7 @@ function initMockData() {
                 id: 7000 + i,
                 code: 7000 + i + '',
                 name: '设备' + i,
-                memo: '设备' + i,
+                remark: '设备' + i,
                 category: {
                     id: 1,
                     name: '商品'
@@ -713,7 +713,7 @@ function initMockData() {
                 paidAmount: 105 - (i % 3) * 10,
                 unpaidAmount: (i % 3) * 10,
                 isAudit: i % 3 == 0,
-                memo: '备注' + i,
+                remark: '备注' + i,
                 settlementMode: { id: 1, name: '现结' },
                 details: [{
                     id: 1,
@@ -726,7 +726,7 @@ function initMockData() {
                     amountWithTax: 105
                 }],
                 settlements: [{
-                    account: { id: 1, name: '现金' },
+                    bankAccount: { id: 1, name: '现金' },
                     settlementAmount: 105 - (i % 3) * 10
                 }]
             })

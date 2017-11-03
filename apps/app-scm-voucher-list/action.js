@@ -47,7 +47,7 @@ class action {
         }
 
         this.component.props.setPortalContent &&
-            this.component.props.setPortalContent('销货单', 'app-scm-voucher-card')
+            this.component.props.setPortalContent('销售订单', 'app-scm-voucher-card')
     }
 
     selectFocus = (key)=> async()=>{
