@@ -758,6 +758,10 @@ export function getInitState() {
 		data: {
 			form: {
 				details: [
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem,
+					blankVoucherItem,
 					blankVoucherItem
 
 

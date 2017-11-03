@@ -46,11 +46,11 @@ export default class action {
                 }
             )
         })
-        debugger
         if (ret) {
             this.metaAction.sfs({
                 [field]: fromJS(ret)
             })
+
         }
     }
 

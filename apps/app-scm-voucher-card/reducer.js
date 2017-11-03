@@ -152,11 +152,12 @@ class reducer {
             }
         }
         else {
-            responseValue.details = [{
-                inventory: {
+            responseValue.details = getInitState().data.form.details
+            // responseValue.details = [{
+            //     inventory: {
 
-                }
-            }]
+            //     }
+            // }]
         }
 
         data.form.details = responseValue.details.map(o => {
