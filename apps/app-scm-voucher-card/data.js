@@ -110,10 +110,16 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-title-left',
 				children: [{
 					name: 'audited',
-					component: '::div',
+					component: '::img',
 					className: 'app-scm-voucher-card-title-left-tag',
-					children: '已审核',
-					_visible: '{{!!data.form.isAudit}}'
+					src: require('./img/audited.png'),
+					_visible: '{{data.form.status===128?true:false}}'
+				},{
+					name: 'settleStatus',
+					component: '::img',
+					className: 'app-scm-voucher-card-title-left-tag',
+					src: require('./img/settle.png'),
+					_visible: '{{data.form.status===128?true:false}}'
 				}]
 			}, {
 				name: 'center',
@@ -715,13 +721,15 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-footer-left',
 				children: [{
 					name: 'creator',
-					component: '::div',
-					children: '制单人:张三',
+					component: 'Form.Item',
+					label: '制单人',
+					children: '{{data.form.creatorName}}',
 					style: { marginRight: 30 }
 				}, {
 					name: 'approver',
-					component: '::div',
-					children: '审核人:李四'
+					component: 'Form.Item',
+					label: '审核人',
+					children: '{{data.form.auditorName}}',
 				}]
 
 			}, {
