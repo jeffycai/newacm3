@@ -155,7 +155,7 @@ class action {
             throw '依赖app-scm-voucher-card app,请使用mk clone app-scm-voucher-card命令添加'
         }
         this.component.props.setPortalContent &&
-            this.component.props.setPortalContent('存货卡片', 'app-scm-voucher-card', { deliveryOrderId: id })
+            this.component.props.setPortalContent('销售发票', 'app-scm-voucher-card', {deliveryId:id})
     }
 
     toggleShowAdvanceFilter = () => {

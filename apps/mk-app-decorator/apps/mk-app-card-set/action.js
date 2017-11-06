@@ -16,6 +16,8 @@ class action {
         this.injections = injections
         injections.reduce('init')
 
+        debugger
+        
         if (this.component.props.setOkListener) {
             this.component.props.setOkListener(this.onOk)
         }
