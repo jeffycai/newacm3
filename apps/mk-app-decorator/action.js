@@ -71,7 +71,7 @@ export default class action {
 
         const response = await this.webapi.basicFiles.consumerQuery.query(list)
         if (response) {
-            this.metaAction.sf('data.other.customers', fromJS(response.dataList))
+            this.metaAction.sf('data.other.customer', fromJS(response.dataList))
         }
     }
 
@@ -122,6 +122,26 @@ export default class action {
 
     getTaxRate = async (params) => {
 
+    }
+
+    getBankAccount = async (params) => {
+        if (!params) {
+            params = {
+                bankAccountTypeIds: [98, 99, 101, 100, 152],
+                status: true
+            }
+        }
+        else {
+            params = {
+                status: true,
+                bankAccountTypeIds: params.bankAccountTypeIds
+            }
+        }
+        const response = await this.webapi.basicFiles.queryBankAccountByType.query(params)
+
+        if (response) {
+            this.metaAction.sf('data.other.bankAccount', fromJS(response))
+        }
     }
 
 

@@ -15,7 +15,9 @@ export default {
         audit: (option) => fetch.post('/v1/delivery/audit', option),
         prev: (id) => fetch.post('/v1/delivery/previous', { id }),
         next: (id) => fetch.post('/v1/delivery/next', { id }),
+        queryByCustomer: (option) => fetch.post('/v1/web/delivery/queryByCustomer', option),
     },
+    /*
     stock: {
         query: (option) => fetch.post('/v1/stock/query', option)
     },
@@ -45,5 +47,5 @@ export default {
     },
     assetAccount: {
         query: (option) => fetch.post('/v1/assetAccount/query', option)
-    }
+    }*/
 }

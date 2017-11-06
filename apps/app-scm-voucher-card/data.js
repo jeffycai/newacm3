@@ -114,7 +114,7 @@ export function getMeta() {
 					className: 'app-scm-voucher-card-title-left-tag',
 					src: require('./img/audited.png'),
 					_visible: '{{data.form.status===128?true:false}}'
-				},{
+				}, {
 					name: 'settleStatus',
 					component: '::img',
 					className: 'app-scm-voucher-card-title-left-tag',
@@ -167,15 +167,15 @@ export function getMeta() {
 					component: 'Select',
 					placeholder: '按名称/拼音搜索',
 					showSearch: true,
-					value: '{{data.form.customer && data.form.customer.id }}',
-					onChange: `{{(v)=>$sf('data.form.customer', $fromJS(data.other.customers.find(o=>o.id==v),null))}}`,
+					value: '{{data.form.customer && data.form.customer.name }}',
+					onChange: '{{$onFieldChange(`customer`)}}',
 					onFocus: "{{$customerFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.customers && data.other.customers[_rowIndex].id }}",
-						children: '{{data.other.customers && data.other.customers[_rowIndex].name }}',
-						_power: 'for in data.other.customers'
+						value: "{{ data.other.customer && data.other.customer[_rowIndex].id }}",
+						children: '{{data.other.customer && data.other.customer[_rowIndex].name }}',
+						_power: 'for in data.other.customer'
 					},
 					dropdownFooter: {
 						name: 'add',
@@ -648,8 +648,8 @@ export function getMeta() {
 							name: 'bankAccount',
 							component: 'Select',
 							showSearch: false,
-							value: '{{data.form.settlements[_rowIndex].bankAccount && data.form.settlements[_rowIndex].bankAccount.id }}',
-							onChange: `{{(v)=>$sf('data.form.settlements.'+ _rowIndex +'.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
+							value: '{{data.form.bankAccount && data.form.bankAccount.name }}',
+							onChange: `{{(v)=>$sf('data.form.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
 							onFocus: "{{$bankAccountFocus}}",
 							children: {
 								name: 'option',
@@ -666,11 +666,10 @@ export function getMeta() {
 						children: [{
 							name: 'settlementAmount',
 							component: 'Input.Number',
-							value: "{{data.form.settlements[_rowIndex].settlementAmount}}",
-							onChange: "{{(v)=>$sf('data.form.settlements.' + _rowIndex + '.settlementAmount', v)}}",
+							value: "{{data.form.settlementAmount}}",
+							onChange: "{{(v)=>$sf('data.form.settlementAmount', v)}}",
 						}]
 					}],
-				_power: 'for in data.form.settlements'
 			}, {
 				name: 'advance',
 				component: 'Form',
@@ -696,7 +695,7 @@ export function getMeta() {
 						onChange: `{{(v)=>$sf('data.form.advanceAmount', v)}}`,
 					}]
 				}]
-			}, {
+			}/*, {
 				name: 'balance',
 				component: 'Form',
 				className: 'app-scm-voucher-card-form-footer-balance',
@@ -710,7 +709,7 @@ export function getMeta() {
 						//children: '{{$calcBalance(data)}}'
 					}]
 				}]
-			}]
+			}*/]
 		}, {
 			name: 'footer',
 			component: 'Layout',
@@ -765,6 +764,10 @@ export function getInitState() {
 	return {
 		data: {
 			form: {
+				customer: {
+					id: '',
+					name: ''
+				},
 				details: [
 					blankVoucherItem,
 					blankVoucherItem,

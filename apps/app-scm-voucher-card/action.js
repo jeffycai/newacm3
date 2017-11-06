@@ -38,7 +38,7 @@ class action {
         const id = this.metaAction.gf('data.form.id')
         const response = await this.webapi.delivery.prev(id)
         if (response) {
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
     }
 
@@ -46,12 +46,12 @@ class action {
         const id = this.metaAction.gf('data.form.id')
         const response = await this.webapi.delivery.next(id)
         if (response) {
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
     }
 
     add = () => {
-        this.injections.reduce('setForm')
+        this.injections.reduce('load')
     }
 
     del = async () => {
@@ -64,7 +64,7 @@ class action {
         if (ret) {
             const response = await this.webapi.delivery.del({ id })
             this.metaAction.toast('success', '删除单据成功')
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
     }
 
@@ -75,11 +75,10 @@ class action {
             this.metaAction.toast('error', '请保存单据')
             return
         }
-        debugger
         const response = await this.webapi.delivery.audit({ id, ts })
         if (response) {
             this.metaAction.toast('success', '单据审核成功')
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
 
     }
@@ -101,12 +100,8 @@ class action {
     }
 
     save = async () => {
-
-
         var form = this.metaAction.gf('data.form').toJS()
-
         let msg = this.voucherAction.checkSave(form)
-
         if (msg.length > 0) {
             this.voucherAction.showMsg(msg)
             return
@@ -116,7 +111,7 @@ class action {
             const response = await this.webapi.delivery.update(form)
             if (response) {
                 this.metaAction.toast('success', '保存更新成功')
-                this.injections.reduce('setForm', response)
+                this.injections.reduce('load', response)
             }
         }
         else {
@@ -124,7 +119,7 @@ class action {
             const response = await this.webapi.delivery.create(form)
             if (response) {
                 this.metaAction.toast('success', '保存单据成功')
-                this.injections.reduce('setForm', response)
+                this.injections.reduce('load', response)
             }
         }
     }
@@ -243,8 +238,8 @@ class action {
     }
 
     invoiceTypeFocus = async () => {
-        let response = this.metaAction.gf('data.other.invoiceType')
-        this.metaAction.sf('data.other.invoiceType', fromJS(response))
+        //let response = this.metaAction.gf('data.other.invoiceType')
+        //this.metaAction.sf('data.other.invoiceType', fromJS(response))
 
     }
 
@@ -256,17 +251,28 @@ class action {
         //await this.voucherAction.getTaxRate()
     }
 
-    settlementModeFocus = async () => {
-        const response = await this.webapi.settlementMode.query()
-        this.metaAction.sf('data.other.settlementModes', fromJS(response))
-    }
 
     bankAccountFocus = async () => {
-        const response = await this.webapi.assetAccount.query()
-        this.metaAction.sf('data.other.bankAccount', fromJS(response))
+        let bankAccountTypeIds = [98, 99, 101, 100, 152]
+        await this.voucherAction.getBankAccount({ bankAccountTypeIds: bankAccountTypeIds })
     }
 
+    onFieldChange = (fieldName) => (v) => {
+        if (!fieldName) return
+        this.metaAction.sf(`data.form.${fieldName}`, fromJS(this.metaAction.gf(`data.other.${fieldName}`).find(o => o.get('id') == v), null))
+        this.customerChange(v)
+    }
 
+    customerChange = async (v) => {
+
+        let customerId = v
+        const response = await this.webapi.delivery.queryByCustomer({ customerId })
+
+        this.metaAction.sf('data.form.bankAccount', fromJS({
+            id: response.lastBankAccountId,
+            name: response.lastBankAccountName
+        }))
+    }
 
     quantityChange = (rowIndex, rowData) => (v) => {
         const quantity = utils.number.round(v, 2),

@@ -20,7 +20,9 @@ class reducer {
     }
 
     load = (state, response) => {
-
+        if (!response) {
+            return this.metaReducer.sf(state, 'data.form', fromJS(getInitState().data.form))
+        }
         let parsed = this.parseResponse(response)
         state = this.metaReducer.sf(state, 'data.other.isChanged', false)
         state = this.metaReducer.sf(state, 'data.form', fromJS(parsed.form))
@@ -35,9 +37,14 @@ class reducer {
         if (parsed.other.taxRate) {
             state = this.metaReducer.sf(state, 'data.other.taxRate', fromJS(parsed.other.taxRate))
         }
-        // state = this.metaReducer.sf(state, 'data.other.invoiceType', fromJS(response.invoiceType.enumDetail))
-        // state = this.metaReducer.sf(state, 'data.other.taxRate', fromJS(response.taxRateList))
-        // state = this.metaReducer.sf(state, 'data.other.columnSetting', fromJS(response.columnSetting[0]))
+
+        if (parsed.other.customer) {
+            state = this.metaReducer.sf(state, 'data.other.customer', fromJS(parsed.other.customer))
+        }
+
+        if (parsed.form.status == consts.status.VOUCHER_STATUS_AUDITED || parsed.form.settleStatus == consts.status.VOUCHER_STATUS_WRITEOFF) {
+        }
+
         return state
     }
 
@@ -68,9 +75,6 @@ class reducer {
                 status: consts.status.VOUCHER_STATUS_NORMAL,
             }
         }
-
-
-
         let responseValue = response
         if (!responseValue) return data
 
@@ -133,6 +137,11 @@ class reducer {
             data.other.status = consts.status.VOUCHER_STATUS_ADD
         }
 
+        if (data.form.customer && data.form.customer.id) {
+            debugger
+            //data.other.customer = data.form.customer
+        }
+
         if (responseValue.taxRateList) {
             data.other.taxRate = responseValue.taxRateList
         }
@@ -153,11 +162,6 @@ class reducer {
         }
         else {
             responseValue.details = getInitState().data.form.details
-            // responseValue.details = [{
-            //     inventory: {
-
-            //     }
-            // }]
         }
 
         data.form.details = responseValue.details.map(o => {
@@ -196,14 +200,6 @@ class reducer {
         return data
     }
 
-    setForm = (state, form) => {
-        if (form) {
-            return this.metaReducer.sf(state, 'data', fromJS(this.parseResponse(form)))
-        }
-        else {
-            return this.metaReducer.sf(state, 'data.form', fromJS(getInitState().data.form))
-        }
-    }
 }
 
 export default function creator(option) {
