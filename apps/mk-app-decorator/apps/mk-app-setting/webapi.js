@@ -7,7 +7,8 @@
 import { fetch } from 'mk-utils'
 
 export default {
+
     set: {
-        query: (option) => fetch.post('/v1/set/query', option)
+        getByDtoId: (option) => fetch.post('/v1/setCardControl/getByDtoId', option)
     }
 }

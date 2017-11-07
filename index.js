@@ -12,8 +12,8 @@ import mk_app_card_department from './apps/mk-app-decorator/apps/mk-app-card-dep
 import mk_app_card_inventory from './apps/mk-app-decorator/apps/mk-app-card-inventory/index.js'
 import mk_app_card_person from './apps/mk-app-decorator/apps/mk-app-card-person/index.js'
 import mk_app_card_project from './apps/mk-app-decorator/apps/mk-app-card-project/index.js'
-import mk_app_card_set from './apps/mk-app-decorator/apps/mk-app-card-set/index.js'
 import mk_app_card_unit from './apps/mk-app-decorator/apps/mk-app-card-unit/index.js'
+import mk_app_setting from './apps/mk-app-decorator/apps/mk-app-setting/index.js'
 import mk_app_devtools_test from './apps/mk-app-devtools/apps/mk-app-devtools-test/index.js'
 import mk_app_devtools from './apps/mk-app-devtools/index.js'
 import mk_app_home_chart from './apps/mk-app-home/apps/mk-app-home-chart/index.js'
@@ -44,8 +44,8 @@ const apps = {
 	[mk_app_card_inventory.name]: mk_app_card_inventory,	
 	[mk_app_card_person.name]: mk_app_card_person,	
 	[mk_app_card_project.name]: mk_app_card_project,	
-	[mk_app_card_set.name]: mk_app_card_set,	
 	[mk_app_card_unit.name]: mk_app_card_unit,	
+	[mk_app_setting.name]: mk_app_setting,	
 	[mk_app_devtools_test.name]: mk_app_devtools_test,	
 	[mk_app_devtools.name]: mk_app_devtools,	
 	[mk_app_home_chart.name]: mk_app_home_chart,	
