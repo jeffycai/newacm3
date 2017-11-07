@@ -13,17 +13,14 @@ class reducer {
         return this.metaReducer.init(state, getInitState(option))
     }
 
-    load = (state, { person }) => {
-        return this.metaReducer.sf(state, 'data.other.person', fromJS(person))
+    load = (state, payload) => {
+        return this.metaReducer.sf(state, 'data.other.departments', fromJS(payload.departments))
     }
-
 
     setperson = (state, person) => {
         state = this.metaReducer.sf(state, 'data.form', fromJS(person))
         return state
     }
-
-
 }
 
 export default function creator(option) {

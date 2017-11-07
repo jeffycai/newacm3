@@ -36,10 +36,10 @@ class action {
         var response = await this.webapi.person.query()
         payload.departments = response
 
-        if (this.component.props.personId || this.component.props.personId == 0) {
+        /*if (this.component.props.personId || this.component.props.personId == 0) {
             response = await this.webapi.person.findById(this.component.props.personId)
             payload.person = response
-        }
+        }*/
 
         this.injections.reduce('load', payload)
     }
@@ -51,45 +51,69 @@ class action {
     save = async () => {
         const form = this.metaAction.gf('data.form').toJS()
         const ok = await this.voucherAction.check([{
-            path: 'data.form.code', value: form.code
+	        path: 'data.form.mobile', value: form.mobile
+        }, {
+	        path: 'data.form.email', value: form.email
         }, {
             path: 'data.form.name', value: form.name
+        }, {
+	        path: 'data.form.identityNumber', value: form.identityNumber
+        }, {
+	        path: 'data.form.departmentId', value: form.departmentId
         }], this.check)
-
+	    
         if (!ok) return false
-        if (form.id || form.id == 0) {
-            const response = await this.webapi.person.update(form)
-            if (response) {
-                this.metaAction.toast('success', '保存成功')
-                this.injections.reduce('setperson', response)
-            }
+	    
+        //if (form.id || form.id == 0) {
+            //const response = await this.webapi.person.update(form)
+            //if (response) {
+                //this.metaAction.toast('success', '保存成功')
+                //this.injections.reduce('setperson', response)
+            //}
 
-        } else {
+        //} else {
             const response = await this.webapi.person.create(form)
             if (response) {
                 this.metaAction.toast('success', '保存成功')
                 this.injections.reduce('setperson', response)
             }
-        }
+        //}
         return true
     }
 
     check = async (option) => {
         if (!option || !option.path)
             return
-
-        if (option.path == 'data.form.code') {
-            return { errorPath: 'data.other.error.code', message: option.value ? '' : '请录入编码' }
+		let mobileReg = /^1[3|4|5|8][0-9]\d{4,8}$/,
+			emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/,
+			identityReg = /^\d{17}(\d|x)$/i
+	    
+	    if (option.path == 'data.form.mobile') {
+		    return { errorPath: 'data.other.error.mobile', message: (option.value && !(mobileReg.test(option.value))) ? '请输入正确格式的手机号' : '' }
+	    }else if (option.path == 'data.form.email') {
+		    return { errorPath: 'data.other.error.email', message: option.value && !(emailReg.test(option.value)) ? '请输入正确格式的邮箱' : '' }
+	    }else if (option.path == 'data.form.name') {
+		    return { errorPath: 'data.other.error.name', message: option.value ? '' : '请录入姓名' }
+	    }else if (option.path == 'data.form.identityNumber') {
+		    return { errorPath: 'data.other.error.identityNumber', message: (option.value && !(identityReg.test(option.value))) ? '请输入正确格式的身份证号' : '' }
+	    }else if (option.path == 'data.form.departmentId') {
+            return { errorPath: 'data.other.error.department', message: option.value ? '' : '请录入所属部门' }
         }
-        else if (option.path == 'data.form.name') {
-            return { errorPath: 'data.other.error.name', message: option.value ? '' : '请录入名称' }
-        }
-
     }
 
     fieldChange = (path, value) => {
         this.voucherAction.fieldChange(path, value, this.check)
     }
+	
+	departmentChange = (path, value) => {
+    	let departments = this.metaAction.gf('data.other.departments').toJS(), _rowIndex
+		departments.map((item, index)=>{
+    		if(item.id == value) _rowIndex = index
+		})
+		this.metaAction.sf('data.form.deptName', fromJS(departments[_rowIndex].name))
+		this.metaAction.sf('data.form.orgId', fromJS(departments[_rowIndex].orgId))
+		this.voucherAction.fieldChange(path, value, this.check)
+	}
 }
 
 export default function creator(option) {
