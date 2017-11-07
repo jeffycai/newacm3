@@ -2,15 +2,15 @@ import config from './config'
 import * as data from './data'
 
 export default {
-	name: "mk-app-card-set",
+	name: "mk-app-setting",
 	version: "1.0.0",
-	description: "mk-app-card-set",
+	description: "mk-app-setting",
 	meta: data.getMeta(),
 	components: [],
 	config: config,
 	load: (cb) => {
 		require.ensure([], require => {
 			cb(require('./component'), require('./action'), require('./reducer'))
-		}, "mk-app-card-customer")
+		}, "mk-app-setting")
 	}
 }

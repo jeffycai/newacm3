@@ -201,7 +201,11 @@ class action {
 
 
     setting = async () => {
-        await this.voucherAction.setting({ "dtoId": 3, "type": 1 })
+        let data = this.metaAction.gf('data')
+        debugger
+        let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 },true)
+        if(ret){
+        }
     }
 
     addCustomer = async () => {

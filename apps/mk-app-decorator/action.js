@@ -22,18 +22,19 @@ export default class action {
         await this.check([{ path: fieldPath, value }], checkFn, true)
     }
 
-    setting = async (dtoProp) => {
+    setting = async (dtoProp,isVoucher) => {
         if (!dtoProp) return
         const ret = await this.metaAction.modal('show', {
             title: '设置',
-            children: this.metaAction.loadApp(
-                'mk-app-card-set', {
-                    store: this.component.props.store
-                }
-            )
+            width:400,
+            children: this.metaAction.loadApp('mk-app-setting', {
+                    store: this.component.props.store,
+                    dtoProp,
+                    voucher:isVoucher
+            })
         })
         if (ret) {
-
+            debugger
         }
     }
 
