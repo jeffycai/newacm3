@@ -56,7 +56,7 @@ export function getMeta() {
 					type: 'bluesky',
 					disabled: '{{!data.form.id}}',
 					onClick: '{{$audit}}',
-					children: '审核'
+					children: '{{$getText()}}'
 				}, {
 					name: 'history',
 					component: 'Button',
@@ -80,11 +80,13 @@ export function getMeta() {
 							name: 'reject',
 							component: 'Menu.Item',
 							key: 'reject',
+							disabled: '{{!data.form.id}}',
 							children: '生成红字销售订单'
 						}, {
 							name: 'receipt',
 							component: 'Menu.Item',
 							key: 'receipt',
+							disabled: '{{!data.form.id}}',
 							children: '收款'
 						}]
 					},

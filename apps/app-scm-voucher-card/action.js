@@ -6,6 +6,7 @@ import { Map, fromJS } from 'immutable'
 import moment from 'moment'
 import utils from 'mk-utils'
 import extend from './extend'
+import consts from './consts'
 
 import decorator from '../mk-app-decorator/index'
 
@@ -55,14 +56,15 @@ class action {
     }
 
     del = async () => {
-        const id = this.metaAction.gf('data.form.id')
+        const id = this.metaAction.gf('data.form.id'),
+            ts = this.metaAction.gf('data.form.ts')
         const ret = await this.metaAction.modal('confirm', {
             title: '删除',
             content: '确认删除?'
         })
 
         if (ret) {
-            const response = await this.webapi.delivery.del({ id })
+            const response = await this.webapi.delivery.del({ id, ts })
             this.metaAction.toast('success', '删除单据成功')
             this.injections.reduce('load', response)
         }
@@ -70,17 +72,38 @@ class action {
 
     audit = async () => {
         const id = this.metaAction.gf('data.form.id'),
-            ts = this.metaAction.gf('data.form.ts')
+            ts = this.metaAction.gf('data.form.ts'),
+            status = this.metaAction.gf('data.form.status')
         if (!id && !ts) {
             this.metaAction.toast('error', '请保存单据')
             return
         }
-        const response = await this.webapi.delivery.audit({ id, ts })
-        if (response) {
-            this.metaAction.toast('success', '单据审核成功')
-            this.injections.reduce('load', response)
-        }
 
+        if (status == consts.status.VOUCHER_STATUS_NOTAUDITED || status == consts.status.VOUCHER_STATUS_HASREJECT) {
+            const response = await this.webapi.delivery.audit({ id, ts })
+            if (response) {
+                this.metaAction.toast('success', '单据审核成功')
+                this.injections.reduce('load', response)
+            }
+        }
+        else {
+            const response = await this.webapi.delivery.unaudit({ id, ts })
+            if (response) {
+                this.metaAction.toast('success', '单据反审核成功')
+                this.injections.reduce('load', response)
+            }
+        }
+    }
+
+
+    getText = () => {
+        const voucherStatus = this.metaAction.gf('data.form.status')
+        if (voucherStatus === consts.status.VOUCHER_STATUS_AUDITED) {
+            return '反审核'
+        }
+        else {
+            return '审核'
+        }
     }
     history = async () => {
         this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
@@ -233,8 +256,7 @@ class action {
     }
 
     warehouseFocus = async () => {
-        const response = await this.webapi.warehouse.query()
-        this.metaAction.sf('data.other.warehouses', fromJS(response))
+
     }
 
     invoiceTypeFocus = async () => {
