@@ -73,20 +73,7 @@ class action {
                 break;
             case 'head':
                 data[0].details.map(o=>{
-                    form.push(
-                        <div>
-                            <Checkbox
-                                onChange={this.handleChange(o.propertyName)}
-                                checked = {o.visible}>
-                                {o.propertyTitle}
-                            </Checkbox>
-                        </div>
-                    )
-
-                })
-                break;
-            case 'body':
-                data[0].details.map(o=>{
+                    if(o.isHead){
                         form.push(
                             <div>
                                 <Checkbox
@@ -96,6 +83,23 @@ class action {
                                 </Checkbox>
                             </div>
                         )
+                    }
+                })
+                break;
+            case 'body':
+                data[0].details.map(o=>{
+                    if(!o.isHead){
+
+                        form.push(
+                            <div>
+                                <Checkbox
+                                    onChange={this.handleChange(o.propertyName)}
+                                    checked = {o.visible}>
+                                    {o.propertyTitle}
+                                </Checkbox>
+                            </div>
+                        )
+                    }
                 })
                 break;
 
