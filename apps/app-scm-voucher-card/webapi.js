@@ -11,11 +11,14 @@ export default {
         init: (option) => fetch.post('/v1/web/delivery/init', option),
         create: (option) => fetch.post('/v1/delivery/create', option),
         update: (option) => fetch.post('/v1/delivery/update', option),
-        del: (option) => fetch.post('/v1/delivery/del', option),
+        del: (option) => fetch.post('/v1/delivery/delete', option),
         audit: (option) => fetch.post('/v1/delivery/audit', option),
+        unaudit: (option) => fetch.post('/v1/delivery/unaudit', option),
         prev: (id) => fetch.post('/v1/delivery/previous', { id }),
         next: (id) => fetch.post('/v1/delivery/next', { id }),
+        queryByCustomer: (option) => fetch.post('/v1/web/delivery/queryByCustomer', option),
     },
+    /*
     stock: {
         query: (option) => fetch.post('/v1/stock/query', option)
     },
@@ -45,5 +48,5 @@ export default {
     },
     assetAccount: {
         query: (option) => fetch.post('/v1/assetAccount/query', option)
-    }
+    }*/
 }

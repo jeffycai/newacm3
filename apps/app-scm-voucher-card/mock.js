@@ -603,8 +603,8 @@ function initMockData() {
     }
 
     //客户
-    if (!mockData.customers) {
-        mockData.customers = [{
+    if (!mockData.customer) {
+        mockData.customer = [{
             id: 1,
             code: '0001',
             name: '腾讯'
@@ -743,7 +743,7 @@ fetch.mock('/v1/delivery/init', (option) => {
         value: {
             voucher: (option.id || option.id == 0) ? mockData.delivery.find(o => o.id == option.id) : undefined,
             inventory: mockData.inventory,
-            customers: mockData.customers,
+            customer: mockData.customer,
             ticketTypes: mockData.ticketTypes,
             warehouses: mockData.warehouses,
             taxRates: mockData.taxRates,
@@ -765,7 +765,7 @@ fetch.mock('/v1/customer/query', (option) => {
     initMockData()
     return {
         result: true,
-        value: mockData.customers
+        value: mockData.customer
     }
 })
 

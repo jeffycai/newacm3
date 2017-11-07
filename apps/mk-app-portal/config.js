@@ -1,4 +1,4 @@
-import logo from './img/logo.png'
+import logo from './img/portalLogo.png'
 import webapi from './webapi'
 
 var _options = {

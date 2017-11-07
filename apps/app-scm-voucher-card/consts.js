@@ -2,7 +2,22 @@ export default {
     status: {
         VOUCHER_STATUS_NORMAL: 1,
         VOUCHER_STATUS_ADD: 2,
-        VOUCHER_STATUS_EDIT: 3
+        VOUCHER_STATUS_EDIT: 3,
+        VOUCHER_STATUS_AUDITED: 128,
+        VOUCHER_STATUS_NOTAUDITED: 127,
+        VOUCHER_STATUS_WRITEOFF: 131,
+        VOUCHER_STATUS_NOTWRITEOFF: 130,
+        VOUCHER_STATUS_HASREJECT: 129
+    },
+    ticketType: {
+        pp: { id: 200000000000050, code: '001', name: '增值税普通发票' },
+        zp: { id: 200000000000051, code: '002', name: '增值税专用发票' },
+        qt: { id: 200000000000052, code: '003', name: '其他票据' },
+        hgzp: { code: "004", id: 200000000000053, name: "海关进口增值税专用缴款书" },
+        np: { code: "005", id: 200000000000054, name: "农产品发票" },
+        qtp: { code: "006", id: 200000000000055, name: "其他发票" },
+        qtpk: { code: "007", id: 200000000000056, name: "其他发票(可抵扣)" },
+        wkp: { code: "008", id: 200000000000057, name: "未开票" }
     }
 
 }

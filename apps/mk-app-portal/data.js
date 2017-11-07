@@ -20,7 +20,7 @@ export function getMeta() {
 				}, {
 					name: 'siteName',
 					component: '::h2',
-					children: 'Monkey King',
+					children: '新流水账',
 					_visible: '{{!data.isFoldMenu}}',
 				}, {
 					name: 'foldMenu',

@@ -56,7 +56,7 @@ export function getMeta() {
 					type: 'bluesky',
 					disabled: '{{!data.form.id}}',
 					onClick: '{{$audit}}',
-					children: '审核'
+					children: '{{$getText()}}'
 				}, {
 					name: 'history',
 					component: 'Button',
@@ -74,17 +74,19 @@ export function getMeta() {
 							name: 'del',
 							component: 'Menu.Item',
 							key: 'del',
-							disabled: '{{!data.form.id}}',
+							disabled: '{{!data.form.id || data.form.status === 128}}',
 							children: '删除'
 						}, {
 							name: 'reject',
 							component: 'Menu.Item',
 							key: 'reject',
+							disabled: '{{!data.form.id}}',
 							children: '生成红字销售订单'
 						}, {
 							name: 'receipt',
 							component: 'Menu.Item',
 							key: 'receipt',
+							disabled: '{{!data.form.id}}',
 							children: '收款'
 						}]
 					},
@@ -114,7 +116,7 @@ export function getMeta() {
 					className: 'app-scm-voucher-card-title-left-tag',
 					src: require('./img/audited.png'),
 					_visible: '{{data.form.status===128?true:false}}'
-				},{
+				}, {
 					name: 'settleStatus',
 					component: '::img',
 					className: 'app-scm-voucher-card-title-left-tag',
@@ -138,17 +140,11 @@ export function getMeta() {
 					name: 'code',
 					component: '::div',
 					style: { marginRight: 10 },
-					children: "{{data.form.code || '1001'}}"
+					children: "{{data.form.code || ''}}"
 				}, {
 						name: 'attachment',
-						component: 'Popover',
-						trigger: 'click',
-						placement: 'bottomRight',
-						children: [{
-							name: 'a',
-							component: '::a',
-							children: '附件:0'
-						}]
+						component: 'Attachment',
+						data: '{{data.form.attachmentFiles}}'
 					}]
 			}]
 		}, {
@@ -167,15 +163,16 @@ export function getMeta() {
 					component: 'Select',
 					placeholder: '按名称/拼音搜索',
 					showSearch: true,
-					value: '{{data.form.customer && data.form.customer.id }}',
-					onChange: `{{(v)=>$sf('data.form.customer', $fromJS(data.other.customers.find(o=>o.id==v),null))}}`,
+					disabled: '{{$getControlEnable()}}',
+					value: '{{data.form.customer && data.form.customer.name }}',
+					onChange: '{{$onFieldChange(`customer`)}}',
 					onFocus: "{{$customerFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.customers && data.other.customers[_rowIndex].id }}",
-						children: '{{data.other.customers && data.other.customers[_rowIndex].name }}',
-						_power: 'for in data.other.customers'
+						value: "{{ data.other.customer && data.other.customer[_rowIndex].id }}",
+						children: '{{data.other.customer && data.other.customer[_rowIndex].name }}',
+						_power: 'for in data.other.customer'
 					},
 					dropdownFooter: {
 						name: 'add',
@@ -194,6 +191,7 @@ export function getMeta() {
 				children: [{
 					name: 'businessDate',
 					component: 'DatePicker',
+					disabled: '{{$getControlEnable()}}',
 					value: '{{$stringToMoment(data.form.businessDate)}}',
 					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
 				}]
@@ -206,6 +204,7 @@ export function getMeta() {
 					name: 'invoiceType',
 					component: 'Select',
 					showSearch: false,
+					disabled: '{{$getControlEnable()}}',
 					value: '{{data.form.invoiceType && data.form.invoiceType.enumItemId }}',
 					onChange: `{{(v)=>$sf('data.form.invoiceType', $fromJS(data.other.invoiceType.find(o=>o.enumItemId==v),null))}}`,
 					onFocus: "{{$invoiceTypeFocus}}",
@@ -226,6 +225,7 @@ export function getMeta() {
 					name: 'warehouse',
 					component: 'Select',
 					showSearch: false,
+					disabled: '{{$getControlEnable()}}',
 					value: '{{data.form.warehouse && data.form.warehouse.id }}',
 					onChange: `{{(v)=>$sf('data.form.warehouse', $fromJS(data.other.warehouses.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$warehouseFocus}}",
@@ -247,7 +247,8 @@ export function getMeta() {
 					name: 'department',
 					component: 'Select',
 					showSearch: true,
-					value: '{{data.form.department && data.form.department.id }}',
+					disabled: '{{$getControlEnable()}}',
+					value: '{{data.form.department && data.form.department.name }}',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -276,7 +277,8 @@ export function getMeta() {
 					name: 'project',
 					component: 'Select',
 					showSearch: true,
-					value: '{{data.form.project && data.form.project.id }}',
+					disabled: '{{$getControlEnable()}}',
+					value: '{{data.form.project && data.form.project.name }}',
 					onChange: `{{(v)=>$sf('data.form.project', $fromJS(data.other.project.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$projectFocus}}",
 					children: {
@@ -304,7 +306,9 @@ export function getMeta() {
 					name: 'person',
 					component: 'Select',
 					showSearch: true,
-					value: '{{data.form.person && data.form.person.id }}',
+					disabled: '{{$getControlEnable()}}',
+
+					value: '{{data.form.person && data.form.person.name }}',
 					onChange: `{{(v)=>$sf('data.form.person', $fromJS(data.other.person.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$personFocus}}",
 					children: {
@@ -327,6 +331,8 @@ export function getMeta() {
 				name: 'remark',
 				component: 'Form.Item',
 				label: '备注',
+				disabled: '{{$getControlEnable()}}',
+
 				className: 'app-scm-voucher-card-form-header-remark',
 				children: [{
 					name: 'remark',
@@ -458,6 +464,7 @@ export function getMeta() {
 				name: 'isGift',
 				component: 'DataGrid.Column',
 				columnKey: 'isGift',
+				_visible: '{{$getControlVisible()}}',
 				width: 100,
 				header: {
 					name: 'header',
@@ -538,6 +545,7 @@ export function getMeta() {
 				component: 'DataGrid.Column',
 				columnKey: 'taxRate',
 				width: 100,
+				_visible: '{{$getControlVisible()}}',
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
@@ -571,6 +579,7 @@ export function getMeta() {
 				component: 'DataGrid.Column',
 				columnKey: 'tax',
 				width: 100,
+				_visible: '{{$getControlVisible()}}',
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
@@ -594,6 +603,7 @@ export function getMeta() {
 				component: 'DataGrid.Column',
 				columnKey: 'amountWithTax',
 				width: 100,
+				_visible: '{{$getControlVisible()}}',
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
@@ -648,8 +658,9 @@ export function getMeta() {
 							name: 'bankAccount',
 							component: 'Select',
 							showSearch: false,
-							value: '{{data.form.settlements[_rowIndex].bankAccount && data.form.settlements[_rowIndex].bankAccount.id }}',
-							onChange: `{{(v)=>$sf('data.form.settlements.'+ _rowIndex +'.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
+							disabled:'{{$getControlEnable()}}',
+							value: '{{data.form.bankAccount && data.form.bankAccount.name }}',
+							onChange: `{{(v)=>$sf('data.form.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
 							onFocus: "{{$bankAccountFocus}}",
 							children: {
 								name: 'option',
@@ -666,11 +677,11 @@ export function getMeta() {
 						children: [{
 							name: 'settlementAmount',
 							component: 'Input.Number',
-							value: "{{data.form.settlements[_rowIndex].settlementAmount}}",
-							onChange: "{{(v)=>$sf('data.form.settlements.' + _rowIndex + '.settlementAmount', v)}}",
+							disabled:'{{$getControlEnable()}}',
+							value: "{{data.form.settlementAmount}}",
+							onChange: "{{(v)=>$sf('data.form.settlementAmount', v)}}",
 						}]
 					}],
-				_power: 'for in data.form.settlements'
 			}, {
 				name: 'advance',
 				component: 'Form',
@@ -682,6 +693,7 @@ export function getMeta() {
 					children: [{
 						name: 'useAdvance',
 						component: 'Checkbox',
+						disabled:'{{$getControlEnable()}}',
 						checked: '{{data.form.useAdvance}}',
 						onChange: `{{(e)=>$sf('data.form.useAdvance', e.target.checked)}}`,
 					}]
@@ -692,11 +704,12 @@ export function getMeta() {
 					children: [{
 						name: 'advanceAmount',
 						component: 'Input.Number',
+						disabled:'{{$getControlEnable()}}',
 						value: '{{data.form.advanceAmount}}',
 						onChange: `{{(v)=>$sf('data.form.advanceAmount', v)}}`,
 					}]
 				}]
-			}, {
+			}/*, {
 				name: 'balance',
 				component: 'Form',
 				className: 'app-scm-voucher-card-form-footer-balance',
@@ -710,7 +723,7 @@ export function getMeta() {
 						//children: '{{$calcBalance(data)}}'
 					}]
 				}]
-			}]
+			}*/]
 		}, {
 			name: 'footer',
 			component: 'Layout',
@@ -765,6 +778,10 @@ export function getInitState() {
 	return {
 		data: {
 			form: {
+				customer: {
+					id: '',
+					name: ''
+				},
 				details: [
 					blankVoucherItem,
 					blankVoucherItem,

@@ -7,10 +7,11 @@ export default {
 	},
 	projectQuery: {
 		query: (option) => fetch.post('v1/project/query', option)
+	},
+	queryBankAccountByType:{
+		query:(option)=>fetch.post('/v1/bankAccount/queryBankAccountByType',option)
 	}
 }
-
-
 // /**
 //  *     currency币种接口
 //  *
