@@ -36,16 +36,16 @@ class action {
     }
 
     prev = async () => {
-        const id = this.metaAction.gf('data.form.id')
-        const response = await this.webapi.delivery.prev(id)
+        const code = this.metaAction.gf('data.form.code')
+        const response = await this.webapi.delivery.previous({ code })
         if (response) {
             this.injections.reduce('load', response)
         }
     }
 
     next = async () => {
-        const id = this.metaAction.gf('data.form.id')
-        const response = await this.webapi.delivery.next(id)
+        const code = this.metaAction.gf('data.form.code')
+        const response = await this.webapi.delivery.next({ code })
         if (response) {
             this.injections.reduce('load', response)
         }
@@ -93,6 +93,23 @@ class action {
                 this.injections.reduce('load', response)
             }
         }
+    }
+
+
+    getControlVisible = () => {
+        let v = true,
+            invoiceType = this.metaAction.gf('data.form.invoiceType')
+        if (invoiceType) {
+            if (invoiceType.get('enumItemId') === consts.ticketType.pp.id) return false
+        }
+        return v
+    }
+
+    getControlEnable = () => {
+        let v = false,
+            status = this.metaAction.gf('data.form.status')
+        if (status === consts.status.VOUCHER_STATUS_AUDITED || status === consts.status.VOUCHER_STATUS_WRITEOFF) return true
+        return v
     }
 
 
@@ -220,9 +237,9 @@ class action {
 
     setting = async () => {
         let data = this.metaAction.gf('data')
-        let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 },true)
-        if(ret){
-            //
+        debugger
+        let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 }, true)
+        if (ret) {
         }
     }
 
