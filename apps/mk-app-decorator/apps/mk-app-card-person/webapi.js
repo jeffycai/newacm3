@@ -8,7 +8,7 @@ import { fetch } from 'mk-utils'
 
 export default {
     person: {
-        query: () => fetch.post('/v1/person/query', {}),
+	    query: () => fetch.post('/v1/department/query', {}),
         findById: (id) => fetch.post('/v1/person/findById', { id }),
         create: (option) => fetch.post('/v1/person/create', option),
         update: (option) => fetch.post('/v1/person/update', option),
