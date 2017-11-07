@@ -74,7 +74,7 @@ export function getMeta() {
 							name: 'del',
 							component: 'Menu.Item',
 							key: 'del',
-							disabled: '{{!data.form.id}}',
+							disabled: '{{!data.form.id || data.form.status === 128}}',
 							children: '删除'
 						}, {
 							name: 'reject',
@@ -249,7 +249,7 @@ export function getMeta() {
 					name: 'department',
 					component: 'Select',
 					showSearch: true,
-					value: '{{data.form.department && data.form.department.id }}',
+					value: '{{data.form.department && data.form.department.name }}',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -278,7 +278,7 @@ export function getMeta() {
 					name: 'project',
 					component: 'Select',
 					showSearch: true,
-					value: '{{data.form.project && data.form.project.id }}',
+					value: '{{data.form.project && data.form.project.name }}',
 					onChange: `{{(v)=>$sf('data.form.project', $fromJS(data.other.project.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$projectFocus}}",
 					children: {
@@ -306,7 +306,7 @@ export function getMeta() {
 					name: 'person',
 					component: 'Select',
 					showSearch: true,
-					value: '{{data.form.person && data.form.person.id }}',
+					value: '{{data.form.person && data.form.person.name }}',
 					onChange: `{{(v)=>$sf('data.form.person', $fromJS(data.other.person.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$personFocus}}",
 					children: {
