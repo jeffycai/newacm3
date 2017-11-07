@@ -26,15 +26,15 @@ export default class action {
         if (!dtoProp) return
         const ret = await this.metaAction.modal('show', {
             title: '设置',
-            width:400,
+            width:700,
             children: this.metaAction.loadApp('mk-app-setting', {
                     store: this.component.props.store,
                     dtoProp,
-                    voucher:isVoucher
+                    isVoucher
             })
         })
         if (ret) {
-            debugger
+            //
         }
     }
 

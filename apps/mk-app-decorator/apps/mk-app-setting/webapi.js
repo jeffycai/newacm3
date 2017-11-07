@@ -9,6 +9,8 @@ import { fetch } from 'mk-utils'
 export default {
 
     set: {
-        getByDtoId: (option) => fetch.post('/v1/setCardControl/getByDtoId', option)
+        getByDtoId: (option) => fetch.post('/v1/setCardControl/getByDtoId', option),
+        updateCardControl: (option) => fetch.post('/v1/setCardControl/updateCardControl', option)
+
     }
 }
