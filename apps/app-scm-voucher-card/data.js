@@ -121,7 +121,7 @@ export function getMeta() {
 					component: '::img',
 					className: 'app-scm-voucher-card-title-left-tag',
 					src: require('./img/settle.png'),
-					_visible: '{{data.form.status===128?true:false}}'
+					_visible: '{{data.form.status===131?true:false}}'
 				}]
 			}, {
 				name: 'center',
@@ -331,12 +331,11 @@ export function getMeta() {
 				name: 'remark',
 				component: 'Form.Item',
 				label: '备注',
-				disabled: '{{$getControlEnable()}}',
-
 				className: 'app-scm-voucher-card-form-header-remark',
 				children: [{
 					name: 'remark',
 					component: 'Input',
+					disabled: '{{$getControlEnable()}}',
 					value: '{{data.form.remark}}',
 					onChange: "{{(e)=>$sf('data.form.remark',e.target.value)}}",
 				}]
@@ -658,7 +657,7 @@ export function getMeta() {
 							name: 'bankAccount',
 							component: 'Select',
 							showSearch: false,
-							disabled:'{{$getControlEnable()}}',
+							disabled: '{{$getControlEnable()}}',
 							value: '{{data.form.bankAccount && data.form.bankAccount.name }}',
 							onChange: `{{(v)=>$sf('data.form.bankAccount', $fromJS(data.other.bankAccount.find(o=>o.id==v),null))}}`,
 							onFocus: "{{$bankAccountFocus}}",
@@ -677,7 +676,7 @@ export function getMeta() {
 						children: [{
 							name: 'settlementAmount',
 							component: 'Input.Number',
-							disabled:'{{$getControlEnable()}}',
+							disabled: '{{$getControlEnable()}}',
 							value: "{{data.form.settlementAmount}}",
 							onChange: "{{(v)=>$sf('data.form.settlementAmount', v)}}",
 						}]
@@ -693,7 +692,7 @@ export function getMeta() {
 					children: [{
 						name: 'useAdvance',
 						component: 'Checkbox',
-						disabled:'{{$getControlEnable()}}',
+						disabled: '{{$getControlEnable()}}',
 						checked: '{{data.form.useAdvance}}',
 						onChange: `{{(e)=>$sf('data.form.useAdvance', e.target.checked)}}`,
 					}]
@@ -704,7 +703,7 @@ export function getMeta() {
 					children: [{
 						name: 'advanceAmount',
 						component: 'Input.Number',
-						disabled:'{{$getControlEnable()}}',
+						disabled: '{{$getControlEnable()}}',
 						value: '{{data.form.advanceAmount}}',
 						onChange: `{{(v)=>$sf('data.form.advanceAmount', v)}}`,
 					}]

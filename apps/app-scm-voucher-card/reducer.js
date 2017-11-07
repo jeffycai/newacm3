@@ -46,9 +46,7 @@ class reducer {
 
         if (parsed.form.status == consts.status.VOUCHER_STATUS_AUDITED || parsed.form.settleStatus == consts.status.VOUCHER_STATUS_WRITEOFF) {
 
-            let lblTitle = this.metaReducer.gm(index, 'root.formHeader.customerItem', 'label')
-
-            debugger
+            
         }
 
         return state

@@ -36,16 +36,16 @@ class action {
     }
 
     prev = async () => {
-        const id = this.metaAction.gf('data.form.id')
-        const response = await this.webapi.delivery.prev(id)
+        const code = this.metaAction.gf('data.form.code')
+        const response = await this.webapi.delivery.previous({ code })
         if (response) {
             this.injections.reduce('load', response)
         }
     }
 
     next = async () => {
-        const id = this.metaAction.gf('data.form.id')
-        const response = await this.webapi.delivery.next(id)
+        const code = this.metaAction.gf('data.form.code')
+        const response = await this.webapi.delivery.next({ code })
         if (response) {
             this.injections.reduce('load', response)
         }
