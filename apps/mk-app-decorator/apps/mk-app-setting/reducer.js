@@ -11,6 +11,12 @@ class reducer {
 
     init = (state, option) => {
         const initState = getInitState()
+
+        initState.data.isVoucher = option.isVoucher
+        initState.data.dtoProp = option.dtoProp
+        initState.data.visibleList = option.visibleList
+        initState.data.form = JSON.parse(JSON.stringify(option.visibleList))
+
         return this.metaReducer.init(state, initState)
     }
 
@@ -18,6 +24,7 @@ class reducer {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
+
 }
 
 export default function creator(option) {

@@ -14,8 +14,8 @@ export default {
         del: (option) => fetch.post('/v1/delivery/delete', option),
         audit: (option) => fetch.post('/v1/delivery/audit', option),
         unaudit: (option) => fetch.post('/v1/delivery/unaudit', option),
-        prev: (id) => fetch.post('/v1/delivery/previous', { id }),
-        next: (id) => fetch.post('/v1/delivery/next', { id }),
+        previous: (code) => fetch.post('/v1/delivery/previous', code),
+        next: (code) => fetch.post('/v1/delivery/next', code),
         queryByCustomer: (option) => fetch.post('/v1/web/delivery/queryByCustomer', option),
     },
     /*
