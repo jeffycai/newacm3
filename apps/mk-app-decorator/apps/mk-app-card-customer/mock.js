@@ -9,7 +9,7 @@ const mockData = fetch.mockData
 
 
 fetch.mock('/v1/customer/findById', (option) => {
-    const customer = mockData.customers.find(o => o.id == option.id)
+    const customer = mockData.customer.find(o => o.id == option.id)
     return {
         result: true,
         value: customer
@@ -17,32 +17,32 @@ fetch.mock('/v1/customer/findById', (option) => {
 })
 
 fetch.mock('/v1/customer/create', (option) => {
-    const id = mockData.customers.length + 1
+    const id = mockData.customer.length + 1
     const v = { ...option, id }
-    mockData.customers.push(v)
+    mockData.customer.push(v)
 
     return { result: true, value: v }
 })
 
 fetch.mock('/v1/customer/update', (option) => {
-    mockData.customers[option.id] = option
+    mockData.customer[option.id] = option
     return { result: true, value: option }
 })
 
 fetch.mock('/v1/customer/prev', (option) => {
     if (option.id) {
         const index = option.id - 1 < 0 ? 0 : option.id - 1
-        return { result: true, value: mockData.customers[index] }
+        return { result: true, value: mockData.customer[index] }
     }
 
-    return { result: true, value: mockData.customers[mockData.customers.length - 1] }
+    return { result: true, value: mockData.customer[mockData.customer.length - 1] }
 })
 
 fetch.mock('/v1/customer/next', (option) => {
     if (option.id) {
-        const index = option.id + 1 > mockData.customers.length - 1 ? mockData.customers.length - 1 : option.id + 1
-        return { result: true, value: mockData.customers[index] }
+        const index = option.id + 1 > mockData.customer.length - 1 ? mockData.customer.length - 1 : option.id + 1
+        return { result: true, value: mockData.customer[index] }
     }
 
-    return { result: true, value: mockData.customers[mockData.customers.length - 1] }
+    return { result: true, value: mockData.customer[mockData.customer.length - 1] }
 })

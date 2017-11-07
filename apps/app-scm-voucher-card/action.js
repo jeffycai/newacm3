@@ -6,6 +6,7 @@ import { Map, fromJS } from 'immutable'
 import moment from 'moment'
 import utils from 'mk-utils'
 import extend from './extend'
+import consts from './consts'
 
 import decorator from '../mk-app-decorator/index'
 
@@ -38,7 +39,7 @@ class action {
         const id = this.metaAction.gf('data.form.id')
         const response = await this.webapi.delivery.prev(id)
         if (response) {
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
     }
 
@@ -46,42 +47,63 @@ class action {
         const id = this.metaAction.gf('data.form.id')
         const response = await this.webapi.delivery.next(id)
         if (response) {
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
     }
 
     add = () => {
-        this.injections.reduce('setForm')
+        this.injections.reduce('load')
     }
 
     del = async () => {
-        const id = this.metaAction.gf('data.form.id')
+        const id = this.metaAction.gf('data.form.id'),
+            ts = this.metaAction.gf('data.form.ts')
         const ret = await this.metaAction.modal('confirm', {
             title: '删除',
             content: '确认删除?'
         })
 
         if (ret) {
-            const response = await this.webapi.delivery.del({ id })
+            const response = await this.webapi.delivery.del({ id, ts })
             this.metaAction.toast('success', '删除单据成功')
-            this.injections.reduce('setForm', response)
+            this.injections.reduce('load', response)
         }
     }
 
     audit = async () => {
         const id = this.metaAction.gf('data.form.id'),
-            ts = this.metaAction.gf('data.form.ts')
+            ts = this.metaAction.gf('data.form.ts'),
+            status = this.metaAction.gf('data.form.status')
         if (!id && !ts) {
             this.metaAction.toast('error', '请保存单据')
             return
         }
-        debugger
-        const response = await this.webapi.delivery.audit({ id, ts })
-        if (response) {
-            this.metaAction.toast('success', '单据审核成功')
-            this.injections.reduce('setForm', response)
-        }
 
+        if (status == consts.status.VOUCHER_STATUS_NOTAUDITED || status == consts.status.VOUCHER_STATUS_HASREJECT) {
+            const response = await this.webapi.delivery.audit({ id, ts })
+            if (response) {
+                this.metaAction.toast('success', '单据审核成功')
+                this.injections.reduce('load', response)
+            }
+        }
+        else {
+            const response = await this.webapi.delivery.unaudit({ id, ts })
+            if (response) {
+                this.metaAction.toast('success', '单据反审核成功')
+                this.injections.reduce('load', response)
+            }
+        }
+    }
+
+
+    getText = () => {
+        const voucherStatus = this.metaAction.gf('data.form.status')
+        if (voucherStatus === consts.status.VOUCHER_STATUS_AUDITED) {
+            return '反审核'
+        }
+        else {
+            return '审核'
+        }
     }
     history = async () => {
         this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
@@ -101,12 +123,8 @@ class action {
     }
 
     save = async () => {
-
-
         var form = this.metaAction.gf('data.form').toJS()
-
         let msg = this.voucherAction.checkSave(form)
-
         if (msg.length > 0) {
             this.voucherAction.showMsg(msg)
             return
@@ -116,7 +134,7 @@ class action {
             const response = await this.webapi.delivery.update(form)
             if (response) {
                 this.metaAction.toast('success', '保存更新成功')
-                this.injections.reduce('setForm', response)
+                this.injections.reduce('load', response)
             }
         }
         else {
@@ -124,7 +142,7 @@ class action {
             const response = await this.webapi.delivery.create(form)
             if (response) {
                 this.metaAction.toast('success', '保存单据成功')
-                this.injections.reduce('setForm', response)
+                this.injections.reduce('load', response)
             }
         }
     }
@@ -242,13 +260,12 @@ class action {
     }
 
     warehouseFocus = async () => {
-        const response = await this.webapi.warehouse.query()
-        this.metaAction.sf('data.other.warehouses', fromJS(response))
+
     }
 
     invoiceTypeFocus = async () => {
-        let response = this.metaAction.gf('data.other.invoiceType')
-        this.metaAction.sf('data.other.invoiceType', fromJS(response))
+        //let response = this.metaAction.gf('data.other.invoiceType')
+        //this.metaAction.sf('data.other.invoiceType', fromJS(response))
 
     }
 
@@ -260,17 +277,28 @@ class action {
         //await this.voucherAction.getTaxRate()
     }
 
-    settlementModeFocus = async () => {
-        const response = await this.webapi.settlementMode.query()
-        this.metaAction.sf('data.other.settlementModes', fromJS(response))
-    }
 
     bankAccountFocus = async () => {
-        const response = await this.webapi.assetAccount.query()
-        this.metaAction.sf('data.other.bankAccount', fromJS(response))
+        let bankAccountTypeIds = [98, 99, 101, 100, 152]
+        await this.voucherAction.getBankAccount({ bankAccountTypeIds: bankAccountTypeIds })
     }
 
+    onFieldChange = (fieldName) => (v) => {
+        if (!fieldName) return
+        this.metaAction.sf(`data.form.${fieldName}`, fromJS(this.metaAction.gf(`data.other.${fieldName}`).find(o => o.get('id') == v), null))
+        this.customerChange(v)
+    }
 
+    customerChange = async (v) => {
+
+        let customerId = v
+        const response = await this.webapi.delivery.queryByCustomer({ customerId })
+
+        this.metaAction.sf('data.form.bankAccount', fromJS({
+            id: response.lastBankAccountId,
+            name: response.lastBankAccountName
+        }))
+    }
 
     quantityChange = (rowIndex, rowData) => (v) => {
         const quantity = utils.number.round(v, 2),

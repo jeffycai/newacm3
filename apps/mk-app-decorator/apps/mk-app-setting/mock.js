@@ -7,8 +7,11 @@ import { fetch } from 'mk-utils'
 
 const mockData = fetch.mockData
 
-/*
-fetch.mock('/v1/person/query', (option) => {
-    return {result:true, value:{}}
+
+fetch.mock('/v1/set/query', (option) => {
+    const id = mockData.customer.length + ''
+    const v = { ...option, id }
+    mockData.customer.push(v)
+
+    return { result: true, value: v }
 })
-*/

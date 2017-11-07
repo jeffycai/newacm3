@@ -12,7 +12,7 @@ function getGridOption() {
                 return [
                     'inventoryCode',
                     'inventoryName',
-                    'spec',
+                    'specification',
                     'unit',
                     'isGift',
                     'quantity',
