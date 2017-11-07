@@ -96,6 +96,23 @@ class action {
     }
 
 
+    getControlVisible = () => {
+        let v = true,
+            invoiceType = this.metaAction.gf('data.form.invoiceType')
+        if (invoiceType) {
+            if (invoiceType.get('enumItemId') === consts.ticketType.pp.id) return false
+        }
+        return v
+    }
+
+    getControlEnable = () => {
+        let v = false,
+            status = this.metaAction.gf('data.form.status')
+        if (status === consts.status.VOUCHER_STATUS_AUDITED || status === consts.status.VOUCHER_STATUS_WRITEOFF) return true
+        return v
+    }
+
+
     getText = () => {
         const voucherStatus = this.metaAction.gf('data.form.status')
         if (voucherStatus === consts.status.VOUCHER_STATUS_AUDITED) {
@@ -221,8 +238,8 @@ class action {
     setting = async () => {
         let data = this.metaAction.gf('data')
         debugger
-        let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 },true)
-        if(ret){
+        let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 }, true)
+        if (ret) {
         }
     }
 
