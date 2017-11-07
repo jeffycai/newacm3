@@ -8,6 +8,8 @@ import extend from './extend'
 import consts from './consts'
 import decorator from '../mk-app-decorator/index'
 
+import index from './index'
+
 class reducer {
     constructor(option) {
         this.metaReducer = option.metaReducer
@@ -43,7 +45,8 @@ class reducer {
         }
 
         if (parsed.form.status == consts.status.VOUCHER_STATUS_AUDITED || parsed.form.settleStatus == consts.status.VOUCHER_STATUS_WRITEOFF) {
-            //state = this.metaReducer.sf(state, '', )
+
+            
         }
 
         return state
@@ -139,7 +142,6 @@ class reducer {
         }
 
         if (data.form.customer && data.form.customer.id) {
-            debugger
             //data.other.customer = data.form.customer
         }
 
