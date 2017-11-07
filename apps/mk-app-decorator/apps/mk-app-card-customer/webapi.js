@@ -8,7 +8,7 @@ import { fetch } from 'mk-utils'
 
 export default {
     customer: {
-        query: () => fetch.post('/v1/customer/query', {}),
+        query: () => fetch.post('/v1/customerArchive/query', {}),
         findById: (id) => fetch.post('/v1/customer/findById', { id }),
         create: (option) => fetch.post('/v1/customerArchive/create', option),
         update: (option) => fetch.post('/v1/customer/update', option),

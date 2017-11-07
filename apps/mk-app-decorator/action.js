@@ -41,6 +41,7 @@ export default class action {
     addCustomer = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增客户',
+	        width: 400,
             children: this.metaAction.loadApp(
                 'mk-app-card-customer', {
                     store: this.component.props.store
@@ -165,6 +166,7 @@ export default class action {
     addDepartment = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增部门',
+	        width: 400,
             children: this.metaAction.loadApp(
                 'mk-app-card-department', {
                     store: this.component.props.store
@@ -202,6 +204,7 @@ export default class action {
     addProject = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增项目',
+	        width: 400,
             children: this.metaAction.loadApp(
                 'mk-app-card-project', {
                     store: this.component.props.store
