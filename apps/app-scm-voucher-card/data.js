@@ -494,7 +494,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].quantity,2,$isFocus(_ctrlPath))}}",
-					onChange: "{{$quantityChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('quantity',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -512,7 +512,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].price,2,$isFocus(_ctrlPath))}}",
-					onChange: "{{$priceChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('price',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -528,9 +528,9 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amount, 2)}}",
-					onChange: "{{$amountChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('amount',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
@@ -561,7 +561,7 @@ export function getMeta() {
 									? data.form.details[_rowIndex].taxRate.id
 									: data.form.details[_rowIndex].taxRate.name
 							}}}`,
-					onChange: "{{$taxRateChange(_rowIndex, data.form.details[_rowIndex], data.other.taxRate)}}",
+					onChange: "{{$calc('taxRate',_rowIndex, data.form.details[_rowIndex])}}",
 					onFocus: "{{$taxRateFocus}}",
 					children: {
 						name: 'option',
@@ -587,8 +587,9 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].tax, 2)}}",
+					onChange: "{{$calc('tax',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
@@ -611,7 +612,7 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amountWithTax, 2)}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
@@ -733,15 +734,13 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-footer-left',
 				children: [{
 					name: 'creator',
-					component: 'Form.Item',
-					label: '制单人',
-					children: '{{data.form.creatorName}}',
+					component: 'Layout',
+					children: ['制单人', '{{data.form.creatorName}}'],
 					style: { marginRight: 30 }
 				}, {
 					name: 'approver',
-					component: 'Form.Item',
-					label: '审核人',
-					children: '{{data.form.auditorName}}',
+					component: 'Layout',
+					children: ['审核人', '{{data.form.auditorName}}'],
 				}]
 
 			}, {
