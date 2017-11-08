@@ -185,18 +185,6 @@ export function getMeta() {
 					},
 				}]
 			}, {
-				name: 'dateItem',
-				component: 'Form.Item',
-				label: '单据日期',
-				required: true,
-				children: [{
-					name: 'businessDate',
-					component: 'DatePicker',
-					disabled: '{{$getControlEnable()}}',
-					value: '{{$stringToMoment(data.form.businessDate)}}',
-					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
-				}]
-			}, {
 				name: 'invoiceTypeItem',
 				component: 'Form.Item',
 				label: '票据类型',
@@ -218,26 +206,27 @@ export function getMeta() {
 					}
 				}]
 			}, {
-				name: 'warehouseItem',
+				name: 'invoiceNumberItem',
 				component: 'Form.Item',
-				label: '仓库',
+				label: '发票号码',
 				required: false,
-				children: [{
-					name: 'warehouse',
-					component: 'Select',
-					showSearch: false,
-					disabled: '{{$getControlEnable()}}',
-					value: '{{data.form.warehouse && data.form.warehouse.id }}',
-					onChange: `{{(v)=>$sf('data.form.warehouse', $fromJS(data.other.warehouses.find(o=>o.id==v),null))}}`,
-					onFocus: "{{$warehouseFocus}}",
-					children: {
-						name: 'option',
-						component: 'Select.Option',
-						value: "{{ data.other.warehouses && data.other.warehouses[_rowIndex].id }}",
-						children: '{{data.other.warehouses && data.other.warehouses[_rowIndex].name }}',
-						_power: 'for in data.other.warehouses'
-					}
-				}]
+				children: {
+					name: 'invoiceNumber',
+					component: 'Input',
+					value: '{{data.form.invoiceNumber}}',
+					onChange: '{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
+				}
+			}, {
+				name: 'invoiceCodeItem',
+				component: 'Form.Item',
+				label: '发票号码',
+				required: false,
+				children: {
+					name: 'invoiceCode',
+					component: 'Input',
+					value: '{{data.form.invoiceCode}}',
+					onChange: '{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
+				}
 			}, {
 				name: 'departmentItem',
 				component: 'Form.Item',
@@ -249,7 +238,7 @@ export function getMeta() {
 					component: 'Select',
 					showSearch: true,
 					disabled: '{{$getControlEnable()}}',
-					value: '{{data.form.department && data.form.department.name }}',
+					value: '',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -266,6 +255,36 @@ export function getMeta() {
 						style: { width: '100%' },
 						children: '新增',
 						onClick: '{{$addDepartment}}'
+					},
+				}]
+			}, {
+				name: 'personItem',
+				component: 'Form.Item',
+				validateStatus: 'info',
+				label: '业务员',
+				children: [{
+					name: 'person',
+					component: 'Select',
+					showSearch: true,
+					disabled: '{{$getControlEnable()}}',
+
+					value: '{{data.form.person && data.form.person.name }}',
+					onChange: `{{(v)=>$sf('data.form.person', $fromJS(data.other.person.find(o=>o.id==v),null))}}`,
+					onFocus: "{{$personFocus}}",
+					children: {
+						name: 'option',
+						component: 'Select.Option',
+						value: "{{ data.other.person && data.other.person[_rowIndex].id }}",
+						children: '{{data.other.person && data.other.person[_rowIndex].name }}',
+						_power: 'for in data.other.person'
+					},
+					dropdownFooter: {
+						name: 'add',
+						component: 'Button',
+						type: 'primary',
+						style: { width: '100%' },
+						children: '新增',
+						onClick: '{{$addPerson}}'
 					},
 				}]
 			}, {
@@ -299,34 +318,16 @@ export function getMeta() {
 					},
 				}]
 			}, {
-				name: 'personItem',
+				name: 'dateItem',
 				component: 'Form.Item',
-				validateStatus: 'info',
-				label: '业务员',
+				label: '记账日期',
+				required: true,
 				children: [{
-					name: 'person',
-					component: 'Select',
-					showSearch: true,
+					name: 'businessDate',
+					component: 'DatePicker',
 					disabled: '{{$getControlEnable()}}',
-
-					value: '{{data.form.person && data.form.person.name }}',
-					onChange: `{{(v)=>$sf('data.form.person', $fromJS(data.other.person.find(o=>o.id==v),null))}}`,
-					onFocus: "{{$personFocus}}",
-					children: {
-						name: 'option',
-						component: 'Select.Option',
-						value: "{{ data.other.person && data.other.person[_rowIndex].id }}",
-						children: '{{data.other.person && data.other.person[_rowIndex].name }}',
-						_power: 'for in data.other.person'
-					},
-					dropdownFooter: {
-						name: 'add',
-						component: 'Button',
-						type: 'primary',
-						style: { width: '100%' },
-						children: '新增',
-						onClick: '{{$addPerson}}'
-					},
+					value: '{{$stringToMoment(data.form.businessDate)}}',
+					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
 				}]
 			}, {
 				name: 'remark',
@@ -495,7 +496,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].quantity,2,$isFocus(_ctrlPath))}}",
-					onChange: "{{$quantityChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('quantity',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -513,7 +514,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].price,2,$isFocus(_ctrlPath))}}",
-					onChange: "{{$priceChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('price',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -529,16 +530,16 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amount, 2)}}",
-					onChange: "{{$amountChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('amount',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmount(data.form.details)}}'
+					children: '{{$sumAmount(`amount`)}}'
 				}
 			}, {
 				name: 'taxRate',
@@ -562,7 +563,7 @@ export function getMeta() {
 									? data.form.details[_rowIndex].taxRate.id
 									: data.form.details[_rowIndex].taxRate.name
 							}}}`,
-					onChange: "{{$taxRateChange(_rowIndex, data.form.details[_rowIndex], data.other.taxRate)}}",
+					onChange: "{{$calc('taxRate',_rowIndex, data.form.details[_rowIndex])}}",
 					onFocus: "{{$taxRateFocus}}",
 					children: {
 						name: 'option',
@@ -588,15 +589,16 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].tax, 2)}}",
+					onChange: "{{$calc('tax',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumTax(data.form.details)}}'
+					children: '{{$sumTax(`tax`)}}'
 				}
 			}, {
 				name: 'amountWithTax',
@@ -612,7 +614,7 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amountWithTax, 2)}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
@@ -620,7 +622,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmountWithTax(data.form.details)}}'
+					children: '{{$sumAmountWithTax(`amountWithTax`)}}'
 				}
 			}]
 		}, {
@@ -665,8 +667,8 @@ export function getMeta() {
 							children: {
 								name: 'option',
 								component: 'Select.Option',
-								value: "{{ data.other.bankAccount && data.other.bankAccount[_lastIndex].id }}",
-								children: '{{data.other.bankAccount && data.other.bankAccount[_lastIndex].name }}',
+								value: "{{ data.other.bankAccount[_lastIndex] && data.other.bankAccount[_lastIndex].id }}",
+								children: '{{data.other.bankAccount[_lastIndex] && data.other.bankAccount[_lastIndex].name }}',
 								_power: 'for in data.other.bankAccount'
 							}
 						}]
@@ -734,15 +736,13 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-footer-left',
 				children: [{
 					name: 'creator',
-					component: 'Form.Item',
-					label: '制单人',
-					children: '{{data.form.creatorName}}',
+					component: 'Layout',
+					children: ['制单人', '{{data.form.creatorName}}'],
 					style: { marginRight: 30 }
 				}, {
 					name: 'approver',
-					component: 'Form.Item',
-					label: '审核人',
-					children: '{{data.form.auditorName}}',
+					component: 'Layout',
+					children: ['审核人', '{{data.form.auditorName}}'],
 				}]
 
 			}, {
@@ -805,6 +805,13 @@ export function getInitState() {
 
 export const blankVoucherItem = {
 	inventory: {
-
-	}
+		id: null,
+		name: null
+	},
+	isGift:null,
+	quantity:null,
+	tax:null,
+	taxRate:null,
+	price:null,
+	amount:''
 }

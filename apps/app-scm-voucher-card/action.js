@@ -126,15 +126,102 @@ class action {
         this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
     }
 
+    reject = async () => {
+        //生成红字销售订单
+        debugger
+        let id = this.metaAction.gf(`data.form.id`),
+            ts = this.metaAction.gf(`data.form.ts`)
+        if (!id && !ts) {
+            voucher.toast('请保存单据!')
+            return
+        }
+
+        let response = await this.webapi.delivery.init({ "deliveryTypeId": 133 })
+        if (response) {
+            let responseValue = this.metaAction.gf('data.form').toJS()
+            let data = {
+                form: {
+                    code: responseValue.code,
+                    enclosures: responseValue.enclosures,
+                    businessDate: responseValue.businessDate,
+                    orgId: responseValue.orgId,
+                    invoiceNumber: responseValue.invoiceNumber,
+                    invoiceCode: responseValue.invoiceCode,
+                    creatorName: responseValue.creatorName,
+                    //invoiceType: responseValue.invoiceType,
+                    invoiceTypeId: responseValue.invoiceType.enumItemId,
+                    invoiceTypeName: responseValue.invoiceType.enumItemName,
+                    //responseValue.defaultInvoiceTypeName
+                    titleText: '红字销售订单',
+                    deliveryTypeId: 133,
+                    settledAmount: responseValue.settledAmount,
+                    totalAmount: responseValue.totalAmount,
+                    totalAmountWithTax: responseValue.totalAmountWithTax,
+                    totalSettleAmount: responseValue.totalSettleAmount,
+                    receiveAmount: responseValue.receiveAmount,
+                    remark: responseValue.remark,
+                    customerId: responseValue.customer.id,
+                    customerName: responseValue.customer.name,
+                    departmentId: responseValue.department.id,
+                    departmentName: responseValue.department.name,
+                    salesPersonId: responseValue.person.id,
+                    salesPersonName: responseValue.person.name,
+                    bankAccountId: responseValue.bankAccount.id,
+                    bankAccountName: responseValue.bankAccount.name,
+                    projectId: responseValue.project.id,
+                    projectName: responseValue.project.name,
+                    details: [
+
+                    ],
+                    other: {
+                        status: consts.status.VOUCHER_STATUS_ADD,
+                    }
+                }
+            }
+            data.form.details = responseValue.details.map(o => {
+                if (o.inventory && o.inventory.id) {
+                    return {
+                        voucherId: o.voucherId,
+                        createTime: o.createTime ? moment(o.createTime).format('YYYY-MM-DD HH:mm:ss') : '',
+                        amount: -(o.amount),
+                        amountWithTax: -(o.amountWithTax),
+                        status: o.status,
+                        orderNumber: o.orderNumber,
+                        inventoryId: o.inventory.id,
+                        inventoryName: o.inventory.name,
+                        inventoryCode: o.inventory.code,
+                        codeAndName: o.inventory.codeAndName,
+                        specification: o.inventory.specification,
+                        unit: o.inventory.unit,
+                        quantity: -(o.quantity),
+                        price: o.price,
+                        tax: -(o.tax),
+                        taxRateId: o.taxRate.id,
+                        taxRateName: o.taxRate.name,
+                        taxRate: o.taxRate.value,
+                        creator: o.creator
+                    }
+                }
+            })
+
+            this.injections.reduce('load', data.form)
+        }
+    }
+    receipt = () => {
+        //收款
+        this.component.props.setPortalContent('销售订单列表', 'app-arap-voucher-card')
+    }
+
     moreMenuClick = (e) => {
         switch (e.key) {
             case 'del':
                 this.del()
                 break
+            case 'reject':
+                this.reject()
+                break
             case 'receipt':
-                throw '请实现收款功能'
-            case 'history':
-                this.history()
+                this.receipt()
                 break
         }
     }
@@ -239,9 +326,20 @@ class action {
         let data = this.metaAction.gf('data')
         let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 }, true)
         if (ret) {
+            this.updateSetting(ret)
         }
     }
+    updateSetting = (data) => {
+        let columnSetting = data[0].details.map(o => {
+            return {
+                propertyName: o.propertyName,
+                propertyTitle: o.propertyTitle,
+                visible: o.visible
+            }
+        })
 
+        this.metaAction.sf('data.other.columnSetting', fromJS(columnSetting))
+    }
     addCustomer = async () => {
         await this.voucherAction.addCustomer('data.form.customer')
     }
@@ -315,98 +413,45 @@ class action {
                 id: response.lastBankAccountId,
                 name: response.lastBankAccountName
             }))
-            
-            this.metaAction.sf('data.form.advanceAmount', this.voucherAction.numberFormat(response.preReceiveAmount, 2))
+
+            this.metaAction.sf('data.form.advanceAmount', this.voucherAction.quantityFormat(response.preReceiveAmount, 2))
         }
     }
 
-    quantityChange = (rowIndex, rowData) => (v) => {
-        const quantity = utils.number.round(v, 2),
-            price = utils.number.round(rowData.price, 2),
-            amount = utils.number.round(price * quantity, 2),
-            tax = utils.number.round(amount * (rowData.tax ? rowData.tax.id : 0) / 100, 2),
-            amountWithTax = utils.number.round(amount + tax, 2)
-
-        this.metaAction.sfs({
-            [`data.form.details.${rowIndex}.quantity`]: quantity,
-            [`data.form.details.${rowIndex}.amount`]: amount,
-            [`data.form.details.${rowIndex}.tax`]: tax,
-            [`data.form.details.${rowIndex}.amountWithTax`]: amountWithTax,
+    calc = (col, rowIndex, rowData, params) => (v) => {
+        params = Object.assign(params, {
+            value: v
         })
+        this.voucherAction.calc(col, rowIndex, rowData, params)
     }
 
-    priceChange = (rowIndex, rowData) => (v) => {
-        const price = utils.number.round(v, 2),
-            quantity = utils.number.round(rowData.quantity, 2),
-            amount = utils.number.round(price * quantity, 2),
-            tax = utils.number.round(amount * (rowData.tax ? rowData.tax.id : 0) / 100, 2),
-            amountWithTax = utils.number.round(amount + tax, 2)
-
-        this.metaAction.sfs({
-            [`data.form.details.${rowIndex}.price`]: price,
-            [`data.form.details.${rowIndex}.amount`]: amount,
-            [`data.form.details.${rowIndex}.tax`]: tax,
-            [`data.form.details.${rowIndex}.amountWithTax`]: amountWithTax,
-        })
+    sumAmount = (columnName) => {
+        return this.voucherAction.sumColumn(columnName)
     }
 
-    amountChange = (rowIndex, rowData) => (v) => {
+    sumTax = (columnName) => {
+        return this.voucherAction.sumColumn(columnName)
     }
 
-    taxRateChange = (rowIndex, rowData, taxRates) => (v) => {
-        const hit = taxRates.find(o => o.id == v)
-
-        if (!hit)
-            return
-
-        const amount = rowData.amount,
-            tax = utils.number.round(amount * hit.id / 100, 2),
-            amountWithTax = utils.number.round(amount + tax, 2)
-
-        this.metaAction.sfs({
-            [`data.form.details.${rowIndex}.taxRate`]: fromJS(hit),
-            [`data.form.details.${rowIndex}.tax`]: fromJS(tax),
-            [`data.form.details.${rowIndex}.amountWithTax`]: amountWithTax,
-        })
-    }
-    calc = (rowIndex, fieldName, rowData, params) => (v) => {
-        this.voucherAction.calc()
-
-    }
-
-    quantityFormat = (quantity, decimals, isFocus = false) => {
-        return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
-    }
-
-    sumAmount = (details) => {
-        return this.voucherAction.numberFormat(this.sum(details, (a, b) => a + b.amount), 2)
-    }
-
-    sumTax = (details) => {
-        return this.voucherAction.numberFormat(this.sum(details, (a, b) => a + b.tax), 2)
-    }
-
-    sumAmountWithTax = (details) => {
-        return this.voucherAction.numberFormat(this.sum(details, (a, b) => a + b.amountWithTax), 2)
+    sumAmountWithTax = (columnName) => {
+        return this.voucherAction.sumColumn(columnName)
     }
 
     calcBalance = (data) => {
-        const amountWithTax = this.sum(data.form.details, (a, b) => a + b.amountWithTax),
-            settlementTotal = this.sum(data.form.settlements, (a, b) => a + b.settlementAmount),
+        const amountWithTax = this.voucherAction.sum(data.form.details, (a, b) => a + b.amountWithTax),
+            settlementTotal = this.voucherAction.sum(data.form.settlements, (a, b) => a + b.settlementAmount),
             advanceAmount = data.form.useAdvance ? utils.number.round(data.form.advanceAmount, 2) : 0
 
         return this.voucherAction.numberFormat(amountWithTax - settlementTotal - advanceAmount, 2)
     }
 
-    sum(details, fn) {
-        if (!details || details.length == 0)
-            return this.voucherAction.numberFormat(0, 2)
-
-        return details.reduce((a, b) => {
-            let r = fn(a, b)
-            return isNaN(r) ? a : r
-        }, 0)
+    quantityFormat = (quantity, decimals, isFocus = false) => {
+        if(quantity){
+            return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
+        }       
     }
+
+
 }
 
 export default function creator(option) {

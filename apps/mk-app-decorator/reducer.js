@@ -6,6 +6,8 @@ export default class reducer {
         this.metaReducer = option.metaReducer
     }
 
+    /*
+
     calc = (state, rowIndex, fieldName, rowData, params) => {
         let v = params.v,
             taxRates = params.taxRates
@@ -74,4 +76,5 @@ export default class reducer {
         return state
 
     }
+    */
 }
