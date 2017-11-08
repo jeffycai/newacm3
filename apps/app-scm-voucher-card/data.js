@@ -538,7 +538,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmount(data.form.details)}}'
+					children: '{{$sumAmount(`amount`)}}'
 				}
 			}, {
 				name: 'taxRate',
@@ -597,7 +597,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumTax(data.form.details)}}'
+					children: '{{$sumTax(`tax`)}}'
 				}
 			}, {
 				name: 'amountWithTax',
@@ -621,7 +621,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmountWithTax(data.form.details)}}'
+					children: '{{$sumAmountWithTax(`amountWithTax`)}}'
 				}
 			}]
 		}, {

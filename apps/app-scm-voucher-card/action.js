@@ -414,7 +414,7 @@ class action {
                 name: response.lastBankAccountName
             }))
 
-            this.metaAction.sf('data.form.advanceAmount', this.quantityFormat(response.preReceiveAmount, 2))
+            this.metaAction.sf('data.form.advanceAmount', this.voucherAction.quantityFormat(response.preReceiveAmount, 2))
         }
     }
 
@@ -425,20 +425,16 @@ class action {
         this.voucherAction.calc(col, rowIndex, rowData, params)
     }
 
-    quantityFormat = (quantity, decimals, isFocus = false) => {
-        return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
+    sumAmount = (columnName) => {
+        return this.voucherAction.sumColumn(columnName)
     }
 
-    sumAmount = (details) => {
-        return this.quantityFormat(this.voucherAction.sum(details, (a, b) => a + b.amount), 2)
+    sumTax = (columnName) => {
+        return this.voucherAction.sumColumn(columnName)
     }
 
-    sumTax = (details) => {
-        return this.quantityFormat(this.voucherAction.sum(details, (a, b) => a + b.tax), 2)
-    }
-
-    sumAmountWithTax = (details) => {
-        return this.quantityFormat(this.voucherAction.sum(details, (a, b) => a + b.amountWithTax), 2)
+    sumAmountWithTax = (columnName) => {
+        return this.voucherAction.sumColumn(columnName)
     }
 
     calcBalance = (data) => {
@@ -446,7 +442,7 @@ class action {
             settlementTotal = this.voucherAction.sum(data.form.settlements, (a, b) => a + b.settlementAmount),
             advanceAmount = data.form.useAdvance ? utils.number.round(data.form.advanceAmount, 2) : 0
 
-        return this.quantityFormat(amountWithTax - settlementTotal - advanceAmount, 2)
+        return this.voucherAction.numberFormat(amountWithTax - settlementTotal - advanceAmount, 2)
     }
 
 }
