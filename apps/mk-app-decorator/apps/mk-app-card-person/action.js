@@ -75,10 +75,10 @@ class action {
             const response = await this.webapi.person.create(form)
             if (response) {
                 this.metaAction.toast('success', '保存成功')
-                this.injections.reduce('setperson', response)
+                //this.injections.reduce('setperson', response)
+	            return response
             }
         //}
-        return true
     }
 
     check = async (option) => {
@@ -113,6 +113,24 @@ class action {
 		this.metaAction.sf('data.form.deptName', fromJS(departments[_rowIndex].name))
 		this.metaAction.sf('data.form.orgId', fromJS(departments[_rowIndex].orgId))
 		this.voucherAction.fieldChange(path, value, this.check)
+	}
+	
+	addDepartment = async () => {
+		const ret = await this.metaAction.modal('show', {
+			title: '新增部门',
+			width: 400,
+			children: this.metaAction.loadApp(
+				'mk-app-card-department', {
+					store: this.component.props.store
+				}
+			)
+		})
+		
+		if (ret) {
+			this.metaAction.sf('data.form.departmentId', fromJS(ret.id))
+			this.metaAction.sf('data.form.deptName', fromJS(ret.name))
+			this.metaAction.sf('data.form.orgId', fromJS(ret.orgId))
+		}
 	}
 }
 
