@@ -128,20 +128,19 @@ class action {
 
     reject = async () => {
         //生成红字销售订单
-        let id = this.metaAction.gf(`form.id`),
-            ts = this.metaAction.gf(`form.ts`)
+        debugger
+        let id = this.metaAction.gf(`data.form.id`),
+            ts = this.metaAction.gf(`data.form.ts`)
         if (!id && !ts) {
             voucher.toast('请保存单据!')
             return
         }
 
-        let responseValue = this.metaAction.gf('form').toJS()
-
         let response = await this.webapi.delivery.init({ "deliveryTypeId": 133 })
-
         if (response) {
-            let newVoucher = {
-                value: {
+            let responseValue = this.metaAction.gf('data.form').toJS()
+            let data = {
+                form: {
                     code: responseValue.code,
                     enclosures: responseValue.enclosures,
                     businessDate: responseValue.businessDate,
@@ -150,10 +149,10 @@ class action {
                     invoiceCode: responseValue.invoiceCode,
                     creatorName: responseValue.creatorName,
                     //invoiceType: responseValue.invoiceType,
-                    invoiceTypeId: responseValue.invoiceType.id,
-                    invoiceTypeName: responseValue.invoiceType.name,
+                    invoiceTypeId: responseValue.invoiceType.enumItemId,
+                    invoiceTypeName: responseValue.invoiceType.enumItemName,
                     //responseValue.defaultInvoiceTypeName
-                    titleText: '红字销售发票',
+                    titleText: '红字销售订单',
                     deliveryTypeId: 133,
                     settledAmount: responseValue.settledAmount,
                     totalAmount: responseValue.totalAmount,
@@ -165,8 +164,8 @@ class action {
                     customerName: responseValue.customer.name,
                     departmentId: responseValue.department.id,
                     departmentName: responseValue.department.name,
-                    salesPersonId: responseValue.salesPerson.id,
-                    salesPersonName: responseValue.salesPerson.name,
+                    salesPersonId: responseValue.person.id,
+                    salesPersonName: responseValue.person.name,
                     bankAccountId: responseValue.bankAccount.id,
                     bankAccountName: responseValue.bankAccount.name,
                     projectId: responseValue.project.id,
@@ -179,7 +178,7 @@ class action {
                     }
                 }
             }
-            newVoucher.value.details = responseValue.detail.map(o => {
+            data.form.details = responseValue.details.map(o => {
                 if (o.inventory && o.inventory.id) {
                     return {
                         voucherId: o.voucherId,
@@ -205,7 +204,7 @@ class action {
                 }
             })
 
-            this.injections.reduce('load', newVoucher)
+            this.injections.reduce('load', data.form)
         }
     }
     receipt = () => {
@@ -329,16 +328,16 @@ class action {
             this.updateSetting(ret)
         }
     }
-    updateSetting = (data)=>{
-        let columnSetting = data[0].details.map(o=>{
+    updateSetting = (data) => {
+        let columnSetting = data[0].details.map(o => {
             return {
-                propertyName:o.propertyName,
-                propertyTitle:o.propertyTitle,
-                visible:o.visible
+                propertyName: o.propertyName,
+                propertyTitle: o.propertyTitle,
+                visible: o.visible
             }
         })
 
-        this.metaAction.sf('data.other.columnSetting',fromJS(columnSetting))
+        this.metaAction.sf('data.other.columnSetting', fromJS(columnSetting))
     }
     addCustomer = async () => {
         await this.voucherAction.addCustomer('data.form.customer')
