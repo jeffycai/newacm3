@@ -806,6 +806,11 @@ export const blankVoucherItem = {
 	inventory: {
 		id: null,
 		name: null
-
-	}
+	},
+	isGift:null,
+	quantity:null,
+	tax:null,
+	taxRate:null,
+	price:null,
+	amount:''
 }

@@ -325,7 +325,6 @@ export default class action {
     }
 
     sumColumn = (col) => {
-        debugger
         let currentSumCol = col,
             details = this.metaAction.gf('data.form.details')
         return this.numberFormat(this.sum(details, (a, b) => a + b.get(`${currentSumCol}`)), 2)

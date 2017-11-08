@@ -446,7 +446,9 @@ class action {
     }
 
     quantityFormat = (quantity, decimals, isFocus = false) => {
-        return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
+        if(quantity){
+            return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
+        }       
     }
 
 
