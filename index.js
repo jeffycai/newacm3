@@ -2,6 +2,7 @@ import { config, start, componentFactory } from 'mk-meta-engine'
 import * as mkComponents from 'mk-component'
 import myConfig  from './config'
 
+import app_arap_voucher_card from './apps/app-arap-voucher-card/index.js'
 import app_scm_voucher_card from './apps/app-scm-voucher-card/index.js'
 import app_scm_voucher_list from './apps/app-scm-voucher-list/index.js'
 import mk_app_apidoc from './apps/mk-app-apidoc/index.js'
@@ -34,6 +35,7 @@ import mk_app_root from './apps/mk-app-root/index.js'
 
 const apps = {
 		
+	[app_arap_voucher_card.name]: app_arap_voucher_card,	
 	[app_scm_voucher_card.name]: app_scm_voucher_card,	
 	[app_scm_voucher_list.name]: app_scm_voucher_list,	
 	[mk_app_apidoc.name]: mk_app_apidoc,	

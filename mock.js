@@ -1,4 +1,5 @@
 
+import './apps/app-arap-voucher-card/mock.js';
 import './apps/app-scm-voucher-card/mock.js';
 import './apps/app-scm-voucher-list/mock.js';
 import './apps/mk-app-apidoc/mock.js';

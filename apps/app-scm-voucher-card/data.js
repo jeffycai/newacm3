@@ -183,7 +183,7 @@ export function getMeta() {
 						onClick: '{{$addCustomer}}'
 					},
 				}]
-			},  {
+			}, {
 				name: 'invoiceTypeItem',
 				component: 'Form.Item',
 				label: '票据类型',
@@ -204,29 +204,29 @@ export function getMeta() {
 						_power: 'for in data.other.invoiceType'
 					}
 				}]
-			},{
-				name:'invoiceNumberItem',
-				component:'Form.Item',
-				label:'发票号码',
-				required:false,
-				children:{
+			}, {
+				name: 'invoiceNumberItem',
+				component: 'Form.Item',
+				label: '发票号码',
+				required: false,
+				children: {
 					name: 'invoiceNumber',
 					component: 'Input',
 					value: '{{data.form.invoiceNumber}}',
-					onChange:'{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
+					onChange: '{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
 				}
-			},{
-				name:'invoiceCodeItem',
-				component:'Form.Item',
-				label:'发票号码',
-				required:false,
-				children:{
+			}, {
+				name: 'invoiceCodeItem',
+				component: 'Form.Item',
+				label: '发票号码',
+				required: false,
+				children: {
 					name: 'invoiceCode',
 					component: 'Input',
 					value: '{{data.form.invoiceCode}}',
-					onChange:'{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
+					onChange: '{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
 				}
-			},{
+			}, {
 				name: 'departmentItem',
 				component: 'Form.Item',
 				required: false,
@@ -256,7 +256,7 @@ export function getMeta() {
 						onClick: '{{$addDepartment}}'
 					},
 				}]
-			},{
+			}, {
 				name: 'personItem',
 				component: 'Form.Item',
 				validateStatus: 'info',
@@ -286,7 +286,7 @@ export function getMeta() {
 						onClick: '{{$addPerson}}'
 					},
 				}]
-			},{
+			}, {
 				name: 'projectItem',
 				component: 'Form.Item',
 				required: false,
@@ -316,7 +316,7 @@ export function getMeta() {
 						onClick: '{{$addProject}}'
 					},
 				}]
-			},{
+			}, {
 				name: 'dateItem',
 				component: 'Form.Item',
 				label: '记账日期',
@@ -328,7 +328,7 @@ export function getMeta() {
 					value: '{{$stringToMoment(data.form.businessDate)}}',
 					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
 				}]
-			},{
+			}, {
 				name: 'remark',
 				component: 'Form.Item',
 				label: '备注',
@@ -666,8 +666,8 @@ export function getMeta() {
 							children: {
 								name: 'option',
 								component: 'Select.Option',
-								value: "{{ data.other.bankAccount && data.other.bankAccount[_lastIndex].id }}",
-								children: '{{data.other.bankAccount && data.other.bankAccount[_lastIndex].name }}',
+								value: "{{ data.other.bankAccount[_lastIndex] && data.other.bankAccount[_lastIndex].id }}",
+								children: '{{data.other.bankAccount[_lastIndex] && data.other.bankAccount[_lastIndex].name }}',
 								_power: 'for in data.other.bankAccount'
 							}
 						}]
@@ -804,6 +804,8 @@ export function getInitState() {
 
 export const blankVoucherItem = {
 	inventory: {
+		id: null,
+		name: null
 
 	}
 }
