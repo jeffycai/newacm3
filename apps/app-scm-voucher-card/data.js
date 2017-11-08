@@ -183,19 +183,7 @@ export function getMeta() {
 						onClick: '{{$addCustomer}}'
 					},
 				}]
-			}, {
-				name: 'dateItem',
-				component: 'Form.Item',
-				label: '单据日期',
-				required: true,
-				children: [{
-					name: 'businessDate',
-					component: 'DatePicker',
-					disabled: '{{$getControlEnable()}}',
-					value: '{{$stringToMoment(data.form.businessDate)}}',
-					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
-				}]
-			}, {
+			},  {
 				name: 'invoiceTypeItem',
 				component: 'Form.Item',
 				label: '票据类型',
@@ -216,28 +204,29 @@ export function getMeta() {
 						_power: 'for in data.other.invoiceType'
 					}
 				}]
-			}, {
-				name: 'warehouseItem',
-				component: 'Form.Item',
-				label: '仓库',
-				required: false,
-				children: [{
-					name: 'warehouse',
-					component: 'Select',
-					showSearch: false,
-					disabled: '{{$getControlEnable()}}',
-					value: '{{data.form.warehouse && data.form.warehouse.id }}',
-					onChange: `{{(v)=>$sf('data.form.warehouse', $fromJS(data.other.warehouses.find(o=>o.id==v),null))}}`,
-					onFocus: "{{$warehouseFocus}}",
-					children: {
-						name: 'option',
-						component: 'Select.Option',
-						value: "{{ data.other.warehouses && data.other.warehouses[_rowIndex].id }}",
-						children: '{{data.other.warehouses && data.other.warehouses[_rowIndex].name }}',
-						_power: 'for in data.other.warehouses'
-					}
-				}]
-			}, {
+			},{
+				name:'invoiceNumberItem',
+				component:'Form.Item',
+				label:'发票号码',
+				required:false,
+				children:{
+					name: 'invoiceNumber',
+					component: 'Input',
+					value: '{{data.form.invoiceNumber}}',
+					onChange:'{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
+				}
+			},{
+				name:'invoiceCodeItem',
+				component:'Form.Item',
+				label:'发票号码',
+				required:false,
+				children:{
+					name: 'invoiceCode',
+					component: 'Input',
+					value: '{{data.form.invoiceCode}}',
+					onChange:'{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
+				}
+			},{
 				name: 'departmentItem',
 				component: 'Form.Item',
 				required: false,
@@ -248,7 +237,7 @@ export function getMeta() {
 					component: 'Select',
 					showSearch: true,
 					disabled: '{{$getControlEnable()}}',
-					value: '{{data.form.department && data.form.department.name }}',
+					value: '',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -267,37 +256,7 @@ export function getMeta() {
 						onClick: '{{$addDepartment}}'
 					},
 				}]
-			}, {
-				name: 'projectItem',
-				component: 'Form.Item',
-				required: false,
-				validateStatus: 'info',
-				label: '项目',
-				children: [{
-					name: 'project',
-					component: 'Select',
-					showSearch: true,
-					disabled: '{{$getControlEnable()}}',
-					value: '{{data.form.project && data.form.project.name }}',
-					onChange: `{{(v)=>$sf('data.form.project', $fromJS(data.other.project.find(o=>o.id==v),null))}}`,
-					onFocus: "{{$projectFocus}}",
-					children: {
-						name: 'option',
-						component: 'Select.Option',
-						value: "{{ data.other.project && data.other.project[_rowIndex].id }}",
-						children: '{{data.other.project && data.other.project[_rowIndex].name }}',
-						_power: 'for in data.other.project'
-					},
-					dropdownFooter: {
-						name: 'add',
-						component: 'Button',
-						type: 'primary',
-						style: { width: '100%' },
-						children: '新增',
-						onClick: '{{$addProject}}'
-					},
-				}]
-			}, {
+			},{
 				name: 'personItem',
 				component: 'Form.Item',
 				validateStatus: 'info',
@@ -327,7 +286,49 @@ export function getMeta() {
 						onClick: '{{$addPerson}}'
 					},
 				}]
-			}, {
+			},{
+				name: 'projectItem',
+				component: 'Form.Item',
+				required: false,
+				validateStatus: 'info',
+				label: '项目',
+				children: [{
+					name: 'project',
+					component: 'Select',
+					showSearch: true,
+					disabled: '{{$getControlEnable()}}',
+					value: '{{data.form.project && data.form.project.name }}',
+					onChange: `{{(v)=>$sf('data.form.project', $fromJS(data.other.project.find(o=>o.id==v),null))}}`,
+					onFocus: "{{$projectFocus}}",
+					children: {
+						name: 'option',
+						component: 'Select.Option',
+						value: "{{ data.other.project && data.other.project[_rowIndex].id }}",
+						children: '{{data.other.project && data.other.project[_rowIndex].name }}',
+						_power: 'for in data.other.project'
+					},
+					dropdownFooter: {
+						name: 'add',
+						component: 'Button',
+						type: 'primary',
+						style: { width: '100%' },
+						children: '新增',
+						onClick: '{{$addProject}}'
+					},
+				}]
+			},{
+				name: 'dateItem',
+				component: 'Form.Item',
+				label: '记账日期',
+				required: true,
+				children: [{
+					name: 'businessDate',
+					component: 'DatePicker',
+					disabled: '{{$getControlEnable()}}',
+					value: '{{$stringToMoment(data.form.businessDate)}}',
+					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
+				}]
+			},{
 				name: 'remark',
 				component: 'Form.Item',
 				label: '备注',

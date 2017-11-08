@@ -33,6 +33,16 @@ export function getMeta() {
 				onChange: "{{(e)=>$fieldChange('data.form.name',e.target.value)}}"
 			}]
 
+		},{
+			name:'statusItem',
+			component:'Form.Item',
+			label:'停用',
+			children:{
+				name:'status',
+				checked:'{{!data.form.status}}',
+				onChange:'{{(e)=>$sf("data.form.status",!e.target.checked)}}',
+				component:'Checkbox'
+			}
 		}]
 	}
 }
@@ -42,7 +52,8 @@ export function getInitState() {
 		data: {
 			form: {
 				code: '',
-				name: ''
+				name: '',
+				status:true
 			},
 			other: {
 				error: {}

@@ -76,7 +76,7 @@ export function getMeta() {
 						children: '新增',
 						onClick: '{{$addDepartment}}'
 					},
-					value: '{{data.form.departmentId}}',
+					value: '{{data.form.deptName}}',
 					//onFocus: '{{$departmentFocus}}',
 					onChange: "{{(v)=>$departmentChange('data.form.departmentId', v)}}",
 					children: {
