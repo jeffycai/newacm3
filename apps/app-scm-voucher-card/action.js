@@ -321,10 +321,14 @@ class action {
         let customerId = v
         const response = await this.webapi.delivery.queryByCustomer({ customerId })
 
-        this.metaAction.sf('data.form.bankAccount', fromJS({
-            id: response.lastBankAccountId,
-            name: response.lastBankAccountName
-        }))
+        if (response) {
+            this.metaAction.sf('data.form.bankAccount', fromJS({
+                id: response.lastBankAccountId,
+                name: response.lastBankAccountName
+            }))
+            
+            this.metaAction.sf('data.form.advanceAmount', this.voucherAction.numberFormat(response.preReceiveAmount, 2))
+        }
     }
 
     quantityChange = (rowIndex, rowData) => (v) => {

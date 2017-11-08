@@ -528,7 +528,7 @@ export function getMeta() {
 				},
 				cell: {
 					name: 'cell',
-					component: "DataGrid.TextCell",
+					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amount, 2)}}",
 					onChange: "{{$amountChange(_rowIndex,data.form.details[_rowIndex])}}",
@@ -538,7 +538,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					//children: '{{$sumAmount(data.form.details)}}'
+					children: '{{$sumAmount(data.form.details)}}'
 				}
 			}, {
 				name: 'taxRate',
@@ -587,7 +587,7 @@ export function getMeta() {
 				},
 				cell: {
 					name: 'cell',
-					component: "DataGrid.TextCell",
+					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].tax, 2)}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -596,7 +596,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					//children: '{{$sumTax(data.form.details)}}'
+					children: '{{$sumTax(data.form.details)}}'
 				}
 			}, {
 				name: 'amountWithTax',
@@ -611,7 +611,7 @@ export function getMeta() {
 				},
 				cell: {
 					name: 'cell',
-					component: "DataGrid.TextCell",
+					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amountWithTax, 2)}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -620,7 +620,7 @@ export function getMeta() {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					//children: '{{$sumAmountWithTax(data.form.details)}}'
+					children: '{{$sumAmountWithTax(data.form.details)}}'
 				}
 			}]
 		}, {

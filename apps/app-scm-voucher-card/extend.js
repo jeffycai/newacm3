@@ -10,26 +10,23 @@ function getGridOption() {
             emptyRow: {},
             getColNames: (gf) => {
                 return [
-                    'inventoryCode',
-                    'inventoryName',
-                    'specification',
-                    'unit',
-                    'isGift',
-                    'quantity',
-                    'price',
-                    'amount',
-                    'taxRate',
-                    'tax',
-                    'amountWithTax'
+                    'inventoryCode',//0
+                    'inventoryName',//1
+                    'specification',//2
+                    'unit',//3
+                    'isGift',//4
+                    'quantity',//5
+                    'price',//6
+                    'amount',//7
+                    'taxRate',//8
+                    'tax',//9
+                    'amountWithTax'//10
                 ]
             },
             cellIsReadonly: (cellPosition, path, gf) => {
                 if (cellPosition.x == 1
                     || cellPosition.x == 2
-                    || cellPosition.x == 3
-                    || cellPosition.x == 7
-                    || cellPosition.x == 9
-                    || cellPosition.x == 10)
+                    || cellPosition.x == 3)
                     return true
 
                 return false
