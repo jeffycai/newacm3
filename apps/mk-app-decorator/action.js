@@ -34,6 +34,7 @@ export default class action {
             })
         })
         if (ret) {
+            return ret
             //
         }
     }
@@ -101,7 +102,8 @@ export default class action {
 
     getProject = async (params) => {
         if (!params) {
-            params = { notNeedPage: true, status: true }
+            // params = {}
+            params = { notNeedPage: true, status: 1 }
         }
         const response = await this.webapi.basicFiles.projectQuery.query(params)
 

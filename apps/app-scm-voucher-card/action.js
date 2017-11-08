@@ -237,12 +237,22 @@ class action {
 
     setting = async () => {
         let data = this.metaAction.gf('data')
-        debugger
         let ret = await this.voucherAction.setting({ "dtoId": 3, "type": 1 }, true)
         if (ret) {
+            this.updateSetting(ret)
         }
     }
+    updateSetting = (data)=>{
+        let columnSetting = data[0].details.map(o=>{
+            return {
+                propertyName:o.propertyName,
+                propertyTitle:o.propertyTitle,
+                visible:o.visible
+            }
+        })
 
+        this.metaAction.sf('data.other.columnSetting',fromJS(columnSetting))
+    }
     addCustomer = async () => {
         await this.voucherAction.addCustomer('data.form.customer')
     }
