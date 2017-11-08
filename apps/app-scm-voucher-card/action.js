@@ -445,6 +445,11 @@ class action {
         return this.voucherAction.numberFormat(amountWithTax - settlementTotal - advanceAmount, 2)
     }
 
+    quantityFormat = (quantity, decimals, isFocus = false) => {
+        return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
+    }
+
+
 }
 
 export default function creator(option) {
