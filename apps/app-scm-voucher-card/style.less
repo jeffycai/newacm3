@@ -2,6 +2,15 @@
     width: 100%;
     height: 100%;
     padding: 10px;
+    color: #666;
+
+    .ant-form-item-label label, h1 {
+        color: #666;
+    }
+    h1 {
+        font-size: 21px;
+        font-weight: 400;
+    }
     .mkicon {
         font-size: 22px;
     }
@@ -52,7 +61,7 @@
     &-header {
         flex-direction: row;
         height: 50px;
-        flex: 0 0 50px;
+        flex: 0 0 40px;
         overflow: hidden;
         &-left {
             flex-direction: row;
@@ -90,11 +99,19 @@
             }
         }
         &-right {
-            flex: 0 0 200px;
+            flex: 0 0 300px;
             flex-direction: row;
             justify-content: flex-end;
             align-items: center;
             padding-right: 10px;
+            .code {
+                line-height: 18px;
+                height: 18px;
+                width: 120px;
+                border-bottom: 1px solid #ccc;
+                text-align: center;
+                color: rgb(204, 204, 204);
+            }
         }
     }
     &-form-header {
@@ -104,10 +121,11 @@
         flex-wrap: wrap;
         padding-top: 18px;
         .mk-form-item {
-            margin-bottom: 20px;
+            margin-bottom: 5px;
+            width: 25%;
         }
         .ant-form-item-label {
-            width: 100px;
+            width: 85px;
             padding: 0px;
         }
         .ant-form-item-control-wrapper {
@@ -124,13 +142,18 @@
             margin-top: 5px;
         }
         &-remark {
+            width: 100% !important;
             .ant-form-item-control-wrapper {
                 width: 800px;
             }
         }
     }
     &-form-details {
-        flex: 1
+        flex: 1;
+        .public_fixedDataTable_header .public_fixedDataTableCell_main {
+            background: #f6f7f8 linear-gradient(#f6f7f8,#f6f7f8);
+            color: #666;
+        }
     }
     &-form-footer {
         flex: 0 0 auto;
@@ -154,10 +177,31 @@
             }
         }
     }
+    &-footer {
+        flex-direction: row;
+        .mk-form-item {
+            margin-bottom: 0;
+            display: flex;
+        }
+    }
     &-footer-left {
         /*padding: 10px;
         flex: 0 0 auto;*/
+        overflow: hidden;
         flex-direction: row;
+
+        .ant-form-item-control-wrapper {
+            display: inline-block;
+        }
+        .ant-form-item-label, .ant-form-item-control {
+            line-height: normal;
+        }
+        .ant-form-item-label, .ant-form-item-control-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
     }
     &-footer-right {
         flex-direction: row;

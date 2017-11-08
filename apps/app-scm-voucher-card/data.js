@@ -20,13 +20,13 @@ export function getMeta() {
 					children: [{
 						name: 'prev',
 						component: 'Button',
-						type: 'softly',
+						type: 'bluesky',
 						icon: 'left',
 						onClick: '{{$prev}}'
 					}, {
 						name: 'next',
 						component: 'Button',
-						type: 'softly',
+						type: 'bluesky',
 						icon: 'right',
 						onClick: '{{$next}}'
 					}]
@@ -34,7 +34,7 @@ export function getMeta() {
 					name: 'setting',
 					component: 'Button',
 					className: 'app-scm-voucher-card-iconbutton',
-					type: 'softly',
+					type: 'bluesky',
 					iconFontFamily: 'mkicon',
 					icon: 'setting',
 					title: '设置',
@@ -139,6 +139,7 @@ export function getMeta() {
 				children: ['单据编号:', {
 					name: 'code',
 					component: '::div',
+					className: 'code',
 					style: { marginRight: 10 },
 					children: "{{data.form.code || ''}}"
 				}, {
