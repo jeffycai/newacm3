@@ -120,7 +120,7 @@ class reducer {
                 id: responseValue.departmentId,
                 name: responseValue.departmentName
             },
-            person: {
+            salesPerson: {
                 id: responseValue.salesPersonId,
                 name: responseValue.salesPersonName
             },

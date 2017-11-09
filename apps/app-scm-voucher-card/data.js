@@ -206,24 +206,26 @@ export function getMeta() {
 						_power: 'for in data.other.invoiceType'
 					}
 				}]
-			}, {
-				name: 'invoiceNumberItem',
-				component: 'Form.Item',
-				label: '发票号码',
-				required: false,
-				children: {
+			},{
+				name:'invoiceNumberItem',
+				component:'Form.Item',
+				label:'发票号码',
+				required:false,
+				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "invoiceNumber" )[0].visible }}',
+				children:{
 					name: 'invoiceNumber',
 					disabled: '{{$getControlEnable()}}',
 					component: 'Input',
 					value: '{{data.form.invoiceNumber}}',
 					onChange: '{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
 				}
-			}, {
-				name: 'invoiceCodeItem',
-				component: 'Form.Item',
-				label: '发票号码',
-				required: false,
-				children: {
+			},{
+				name:'invoiceCodeItem',
+				component:'Form.Item',
+				label:'发票代码',
+				required:false,
+				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "invoiceCode" )[0].visible }}',
+				children:{
 					name: 'invoiceCode',
 					component: 'Input',
 					disabled: '{{$getControlEnable()}}',
@@ -236,6 +238,7 @@ export function getMeta() {
 				required: false,
 				validateStatus: 'info',
 				label: '部门',
+				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "department" )[0].visible }}',
 				children: [{
 					name: 'department',
 					component: 'Select',
@@ -265,21 +268,22 @@ export function getMeta() {
 				component: 'Form.Item',
 				validateStatus: 'info',
 				label: '业务员',
+				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "salesPerson" )[0].visible }}',
 				children: [{
 					name: 'person',
 					component: 'Select',
 					showSearch: true,
 					disabled: '{{$getControlEnable()}}',
 
-					value: '{{data.form.person && data.form.person.name }}',
-					onChange: `{{(v)=>$sf('data.form.person', $fromJS(data.other.person.find(o=>o.id==v),null))}}`,
-					onFocus: "{{$personFocus}}",
+					value: '{{data.form.salesPerson && data.form.salesPerson.name }}',
+					onChange: `{{(v)=>$sf('data.form.salesPerson', $fromJS(data.other.salesPerson.find(o=>o.id==v),null))}}`,
+					onFocus: "{{$salesPersonFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.person && data.other.person[_rowIndex].id }}",
-						children: '{{data.other.person && data.other.person[_rowIndex].name }}',
-						_power: 'for in data.other.person'
+						value: "{{ data.other.salesPerson && data.other.salesPerson[_rowIndex].id }}",
+						children: '{{data.other.salesPerson && data.other.salesPerson[_rowIndex].name }}',
+						_power: 'for in data.other.salesPerson'
 					},
 					dropdownFooter: {
 						name: 'add',
@@ -296,6 +300,7 @@ export function getMeta() {
 				required: false,
 				validateStatus: 'info',
 				label: '项目',
+				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "project" )[0].visible }}',
 				children: [{
 					name: 'project',
 					component: 'Select',
@@ -332,8 +337,8 @@ export function getMeta() {
 					value: '{{$stringToMoment(data.form.businessDate)}}',
 					onChange: "{{(d)=>$sf('data.form.businessDate',$momentToString(d,'YYYY-MM-DD'))}}",
 				}]
-			}, {
-				name: 'remark',
+			},{
+				name: 'remarkItem',
 				component: 'Form.Item',
 				label: '备注',
 				className: 'app-scm-voucher-card-form-header-remark',
@@ -367,50 +372,7 @@ export function getMeta() {
 			onKeyDown: '{{$gridKeydown}}',
 			scrollToColumn: '{{data.other.detailsScrollToColumn}}',
 			scrollToRow: '{{data.other.detailsScrollToRow}}',
-			columns: [{
-				name: 'inventoryCode',
-				component: 'DataGrid.Column',
-				columnKey: 'inventoryCode',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: [{
-						name: 'label',
-						component: '::label',
-						className: 'ant-form-item-required',
-						children: '存货编码'
-					}]
-				},
-				cell: {
-					name: 'cell',
-					component: "{{$isFocus(_ctrlPath) ? 'Select' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath)}}",
-					showSearch: true,
-					value: `{{{
-								if(!data.form.details[_rowIndex]) return
-								if(!data.form.details[_rowIndex].inventory) return
-								return $isFocus(_ctrlPath)
-									? data.form.details[_rowIndex].inventory.id
-									: data.form.details[_rowIndex].inventory.code
-							}}}`,
-					onChange: `{{(v)=>{
-								const hit = data.other.inventory.find(o=>o.id==v)
-								$sf('data.form.details.'+ _rowIndex + '.inventory', $fromJS(hit,null))
-							}}}`,
-					onFocus: "{{$inventoryFocus}}",
-					children: {
-						name: 'option',
-						component: 'Select.Option',
-						value: "{{ data.other.inventory && data.other.inventory[_lastIndex].id }}",
-						children: '{{data.other.inventory && data.other.inventory[_lastIndex].name }}',
-						_power: 'for in data.other.inventory'
-					},
-					_excludeProps: "{{$isFocus(_ctrlPath)? ['onClick'] : ['children'] }}",
-					_power: '({rowIndex})=>rowIndex',
-				},
-			}, {
+			columns: [ {
 				name: 'inventoryName',
 				component: 'DataGrid.Column',
 				columnKey: 'inventoryName',
@@ -659,6 +621,7 @@ export function getMeta() {
 				},*/ {
 						name: 'bankAccountItem',
 						component: 'Form.Item',
+						_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "bankAccount" )[0].visible }}',
 						label: '现结账户',
 						children: [{
 							name: 'bankAccount',
@@ -679,19 +642,21 @@ export function getMeta() {
 					}, {
 						name: 'settlementAmount',
 						component: 'Form.Item',
+						_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "receiveAmount" )[0].visible }}',
 						label: '现结金额',
 						children: [{
 							name: 'settlementAmount',
 							component: 'Input.Number',
 							disabled: '{{$getControlEnable()}}',
-							value: "{{data.form.settlementAmount}}",
-							onChange: "{{(v)=>$sf('data.form.settlementAmount', v)}}",
+							value: "{{data.form.receiveAmount}}",
+							onChange: "{{(v)=>$sf('data.form.receiveAmount', v)}}",
 						}]
 					}],
 			}, {
 				name: 'advance',
 				component: 'Form',
 				className: 'app-scm-voucher-card-form-footer-advance',
+				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "preReceiveAmount" )[0].visible }}',
 				children: [{
 					name: 'useItem',
 					component: 'Form.Item',

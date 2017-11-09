@@ -363,7 +363,7 @@ class action {
     updateSetting = (data) => {
         let columnSetting = data[0].details.map(o => {
             return {
-                propertyName: o.propertyName,
+                propertyName: o.propertyName.replace('Id', ''),
                 propertyTitle: o.propertyTitle,
                 visible: o.visible
             }
@@ -385,7 +385,7 @@ class action {
 
 
     addPerson = async () => {
-        await this.voucherAction.addPerson('data.form.person')
+        await this.voucherAction.addPerson('data.form.salesPerson')
     }
 
     customerFocus = async () => {
@@ -396,7 +396,7 @@ class action {
         await this.voucherAction.getDepartment({ orgId: '' })
     }
 
-    personFocus = async () => {
+    salesPersonFocus = async () => {
         await this.voucherAction.getPerson()
     }
 
