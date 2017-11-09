@@ -208,7 +208,7 @@ class action {
             this.injections.reduce('load', data.form)
         }
     }
-    
+
     receipt = () => {
         //收款
         this.component.props.setPortalContent('销售订单列表', 'app-arap-voucher-card')

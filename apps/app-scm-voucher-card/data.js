@@ -478,7 +478,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath)}}",
-					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '否' }}",
+					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '' }}",
 					checked: "{{ data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift }}",
 					onChange: "{{(e)=>$sf('data.form.details.' + _rowIndex + '.isGift', e.target.checked)}}",
 					_power: '({rowIndex})=>rowIndex',

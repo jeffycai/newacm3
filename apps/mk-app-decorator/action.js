@@ -247,7 +247,6 @@ export default class action {
             this.quantityChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'taxRate') {
-
             this.taxRateChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'tax') {
@@ -275,9 +274,31 @@ export default class action {
     }
 
     amountChange = (rowIndex, rowData, v) => {
-        this.metaAction.sfs({
-            [`data.form.details.${rowIndex}.amount`]: v
-        })
+        const quantity = utils.number.round(rowData.quantity, 2),
+            amount = utils.number.round(v, 2),
+            price = utils.number.round(rowData.price, 2),
+            tax = utils.number.round(rowData.tax, 2),
+            taxRate = utils.number.round(rowData.taxRate.taxRate, 2),
+            amountWithTax = utils.number.round(rowData.amountWithTax, 2)
+
+        if (tax != undefined && taxRate >= 0) {
+            let _tax = amount * taxRate
+            let _amountWithTax = amount + _tax,
+                _price = price
+            if (quantity != 0) {
+                _price = utils.number.round(amount / quantity,2)
+            }
+
+            this.metaAction.sfs({
+                [`data.form.details.${rowIndex}.amount`]: v,
+                [`data.form.details.${rowIndex}.tax`]: _tax,
+                [`data.form.details.${rowIndex}.amountWithTax`]: _amountWithTax,
+                [`data.form.details.${rowIndex}.price`]: _price
+
+            })
+
+        }
+
     }
 
     quantityChange = (rowIndex, rowData, v) => {
