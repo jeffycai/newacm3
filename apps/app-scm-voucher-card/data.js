@@ -20,13 +20,13 @@ export function getMeta() {
 					children: [{
 						name: 'prev',
 						component: 'Button',
-						type: 'softly',
+						type: 'bluesky',
 						icon: 'left',
 						onClick: '{{$prev}}'
 					}, {
 						name: 'next',
 						component: 'Button',
-						type: 'softly',
+						type: 'bluesky',
 						icon: 'right',
 						onClick: '{{$next}}'
 					}]
@@ -34,7 +34,7 @@ export function getMeta() {
 					name: 'setting',
 					component: 'Button',
 					className: 'app-scm-voucher-card-iconbutton',
-					type: 'softly',
+					type: 'bluesky',
 					iconFontFamily: 'mkicon',
 					icon: 'setting',
 					title: '设置',
@@ -130,6 +130,7 @@ export function getMeta() {
 				children: {
 					name: 'title',
 					component: '::h1',
+					style: { fontWeight:'bold'},
 					children: '销售订单'
 				}
 			}, {
@@ -139,6 +140,7 @@ export function getMeta() {
 				children: ['单据编号:', {
 					name: 'code',
 					component: '::div',
+					className: 'code',
 					style: { marginRight: 10 },
 					children: "{{data.form.code || ''}}"
 				}, {
@@ -183,7 +185,7 @@ export function getMeta() {
 						onClick: '{{$addCustomer}}'
 					},
 				}]
-			},  {
+			}, {
 				name: 'invoiceTypeItem',
 				component: 'Form.Item',
 				label: '票据类型',
@@ -212,9 +214,10 @@ export function getMeta() {
 				_visible:'{{data.other.columnSetting && data.other.columnSetting.filter(o=> o.propertyName === "invoiceNumber" )[0].visible }}',
 				children:{
 					name: 'invoiceNumber',
+					disabled: '{{$getControlEnable()}}',
 					component: 'Input',
 					value: '{{data.form.invoiceNumber}}',
-					onChange:'{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
+					onChange: '{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
 				}
 			},{
 				name:'invoiceCodeItem',
@@ -225,10 +228,11 @@ export function getMeta() {
 				children:{
 					name: 'invoiceCode',
 					component: 'Input',
+					disabled: '{{$getControlEnable()}}',
 					value: '{{data.form.invoiceCode}}',
-					onChange:'{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
+					onChange: '{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
 				}
-			},{
+			}, {
 				name: 'departmentItem',
 				component: 'Form.Item',
 				required: false,
@@ -240,7 +244,7 @@ export function getMeta() {
 					component: 'Select',
 					showSearch: true,
 					disabled: '{{$getControlEnable()}}',
-					value: '',
+					value: '{{data.form.department && data.form.department.name }}',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -259,7 +263,7 @@ export function getMeta() {
 						onClick: '{{$addDepartment}}'
 					},
 				}]
-			},{
+			}, {
 				name: 'personItem',
 				component: 'Form.Item',
 				validateStatus: 'info',
@@ -290,7 +294,7 @@ export function getMeta() {
 						onClick: '{{$addPerson}}'
 					},
 				}]
-			},{
+			}, {
 				name: 'projectItem',
 				component: 'Form.Item',
 				required: false,
@@ -321,7 +325,7 @@ export function getMeta() {
 						onClick: '{{$addProject}}'
 					},
 				}]
-			},{
+			}, {
 				name: 'dateItem',
 				component: 'Form.Item',
 				label: '记账日期',
@@ -437,7 +441,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath)}}",
-					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '否' }}",
+					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '' }}",
 					checked: "{{ data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift }}",
 					onChange: "{{(e)=>$sf('data.form.details.' + _rowIndex + '.isGift', e.target.checked)}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -457,7 +461,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].quantity,2,$isFocus(_ctrlPath))}}",
-					onChange: "{{$quantityChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('quantity',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -475,7 +479,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].price,2,$isFocus(_ctrlPath))}}",
-					onChange: "{{$priceChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('price',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				}
 			}, {
@@ -491,16 +495,16 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amount, 2)}}",
-					onChange: "{{$amountChange(_rowIndex,data.form.details[_rowIndex])}}",
+					onChange: "{{$calc('amount',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmount(data.form.details)}}'
+					children: '{{$sumAmount(`amount`)}}'
 				}
 			}, {
 				name: 'taxRate',
@@ -524,7 +528,7 @@ export function getMeta() {
 									? data.form.details[_rowIndex].taxRate.id
 									: data.form.details[_rowIndex].taxRate.name
 							}}}`,
-					onChange: "{{$taxRateChange(_rowIndex, data.form.details[_rowIndex], data.other.taxRate)}}",
+					onChange: "{{$calc('taxRate',_rowIndex, data.form.details[_rowIndex])}}",
 					onFocus: "{{$taxRateFocus}}",
 					children: {
 						name: 'option',
@@ -550,15 +554,16 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].tax, 2)}}",
+					onChange: "{{$calc('tax',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumTax(data.form.details)}}'
+					children: '{{$sumTax(`tax`)}}'
 				}
 			}, {
 				name: 'amountWithTax',
@@ -574,15 +579,16 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
-					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled app-scm-voucher-card-cell-right'}}",
+					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amountWithTax, 2)}}",
+					onChange: "{{$calc('amountWithTax',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
 					name: 'footer',
 					component: 'DataGrid.Cell',
 					className: 'app-scm-voucher-card-list-cell-right',
-					children: '{{$sumAmountWithTax(data.form.details)}}'
+					children: '{{$sumAmountWithTax(`amountWithTax`)}}'
 				}
 			}]
 		}, {
@@ -628,8 +634,8 @@ export function getMeta() {
 							children: {
 								name: 'option',
 								component: 'Select.Option',
-								value: "{{ data.other.bankAccount && data.other.bankAccount[_lastIndex].id }}",
-								children: '{{data.other.bankAccount && data.other.bankAccount[_lastIndex].name }}',
+								value: "{{ data.other.bankAccount[_lastIndex] && data.other.bankAccount[_lastIndex].id }}",
+								children: '{{data.other.bankAccount[_lastIndex] && data.other.bankAccount[_lastIndex].name }}',
 								_power: 'for in data.other.bankAccount'
 							}
 						}]
@@ -699,15 +705,13 @@ export function getMeta() {
 				className: 'app-scm-voucher-card-footer-left',
 				children: [{
 					name: 'creator',
-					component: 'Form.Item',
-					label: '制单人',
-					children: '{{data.form.creatorName}}',
+					component: 'Layout',
+					children: ['制单人', '{{data.form.creatorName}}'],
 					style: { marginRight: 30 }
 				}, {
 					name: 'approver',
-					component: 'Form.Item',
-					label: '审核人',
-					children: '{{data.form.auditorName}}',
+					component: 'Layout',
+					children: ['审核人', '{{data.form.auditorName}}'],
 				}]
 
 			}, {
@@ -770,6 +774,13 @@ export function getInitState() {
 
 export const blankVoucherItem = {
 	inventory: {
-
-	}
+		id: null,
+		name: null
+	},
+	isGift:null,
+	quantity:null,
+	tax:null,
+	taxRate:null,
+	price:null,
+	amount:''
 }

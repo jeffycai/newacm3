@@ -26,7 +26,8 @@ function getGridOption() {
             cellIsReadonly: (cellPosition, path, gf) => {
                 if (cellPosition.x == 1
                     || cellPosition.x == 2
-                    || cellPosition.x == 3)
+                    || cellPosition.x == 3
+                    || cellPosition.x == 9)
                     return true
 
                 return false
