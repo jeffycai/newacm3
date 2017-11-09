@@ -130,6 +130,7 @@ export function getMeta() {
 				children: {
 					name: 'title',
 					component: '::h1',
+					style: { fontWeight:'bold'},
 					children: '销售订单'
 				}
 			}, {
@@ -212,6 +213,7 @@ export function getMeta() {
 				required: false,
 				children: {
 					name: 'invoiceNumber',
+					disabled: '{{$getControlEnable()}}',
 					component: 'Input',
 					value: '{{data.form.invoiceNumber}}',
 					onChange: '{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
@@ -224,6 +226,7 @@ export function getMeta() {
 				children: {
 					name: 'invoiceCode',
 					component: 'Input',
+					disabled: '{{$getControlEnable()}}',
 					value: '{{data.form.invoiceCode}}',
 					onChange: '{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
 				}
@@ -238,7 +241,7 @@ export function getMeta() {
 					component: 'Select',
 					showSearch: true,
 					disabled: '{{$getControlEnable()}}',
-					value: '',
+					value: '{{data.form.department && data.form.department.name }}',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -476,7 +479,7 @@ export function getMeta() {
 					name: 'cell',
 					component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath)}}",
-					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '否' }}",
+					value: "{{ (data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift) ? '是': '' }}",
 					checked: "{{ data.form.details[_rowIndex] && data.form.details[_rowIndex].isGift }}",
 					onChange: "{{(e)=>$sf('data.form.details.' + _rowIndex + '.isGift', e.target.checked)}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -616,6 +619,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amountWithTax, 2)}}",
+					onChange: "{{$calc('amountWithTax',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {

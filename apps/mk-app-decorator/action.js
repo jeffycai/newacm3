@@ -3,6 +3,8 @@ import utils from 'mk-utils'
 import config from './config'
 import Immutable, { fromJS, Map, List } from 'immutable'
 
+
+let requiredFieldList = []
 export default class action {
 
     constructor(option) {
@@ -183,8 +185,6 @@ export default class action {
         }
     }
 
-
-
     addPerson = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增业务员',
@@ -249,7 +249,6 @@ export default class action {
             this.quantityChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'taxRate') {
-
             this.taxRateChange(rowIndex, rowData, v)
         }
         else if (fieldName === 'tax') {
@@ -277,7 +276,28 @@ export default class action {
     }
 
     amountChange = (rowIndex, rowData, v) => {
+        const quantity = utils.number.round(rowData.quantity, 2),
+            amount = utils.number.round(v, 2),
+            price = utils.number.round(rowData.price, 2),
+            tax = utils.number.round(rowData.tax, 2),
+            taxRate = utils.number.round(rowData.taxRate.taxRate || 0, 2),
+            amountWithTax = utils.number.round(rowData.amountWithTax, 2)
 
+        if (tax != undefined && taxRate >= 0) {
+            let _tax = amount * taxRate
+            let _amountWithTax = amount + _tax,
+                _price = price
+            if (quantity != 0) {
+                _price = utils.number.round(amount / quantity, 2)
+            }
+
+            this.metaAction.sfs({
+                [`data.form.details.${rowIndex}.amount`]: v,
+                [`data.form.details.${rowIndex}.tax`]: _tax,
+                [`data.form.details.${rowIndex}.amountWithTax`]: _amountWithTax,
+                [`data.form.details.${rowIndex}.price`]: _price
+            })
+        }
     }
 
     quantityChange = (rowIndex, rowData, v) => {
@@ -293,7 +313,6 @@ export default class action {
             [`data.form.details.${rowIndex}.tax`]: tax,
             [`data.form.details.${rowIndex}.amountWithTax`]: amountWithTax,
         })
-
     }
 
     taxRateChange = (rowIndex, rowData, v) => {
@@ -314,14 +333,55 @@ export default class action {
                 [`data.form.details.${rowIndex}.amountWithTax`]: amountWithTax,
             })
         }
-
     }
 
     taxChange = (rowIndex, rowData, v) => {
+        const tax = utils.number.round(v, 2),
+            price = utils.number.round(rowData.price, 2),
+            quantity = utils.number.round(rowData.quantity, 2),
+            amount = utils.number.round(price * quantity, 2),
+            amountWithTax = utils.number.round(amount + tax, 2),
+            taxRate = utils.number.round(rowData.taxRate.taxRate || 0, 2)
 
+
+        if (tax >= 0 && taxRate >= 0) {
+            let _amountOfMoney = utils.number.round(tax / taxRate)
+            let _amountWithTax = utils.number.round(_amountOfMoney + tax)
+            let _price = 0
+            if (quantity != 0) {
+                _price = utils.number.round(_amountOfMoney / quantity)
+            }
+
+            this.metaAction.sfs({
+                [`data.form.details.${rowIndex}.tax`]: v,
+                [`data.form.details.${rowIndex}.amount`]: _amountOfMoney,
+                [`data.form.details.${rowIndex}.amountWithTax`]: _amountWithTax,
+                [`data.form.details.${rowIndex}.price`]: _price
+            })
+        }
     }
     amountWithTaxChange = (rowIndex, rowData, v) => {
-
+        const tax = utils.number.round(v, 2),
+            price = utils.number.round(rowData.price, 2),
+            quantity = utils.number.round(rowData.quantity, 2),
+            amount = utils.number.round(price * quantity, 2),
+            amountWithTax = utils.number.round(v, 2),
+            taxRate = utils.number.round(rowData.taxRate.taxRate || 0, 2)
+        
+        if (amountWithTax && taxRate >= 0) {
+            let _amountOfMoney = utils.number.round(amountWithTax / (1 + taxRate), 2)
+            let _taxamount = utils.number.round(amountWithTax - _amountOfMoney,2)
+            let _price = price
+            if (quantity != 0) {
+                _price = utils.number.round(amountWithTax / (1 + taxRate) / quantity,2)
+            }
+            this.metaAction.sfs({
+                [`data.form.details.${rowIndex}.amountWithTax`]: v,
+                [`data.form.details.${rowIndex}.amount`]: _amountOfMoney,
+                [`data.form.details.${rowIndex}.tax`]: _taxamount,
+                [`data.form.details.${rowIndex}.price`]: _price
+            })
+        }
     }
 
     sumColumn = (col) => {
@@ -329,7 +389,6 @@ export default class action {
             details = this.metaAction.gf('data.form.details')
         return this.numberFormat(this.sum(details, (a, b) => a + b.get(`${currentSumCol}`)), 2)
     }
-
 
     sum = (details, fn) => {
         if (!details || details.length == 0)
@@ -339,6 +398,32 @@ export default class action {
             let r = fn(a, b)
             return isNaN(r) ? a : r
         }, 0)
+    }
+
+    cancel = (params) => {
+        if (params) {
+            // let isChanged = this.metaAction.gf(params.statusPath)
+            // if (isChanged == consts.VOUCHER_STATUS_EDIT || isChanged == consts.VOUCHER_STATUS_ADD) {
+            //     if (ma.confirm('放弃', '单据尚未保存，还要离开吗？')) {
+            //         //
+            //     }
+            // }
+        }
+
+    }
+
+    setVoucherStatus = (status) => {
+
+    }
+
+
+    getVoucherRequiredField = (ele) => {
+        let rootMeta = this.metaAction.gm('root')
+        if (rootMeta && rootMeta.children) {
+            rootMeta.children.map((ele, index) => {
+                this.getVoucherRequiredField(ele)
+            })
+        }
     }
 
     checkSave = (form) => {
