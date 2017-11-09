@@ -46,7 +46,7 @@ class reducer {
 
         if (parsed.form.status == consts.status.VOUCHER_STATUS_AUDITED || parsed.form.settleStatus == consts.status.VOUCHER_STATUS_WRITEOFF) {
 
-            
+
         }
 
         return state
@@ -120,7 +120,7 @@ class reducer {
                 id: responseValue.departmentId,
                 name: responseValue.departmentName
             },
-            person: {
+            salesPerson: {
                 id: responseValue.salesPersonId,
                 name: responseValue.salesPersonName
             },

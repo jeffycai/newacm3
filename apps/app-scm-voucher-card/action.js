@@ -245,9 +245,9 @@ class action {
     updateSetting = (data)=>{
         let columnSetting = data[0].details.map(o=>{
             return {
-                propertyName:o.propertyName,
-                propertyTitle:o.propertyTitle,
-                visible:o.visible
+                propertyName: o.propertyName.replace('Id', ''),
+                propertyTitle: o.propertyTitle,
+                visible: o.visible
             }
         })
 
@@ -267,7 +267,7 @@ class action {
 
 
     addPerson = async () => {
-        await this.voucherAction.addPerson('data.form.person')
+        await this.voucherAction.addPerson('data.form.salesPerson')
     }
 
     customerFocus = async () => {
@@ -278,7 +278,7 @@ class action {
         await this.voucherAction.getDepartment({ orgId: '' })
     }
 
-    personFocus = async () => {
+    salesPersonFocus = async () => {
         await this.voucherAction.getPerson()
     }
 
@@ -326,7 +326,7 @@ class action {
                 id: response.lastBankAccountId,
                 name: response.lastBankAccountName
             }))
-            
+
             this.metaAction.sf('data.form.advanceAmount', this.voucherAction.numberFormat(response.preReceiveAmount, 2))
         }
     }
@@ -403,7 +403,7 @@ class action {
 
     calcBalance = (data) => {
         const amountWithTax = this.sum(data.form.details, (a, b) => a + b.amountWithTax),
-            settlementTotal = this.sum(data.form.settlements, (a, b) => a + b.settlementAmount),
+            settlementTotal = this.sum(data.form.settlements, (a, b) => a + b.receiveAmount),
             advanceAmount = data.form.useAdvance ? utils.number.round(data.form.advanceAmount, 2) : 0
 
         return this.voucherAction.numberFormat(amountWithTax - settlementTotal - advanceAmount, 2)
