@@ -227,13 +227,8 @@ class action {
     }
 
     save = async () => {
-        var form = this.metaAction.gf('data.form').toJS()
-        let msg = this.voucherAction.checkSave(form)
-        if (msg.length > 0) {
-            this.voucherAction.showMsg(msg)
-            return
-        }
-
+        if (!this.checkForSave()) return
+        let form = this.metaAction.gf('data.form').toJS()
         if (form.id || form.id == 0) {
             const response = await this.webapi.delivery.update(form)
             if (response) {
@@ -311,9 +306,45 @@ class action {
         return ret
     }
 
+    checkForSave = () => {
+        var form = this.metaAction.gf('data.form').toJS()
+        let msg = this.voucherAction.checkSave(form)
+        if (msg.length > 0) {
+            this.voucherAction.showMsg(msg)
+            return false
+            //return
+        }
+        return true
+    }
+
 
     saveAndNew = async () => {
-        await this.voucherAction.saveAndNew()
+        if (!checkForSave()) return
+        let form = this.metaAction.gf('data.form').toJS(),
+            voucherStatus = this.metaAction.gf('data.other.status'),
+            data = transForSave(form)
+
+        if (voucherStatus == consts.status.VOUCHER_STATUS_ADD || !form.id) {
+
+            let response = this.webapi.delivery.create(data)
+            if (response) {
+                this.metaAction.toast('success', '保存更新成功')
+                let initResponse = this.webapi.delivery.init({ "deliveryTypeId": 132 })
+                if (initResponse) {
+                    this.injections.reduce('load', initResponse)
+                }
+            }
+        }
+        else if (voucherStatus == consts.status.VOUCHER_STATUS_EDIT && form.id) {
+            let response = this.webapi.delivery.update(data)
+            if (response) {
+                this.metaAction.toast('success', '更新成功')
+                let initResponse = this.webapi.delivery.init({ "deliveryTypeId": 132 })
+                if (initResponse) {
+                    this.injections.reduce('load', initResponse)
+                }
+            }
+        }
     }
 
 
@@ -414,7 +445,7 @@ class action {
                 name: response.lastBankAccountName
             }))
 
-            this.metaAction.sf('data.form.advanceAmount', this.voucherAction.quantityFormat(response.preReceiveAmount, 2))
+            this.metaAction.sf('data.form.advanceAmount', this.voucherAction.numberFormat(response.preReceiveAmount, 2))
         }
     }
 
@@ -446,9 +477,9 @@ class action {
     }
 
     quantityFormat = (quantity, decimals, isFocus = false) => {
-        if(quantity){
+        if (quantity) {
             return this.voucherAction.numberFormat(quantity, decimals, isFocus = false)
-        }       
+        }
     }
 
 

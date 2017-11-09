@@ -212,6 +212,7 @@ export function getMeta() {
 				required: false,
 				children: {
 					name: 'invoiceNumber',
+					disabled: '{{$getControlEnable()}}',
 					component: 'Input',
 					value: '{{data.form.invoiceNumber}}',
 					onChange: '{{(e)=>$sf("data.form.invoiceNumber",e.target.value)}}'
@@ -224,6 +225,7 @@ export function getMeta() {
 				children: {
 					name: 'invoiceCode',
 					component: 'Input',
+					disabled: '{{$getControlEnable()}}',
 					value: '{{data.form.invoiceCode}}',
 					onChange: '{{(e)=>$sf("data.form.invoiceCode",e.target.value)}}'
 				}
