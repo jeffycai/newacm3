@@ -183,8 +183,6 @@ export default class action {
         }
     }
 
-
-
     addPerson = async (field) => {
         const ret = await this.metaAction.modal('show', {
             title: '新增业务员',
@@ -277,7 +275,9 @@ export default class action {
     }
 
     amountChange = (rowIndex, rowData, v) => {
-
+        this.metaAction.sfs({
+            [`data.form.details.${rowIndex}.amount`]: v
+        })
     }
 
     quantityChange = (rowIndex, rowData, v) => {
@@ -318,10 +318,14 @@ export default class action {
     }
 
     taxChange = (rowIndex, rowData, v) => {
-
+        this.metaAction.sfs({
+            [`data.form.details.${rowIndex}.tax`]: v
+        })
     }
     amountWithTaxChange = (rowIndex, rowData, v) => {
-
+        this.metaAction.sfs({
+            [`data.form.details.${rowIndex}.amountWithTax`]: v
+        })
     }
 
     sumColumn = (col) => {
@@ -339,6 +343,18 @@ export default class action {
             let r = fn(a, b)
             return isNaN(r) ? a : r
         }, 0)
+    }
+
+    cancel = (params) => {
+        if (params) {
+            // let isChanged = this.metaAction.gf(params.statusPath)
+            // if (isChanged == consts.VOUCHER_STATUS_EDIT || isChanged == consts.VOUCHER_STATUS_ADD) {
+            //     if (ma.confirm('放弃', '单据尚未保存，还要离开吗？')) {
+            //         //
+            //     }
+            // }
+        }
+
     }
 
     checkSave = (form) => {

@@ -122,6 +122,7 @@ class action {
             return '审核'
         }
     }
+
     history = async () => {
         this.component.props.setPortalContent('销售订单列表', 'app-scm-voucher-list')
     }
@@ -207,6 +208,7 @@ class action {
             this.injections.reduce('load', data.form)
         }
     }
+    
     receipt = () => {
         //收款
         this.component.props.setPortalContent('销售订单列表', 'app-arap-voucher-card')
@@ -319,7 +321,7 @@ class action {
 
 
     saveAndNew = async () => {
-        if (!checkForSave()) return
+        if (!this.checkForSave()) return
         let form = this.metaAction.gf('data.form').toJS(),
             voucherStatus = this.metaAction.gf('data.other.status'),
             data = transForSave(form)
@@ -347,11 +349,9 @@ class action {
         }
     }
 
-
     cancel = async () => {
         await this.voucherAction.cancel()
     }
-
 
     setting = async () => {
         let data = this.metaAction.gf('data')
