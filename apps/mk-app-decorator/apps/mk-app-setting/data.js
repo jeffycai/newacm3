@@ -20,7 +20,7 @@ export function getHeaderMeta() {
 			name:'recover',
 			component:'Button',
 			onClick:'{{$handleRecover}}',
-			type:'primary',
+			type:'showy',
 			children:'恢复默认'
 		}
 	}
@@ -38,6 +38,7 @@ export function getTabMeta() {
 	return {
 		name: 'headTabList',
 		component: 'Tabs',
+		animated: false,
 		defaultActiveKey:'{{data.isVoucher? "1":"0"}}',
 		children: [{
 				name: 'list',

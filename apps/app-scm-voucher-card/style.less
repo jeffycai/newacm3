@@ -85,7 +85,7 @@
         flex-direction: row;
         justify-content: space-between;
         &-left {
-            flex: 0 0 200px;
+            flex: 0 0 300px;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
@@ -125,11 +125,11 @@
             width: 25%;
         }
         .ant-form-item-label {
-            width: 85px;
             padding: 0px;
+            width: 85px;
         }
         .ant-form-item-control-wrapper {
-            width: 200px;
+            width: 150px;
             height:32px;
         }
         .mk-select {
@@ -150,14 +150,28 @@
     }
     &-form-details {
         flex: 1;
+        margin: 8px 0;
         .public_fixedDataTable_header .public_fixedDataTableCell_main {
             background: #f6f7f8 linear-gradient(#f6f7f8,#f6f7f8);
             color: #666;
+        }
+        .public_fixedDataTable_main {
+            border: 1px solid #efefef;
+            .public_fixedDataTableRow_highlighted {
+                border-top: 1px solid #efefef;
+                border-bottom: 1px solid #efefef;
+            }
+            .fixedDataTableLayout_header .mk-datagrid-cellContent {
+                font-weight: 700;
+                font-size: 13px;
+            }
         }
     }
     &-form-footer {
         flex: 0 0 auto;
         display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
         .ant-form-item-label {
             width: 100px;
         }
@@ -173,8 +187,15 @@
             flex-direction: row;
             justify-content: flex-end;
             .ant-form-item-control-wrapper {
-                width: 100px;
+                width: 150px;
             }
+        }
+        &-settlement {
+          align-items: flex-start;
+        }
+        &-advance {
+            flex-direction: column;
+            justify-content: flex-start;
         }
     }
     &-footer {

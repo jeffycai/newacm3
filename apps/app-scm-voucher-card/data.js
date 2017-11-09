@@ -34,7 +34,7 @@ export function getMeta() {
 					name: 'setting',
 					component: 'Button',
 					className: 'app-scm-voucher-card-iconbutton',
-					type: 'bluesky',
+					type: 'showy',
 					iconFontFamily: 'mkicon',
 					icon: 'setting',
 					title: '设置',
