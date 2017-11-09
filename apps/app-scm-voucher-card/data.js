@@ -130,6 +130,7 @@ export function getMeta() {
 				children: {
 					name: 'title',
 					component: '::h1',
+					style: { fontWeight:'bold'},
 					children: '销售订单'
 				}
 			}, {
@@ -240,7 +241,7 @@ export function getMeta() {
 					component: 'Select',
 					showSearch: true,
 					disabled: '{{$getControlEnable()}}',
-					value: '',
+					value: '{{data.form.department && data.form.department.name }}',
 					onChange: `{{(v)=>$sf('data.form.department', $fromJS(data.other.department.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$departmentFocus}}",
 					children: {
@@ -618,6 +619,7 @@ export function getMeta() {
 					component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell app-scm-voucher-card-cell-right'}}",
 					value: "{{$quantityFormat(data.form.details[_rowIndex].amountWithTax, 2)}}",
+					onChange: "{{$calc('amountWithTax',_rowIndex,data.form.details[_rowIndex])}}",
 					_power: '({rowIndex})=>rowIndex',
 				},
 				footer: {
