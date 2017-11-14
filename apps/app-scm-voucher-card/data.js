@@ -276,14 +276,14 @@ export function getMeta() {
 					disabled: '{{$getControlEnable()}}',
 
 					value: '{{data.form.salesPerson && data.form.salesPerson.name }}',
-					onChange: `{{(v)=>$sf('data.form.salesPerson', $fromJS(data.other.salesPerson.find(o=>o.id==v),null))}}`,
+					onChange: `{{(v)=>$sf('data.form.salesPerson', $fromJS(data.other.person.find(o=>o.id==v),null))}}`,
 					onFocus: "{{$salesPersonFocus}}",
 					children: {
 						name: 'option',
 						component: 'Select.Option',
-						value: "{{ data.other.salesPerson && data.other.salesPerson[_rowIndex].id }}",
-						children: '{{data.other.salesPerson && data.other.salesPerson[_rowIndex].name }}',
-						_power: 'for in data.other.salesPerson'
+						value: "{{ data.other.person && data.other.person[_rowIndex].id }}",
+						children: '{{data.other.person && data.other.person[_rowIndex].name }}',
+						_power: 'for in data.other.person'
 					},
 					dropdownFooter: {
 						name: 'add',
@@ -385,7 +385,8 @@ export function getMeta() {
 				},
 				cell: {
 					name: 'cell',
-					component: "DataGrid.TextCell",
+					onFocus:'{{$inventoryFocus}}',
+					component:  "{{$isFocus(_ctrlPath) ? 'Select' : 'DataGrid.TextCell'}}",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
 					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -403,7 +404,8 @@ export function getMeta() {
 				},
 				cell: {
 					name: 'cell',
-					component: "DataGrid.TextCell",
+					component:  "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
+					onFocus:'{{$inventoryFocus}}',
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
 					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.specification}}",
 					_power: '({rowIndex})=>rowIndex',
@@ -422,6 +424,7 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					component: "DataGrid.TextCell",
+					onFocus:'{{$inventoryFocus}}',
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
 					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.unitName}}",
 					_power: '({rowIndex})=>rowIndex',
