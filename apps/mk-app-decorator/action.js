@@ -498,7 +498,7 @@ export default class action {
         return !hasError
     }
 
-    numberFormat = (number, decimals, isFocus = false) => {
+    numberFormat = (number, decimals, isFocus) => {
         if (isFocus === true) return number
         return utils.number.format(number, decimals)
     }
