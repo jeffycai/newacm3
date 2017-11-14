@@ -372,7 +372,50 @@ export function getMeta() {
 			onKeyDown: '{{$gridKeydown}}',
 			scrollToColumn: '{{data.other.detailsScrollToColumn}}',
 			scrollToRow: '{{data.other.detailsScrollToRow}}',
-			columns: [ {
+			columns: [{
+				name: 'inventoryCode',
+				component: 'DataGrid.Column',
+				columnKey: 'inventoryCode',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: [{
+						name: 'label',
+						component: '::label',
+						className: 'ant-form-item-required',
+						children: '存货编码'
+					}]
+				},
+				cell: {
+					name: 'cell',
+					component: "{{$isFocus(_ctrlPath) ? 'Select' : 'DataGrid.TextCell'}}",
+					className: "{{$getCellClassName(_ctrlPath)}}",
+					showSearch: true,
+					value: `{{{
+								if(!data.form.details[_rowIndex]) return
+								if(!data.form.details[_rowIndex].inventory) return
+								return $isFocus(_ctrlPath)
+									? data.form.details[_rowIndex].inventory.id
+									: data.form.details[_rowIndex].inventory.code
+							}}}`,
+					onChange: `{{(v)=>{
+								const hit = data.other.inventory.find(o=>o.id==v)
+								$sf('data.form.details.'+ _rowIndex + '.inventory', $fromJS(hit,null))
+							}}}`,
+					onFocus: "{{$inventoryFocus}}",
+					children: {
+						name: 'option',
+						component: 'Select.Option',
+						value: "{{ data.other.inventory && data.other.inventory[_lastIndex].id }}",
+						children: '{{data.other.inventory && data.other.inventory[_lastIndex].name }}',
+						_power: 'for in data.other.inventory'
+					},
+					_excludeProps: "{{$isFocus(_ctrlPath)? ['onClick'] : ['children'] }}",
+					_power: '({rowIndex})=>rowIndex',
+				},
+			},{
 				name: 'inventoryName',
 				component: 'DataGrid.Column',
 				columnKey: 'inventoryName',
@@ -386,7 +429,7 @@ export function getMeta() {
 				cell: {
 					name: 'cell',
 					onFocus:'{{$inventoryFocus}}',
-					component:  "{{$isFocus(_ctrlPath) ? 'Select' : 'DataGrid.TextCell'}}",
+					component:  "DataGrid.TextCell",
 					className: "{{$getCellClassName(_ctrlPath) + ' app-scm-voucher-card-cell-disabled'}}",
 					value: "{{data.form.details[_rowIndex] && data.form.details[_rowIndex].inventory && data.form.details[_rowIndex].inventory.name}}",
 					_power: '({rowIndex})=>rowIndex',
