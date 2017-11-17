@@ -22,6 +22,7 @@
 			height: 100%;
 			flex-direction: row;
 			align-items: center;
+            background: #002140;
 
 			&-logo {
 				width: 50px;
@@ -31,6 +32,7 @@
 
 			h1,h2{
 				color:#fff;
+                font-size: 20px;
 			}
 
 			&-fold {
@@ -111,7 +113,7 @@
 
 		&-left{
 			overflow: visible;
-			background-color: #404040;
+            background-color: #001529;
 
 			&-fold {
 				width:64px;
@@ -122,6 +124,24 @@
 				width:200px;
 				flex: 0 0 200px;
 			}
+
+            .ant-menu-submenu-title {
+                background-color: #001529;
+                font-weight: 300;
+                font-size: 14px;
+            }
+            .ant-menu-inline .ant-menu-item,
+            .ant-menu-dark.ant-menu-vertical .ant-menu-item {
+                background-color: #000c17;
+                font-weight: 300;
+                font-size: 14px;
+            }
+            .ant-menu-dark .ant-menu-submenu-title:hover {
+                background-color: #001529;
+            }
+            .ant-menu-dark .ant-menu-item-selected {
+                background-color: #108ee9 !important;
+            }
 		}
 
 		&-main{
